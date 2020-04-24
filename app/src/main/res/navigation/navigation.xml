@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/navhome">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/navhome"
         android:name="com.wzy.yuka.ui.HomeFragment"
         android:label="主页"
-        tools:layout="@layout/home" />
+        tools:layout="@layout/home">
+        <action
+            android:id="@+id/action_nav_home_to_nav_settings"
+            app:destination="@id/nav_settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_settings"
