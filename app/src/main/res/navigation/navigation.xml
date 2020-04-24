@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.wzy.yuka.ui.HomeFragment"
+        android:label="主页"
+        tools:layout="@layout/home" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.wzy.yuka.ui.setting.SettingsFragment"
+        android:label="设置">
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_developer"
+            app:destination="@id/nav_settings_developer" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_settings_developer"
+        android:name="com.wzy.yuka.ui.setting.SettingsDeveloper"
+        android:label="开发者选项" />
+
+    <fragment
+        android:id="@+id/nav_help"
+        android:name="com.wzy.yuka.ui.help.HelpFragment"
+        android:label="帮助">
+
+        <action
+            android:id="@+id/action_nav_help_to_nav_help_Advance"
+            app:destination="@id/nav_help_Advance" />
+        <action
+            android:id="@+id/action_nav_help_to_nav_help_QA"
+            app:destination="@id/nav_help_QA" />
+        <action
+            android:id="@+id/action_nav_help_to_nav_help_Example"
+            app:destination="@id/nav_help_Example" />
+        <action
+            android:id="@+id/action_nav_help_to_nav_help_Future"
+            app:destination="@id/nav_help_Future" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_help_QA"
+        android:name="com.wzy.yuka.ui.help.HelpQA"
+        android:label="Q&amp;A" />
+    <fragment
+        android:id="@+id/nav_help_Example"
+        android:name="com.wzy.yuka.ui.help.HelpExample"
+        android:label="翻译示例" />
+    <fragment
+        android:id="@+id/nav_help_Advance"
+        android:name="com.wzy.yuka.ui.help.HelpAdvance"
+        android:label="进阶操作" />
+    <fragment
+        android:id="@+id/nav_help_Future"
+        android:name="com.wzy.yuka.ui.help.HelpFuture"
+        android:label="敬请期待" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.wzy.yuka.ui.about.AboutFragment"
+        android:label="关于">
+        <action
+            android:id="@+id/action_nav_about_to_nav_about_reference"
+            app:destination="@id/nav_about_reference" />
+        <action
+            android:id="@+id/action_nav_about_to_nav_about_opensource"
+            app:destination="@id/nav_about_opensource" />
+        <action
+            android:id="@+id/action_nav_about_to_nav_about_dev"
+            app:destination="@id/nav_about_dev" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_about_dev"
+        android:name="com.wzy.yuka.ui.about.AboutDev"
+        android:label="关于开发者" />
+    <fragment
+        android:id="@+id/nav_about_opensource"
+        android:name="com.wzy.yuka.ui.about.AboutOpenSource"
+        android:label="开源许可证" />
+    <fragment
+        android:id="@+id/nav_about_reference"
+        android:name="com.wzy.yuka.ui.about.AboutReference"
+        android:label="参考文献" />
+</navigation>

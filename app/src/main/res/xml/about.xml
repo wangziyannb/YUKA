@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="关于"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_about_dev"
+            android:summary="绯绯色欠片"
+            android:title="关于开发者" />
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_about_donate"
+            android:summary="毕设产生了经济效益？"
+            android:title="捐献" />
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_about_version"
+            android:title="Yuka版本号" />
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_about_server"
+            android:summary="2.2"
+            android:title="服务器版本" />
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_about_repository"
+            android:summary="github"
+            android:title="项目地址" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:iconSpaceReserved="false"
+        android:title="鸣谢">
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_thanks_open_source"
+            android:summary="大佬们的轮子"
+            android:title="开源许可证" />
+        <Preference
+            android:iconSpaceReserved="false"
+            android:key="about_thanks_reference"
+            android:title="参考文献" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

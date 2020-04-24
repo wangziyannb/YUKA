@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        android:key="about_reference_1"
+        android:summary="https://www.cnblogs.com/xiaozhi_5638/p/9268715.html"
+        android:title="[AI开发]Python+Tensorflow打造自己的计算机视觉API服务"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_2"
+        android:summary="https://www.jianshu.com/p/7d1a7c82094a"
+        android:title="EasyFloat：浮窗从未如此简单"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_3"
+        android:summary="https://www.jianshu.com/p/ee1342fcf5e7"
+        android:title="Android 多线程：手把手教你使用AsyncTask"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_4"
+        android:summary="https://blog.csdn.net/yingshukun/article/details/100175638"
+        android:title="Android与Python混合编程"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_5"
+        android:summary="https://blog.csdn.net/wwb1990/article/details/104051068"
+        android:title="Python 学习笔记 —— 使用Chaquopy在AndroidStudio添加Python环境，java和python互调"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_6"
+        android:summary="https://blog.csdn.net/huaweichenai/article/details/85690780"
+        android:title="python 使用OpenCV库实现图像处理"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_7"
+        android:summary="https://my.oschina.net/u/876354/blog/3054322"
+        android:title="【AI实战】手把手教你深度学习文字识别（文字检测篇：基于MSER, CTPN, SegLink, EAST等方法）"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_8"
+        android:summary="https://my.oschina.net/u/876354/blog/3047851"
+        android:title="大话文本检测经典模型：CTPN"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_9"
+        android:summary="https://blog.csdn.net/weixin_30488085/article/details/97042413"
+        android:title="使用python快速搭建本地网站"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_10"
+        android:summary="https://blog.csdn.net/LANGQING12345/article/details/46539545"
+        android:title="web框架之cgi.FieldStorage()与数据提交"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_11"
+        android:summary="https://www.cnblogs.com/xiaozhi_5638/p/11792274.html"
+        android:title="[AI开发]零数学公式告诉你什么是（卷积）神经网络"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_12"
+        android:summary="https://blog.csdn.net/u013282737/article/details/85233408"
+        android:title="一个Python项目（带前端），部署到Docker的完整过程"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_13"
+        android:summary="https://www.jianshu.com/p/22c50ded4cf7"
+        android:title="深度学习 | 三个概念：Epoch, Batch, Iteration"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_14"
+        android:summary="https://zhuanlan.zhihu.com/p/100295074"
+        android:title="七星炼丹炉-NLP、炼丹技巧和基础理论文章索引"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_15"
+        android:summary="https://blog.csdn.net/u011774501/article/details/84809290"
+        android:title="使用PreferenceFragment快速实现app设置页面"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_16"
+        android:summary="https://zhuanlan.zhihu.com/p/41423739"
+        android:title="一文读懂VGG网络"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_17"
+        android:summary="https://www.jianshu.com/p/a60b609ec7e7"
+        android:title="序列化Serializable和Parcelable的理解和区别"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_18"
+        android:summary="https://www.jianshu.com/p/ad040aab0e66"
+        android:title="Android官方架构组件Navigation：大巧不工的Fragment管理框架"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="about_reference_19"
+        android:summary="https://www.cnblogs.com/xqz0618/"
+        android:title="汪菜菜学习笔记"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

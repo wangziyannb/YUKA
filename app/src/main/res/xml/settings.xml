@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="基本设置">
+        <ListPreference
+            android:entries="@array/detect_languages"
+            android:entryValues="@array/model"
+            android:key="settings_detect_language"
+            android:title="识别语言" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="翻译设置">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_trans_switch"
+            android:summaryOff="仅识别"
+            android:summaryOn="已启用"
+            android:title="启用翻译" />
+        <ListPreference
+            android:dependency="settings_trans_switch"
+            android:entries="@array/translator_name"
+            android:entryValues="@array/translator"
+            android:key="settings_trans_translator"
+            android:summary="默认谷歌"
+            android:title="翻译器选择" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="settings_trans_switch"
+            android:key="settings_trans_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换（百度翻译）" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="悬浮窗设置">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_window_multiple"
+            android:title="启用复数悬浮框" />
+        <SeekBarPreference
+            android:title="悬浮框数量"
+            android:dependency="settings_window_multiple"
+            android:key="settings_window_number"
+            android:max="4"
+            app:adjustable="true"
+            app:defaultValue="1"
+            app:min="1"
+            app:seekBarIncrement="1" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="进阶设置">
+        <SwitchPreference
+            android:key="settings_fastMode"
+            android:summary="高性能要求"
+            android:title="快速识别" />
+        <SwitchPreference
+            android:key="settings_continuousMode"
+            android:summary="将强制快速截图，需禁用复数悬浮框"
+            android:title="半自动模式" />
+        <SeekBarPreference
+            android:dependency="settings_continuousMode"
+            android:key="settings_continuousMode_interval"
+            android:max="6"
+            android:title="识别间隔（秒）"
+            app:adjustable="true"
+            app:defaultValue="6"
+            app:min="2"
+            app:seekBarIncrement="1" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="进阶设置">
+        <Preference
+            android:key="settings_developer"
+            android:title="开发者选项" />
+    </PreferenceCategory>
+</PreferenceScreen>

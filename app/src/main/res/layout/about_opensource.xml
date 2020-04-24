@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="EasyFloat: \nhttps://github.com/princekin-f/EasyFloat"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="AndroidScreenShot_SysApi: \nhttps://github.com/BruceWind/AndroidScreenShot_SysApi"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="chinese_ocr: \nhttps://github.com/YCG09/chinese_ocr"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="vision-web-service: \nhttps://github.com/sherlockchou86/vision-web-service"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="text_renderer: \nhttps://github.com/Sanster/text_renderer"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="okhttp: \nhttps://github.com/square/okhttp"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+    </LinearLayout>
+</ScrollView>

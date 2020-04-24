@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="settings_button" type="id" />
+    <item name="detect_button" type="id" />
+    <item name="reset_button" type="id" />
+    <item name="exit_button" type="id" />
+</resources>

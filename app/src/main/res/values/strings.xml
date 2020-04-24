@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">YUKA</string>
+    <string name="True">1</string>
+    <string name="False">0</string>
+    <string-array name="mode">
+        <item>ocr</item>
+        <item>translate</item>
+        <item>yuka</item>
+    </string-array>
+    <string-array name="model">
+        <item>google</item>
+        <item>chn</item>
+        <item>eng</item>
+    </string-array>
+    <string-array name="detect_languages">
+        <item>自动（Google Cloud Vision）</item>
+        <item>中文（白底黑字最佳）</item>
+        <item>英语（未训练完）</item>
+    </string-array>
+    <string-array name="translator_name">
+        <item>Google</item>
+        <item>百度翻译</item>
+        <item>有道翻译</item>
+    </string-array>
+    <string-array name="translator">
+        <item>google</item>
+        <item>baidu</item>
+        <item>youdao</item>
+    </string-array>
+
+</resources>
