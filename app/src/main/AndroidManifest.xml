@@ -30,6 +30,10 @@
             android:name=".tools.screenshot.ScreenShotService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
+        <service
+            android:name=".tools.screenshot.SingleScreenShotService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
     </application>
 
 </manifest>

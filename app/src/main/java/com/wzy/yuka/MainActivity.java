@@ -15,7 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.lzf.easyfloat.EasyFloat;
-import com.wzy.yuka.tools.floatwindow.FloatWindow;
+import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (EasyFloat.getAppFloatView("startBtn") != null) {
-            FloatWindow.dismissAllFloatWindow(true);
-            FloatWindow.initFloatWindow(this);
+            FloatWindowManager.dismissAllFloatWindow(true);
+            FloatWindowManager.initFloatWindow(this);
         }
     }
 }

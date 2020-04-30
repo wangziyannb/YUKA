@@ -12,7 +12,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindow;
+import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
@@ -20,7 +20,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-        if (FloatWindow.NumOfFloatWindows > 0) {
+        if (FloatWindowManager.getNumOfFloatWindows() > 0) {
             Toast.makeText(getContext(), "没有关闭所有悬浮窗（包括启动按钮），设置暂时不可用", Toast.LENGTH_SHORT).show();
             for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
                 getPreferenceScreen().getPreference(i).setEnabled(false);

@@ -1,101 +1,127 @@
 package com.wzy.yuka.tools.floatwindow;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.lzf.easyfloat.EasyFloat;
+import com.lzf.easyfloat.enums.ShowPattern;
+import com.lzf.easyfloat.enums.SidePattern;
+import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.tools.screenshot.ScreenShotService;
 
-public class FloatBall extends ViewGroup {
+/**
+ * Created by Ziyan on 2020/4/30.
+ */
+class FloatBall {
+    private String tag;
+    private Intent service;
 
-    static private boolean isleft = true;
-
-    public FloatBall(Context context) {
-        super(context);
+    FloatBall(Activity activity, String tag) {
+        this.tag = tag;
+        service = new Intent(activity, ScreenShotService.class);
+        EasyFloat.with(activity)
+                .setTag(tag)
+                .setLayout(R.layout.test, v -> {
+                    ImageButton imageButton = v.findViewById(R.id.test1);
+                    imageButton.getBackground().setAlpha(0);
+                    v.findViewById(R.id.test1).setOnClickListener(v1 -> {
+                        FloatBallLayout floatWindows = v.findViewById(R.id.test);
+                        if (SizeUtil.px2dp(v.getContext(), v.getWidth()) > 45) {
+                            do {
+                                floatWindows.removeViewAt(floatWindows.getChildCount() - 1);
+                            } while (floatWindows.getChildCount() != 1);
+                            View view = EasyFloat.getAppFloatView("mainFloatBall");
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            try {
+                                int currentFlags = (Integer) layoutParams.getClass().getField("privateFlags").get(layoutParams);
+                                layoutParams.getClass().getField("privateFlags").set(layoutParams, currentFlags | 0x00000040);
+                            } catch (Exception e) {
+                                //do nothing. Probably using other version of android
+                            }
+                            layoutParams.y = layoutParams.y + SizeUtil.dp2px(v.getContext(), 52);
+                            WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                            windowManager.updateViewLayout(view, layoutParams);
+                        } else {
+                            ImageButton[] imageButtons = new ImageButton[4];
+                            for (int i = 0; i < imageButtons.length; i++) {
+                                imageButtons[i] = new ImageButton(activity);
+                                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(activity, 45),
+                                        SizeUtil.dp2px(activity, 44));
+                                imageButtons[i].setLayoutParams(lp);
+                                switch (i) {
+                                    case 0:
+                                        imageButtons[i].setId(R.id.settings_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.settings);
+                                        break;
+                                    case 1:
+                                        imageButtons[i].setId(R.id.detect_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.detect);
+                                        imageButtons[i].setOnClickListener(v2 -> {
+                                            if (FloatWindowManager.getNumOfFloatWindows() > 0) {
+                                                FloatWindowManager.hideAllFloatWindow();
+                                                FloatWindowManager.startSS(activity);
+                                            } else {
+                                                Toast.makeText(activity, "还没有悬浮窗初始化呢，请从控制中启用悬浮窗", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        break;
+                                    case 2:
+                                        imageButtons[i].setId(R.id.reset_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.reset);
+                                        imageButtons[i].setOnClickListener(v2 -> {
+                                            activity.stopService(service);
+                                            FloatWindowManager.reset(activity);
+//                                            v.findViewById(R.id.reset_button).performClick();
+                                        });
+                                        break;
+                                    case 3:
+                                        imageButtons[i].setId(R.id.exit_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.exit);
+                                        imageButtons[i].setOnClickListener(v2 -> {
+                                            activity.stopService(service);
+                                            activity.finishAffinity();
+                                            System.exit(0);
+                                        });
+                                        break;
+                                }
+                                floatWindows.addView(imageButtons[i]);
+                            }
+                            View view = EasyFloat.getAppFloatView("mainFloatBall");
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            try {
+                                int currentFlags = (Integer) layoutParams.getClass().getField("privateFlags").get(layoutParams);
+                                layoutParams.getClass().getField("privateFlags").set(layoutParams, currentFlags | 0x00000040);
+                            } catch (Exception e) {
+                                //do nothing. Probably using other version of android
+                            }
+                            layoutParams.y = layoutParams.y - SizeUtil.dp2px(v.getContext(), 52);
+                            WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                            windowManager.updateViewLayout(view, layoutParams);
+                        }
+                    });
+                })
+                .setSidePattern(SidePattern.RESULT_HORIZONTAL)
+                .setShowPattern(ShowPattern.ALL_TIME)
+                .setDragEnable(true)
+                .setLocation(100, 100).show();
     }
 
-    public FloatBall(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    void dismiss() {
+        EasyFloat.dismissAppFloat(tag);
     }
 
-    public FloatBall(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    void hide() {
+        EasyFloat.hideAppFloat(tag);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
-        //测量并保存layout的宽高(使用getDefaultSize时，wrap_content和match_perent都是填充屏幕)
-        //稍后会重新写这个方法，能达到wrap_content的效果
-        if (getChildCount() == 1) {
-            setMeasuredDimension(getChildAt(0).getMeasuredWidth(), getChildAt(0).getMeasuredHeight());
-        } else {
-            setMeasuredDimension(widthMeasureSpec,
-                    heightMeasureSpec);
-        }
-
+    void show() {
+        EasyFloat.showAppFloat(tag);
     }
-
-    @Override
-    public void addView(View child) {
-        final int count = getChildCount();
-        super.addView(child, count);
-        LayoutParams layoutParams = getLayoutParams();
-        layoutParams.height = SizeUtil.dp2px(getContext(), 52 * 2 + 44);
-        layoutParams.width = SizeUtil.dp2px(getContext(), (float) (52 / 2 * Math.sqrt(3) + 44));
-        setLayoutParams(layoutParams);
-        Log.d("TAG", "addView: " + layoutParams.height + layoutParams.width);
-    }
-
-    @Override
-    public void removeViewAt(int index) {
-        super.removeViewAt(index);
-    }
-
-    public void addView() {
-
-    }
-
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d("TAG", "onSizeChanged:" + w + " " + h);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int[] center = {(right - left) / 2, (bottom - top) / 2};
-        Log.d("TAG", "onLayout: " + center[0] + " " + center[1]);
-        final int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            int radius = child.getMeasuredWidth() / 2;
-            if (count > 1) {
-                center[0] = center[0] - child.getWidth() / 2;
-                if (i == 0) {
-                    child.layout(center[0] - radius, center[1] - radius,
-                            center[0] + radius, center[1] + radius);
-                } else {
-                    int[] newCoordinate = calculate(center, SizeUtil.dp2px(getContext(), 52), i - 1);
-                    child.layout(newCoordinate[0] - radius, newCoordinate[1] - radius,
-                            newCoordinate[0] + radius, newCoordinate[1] + radius);
-                }
-            } else {
-                child.layout(center[0] - radius, center[1] - radius,
-                        center[0] + radius, center[1] + radius);
-            }
-            //确定子控件的位置，四个参数分别代表（左上右下）点的坐标值
-        }
-    }
-
-
-    private int[] calculate(int[] center, int radius, int index) {
-        int[] newCoordinate = new int[2];
-        newCoordinate[0] = (int) (center[0] + radius * Math.sin(((float) index / 6) * 2 * Math.PI));
-        newCoordinate[1] = (int) (center[1] - radius * Math.cos(((float) index / 6) * 2 * Math.PI));
-        return newCoordinate;
-    }
-
 }

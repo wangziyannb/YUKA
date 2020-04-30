@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/testFloatScale"
+    android:id="@+id/select_window_layout"
     android:layout_width="250dp"
     android:layout_height="120dp"
     android:background="@drawable/shape"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="选取目标位置后点识别\n右下角可改变框体大小\n每次调整大小后都必须位移选词窗"
-        android:textColor="@color/text_color_DarkBg"/>
+        android:textColor="@color/text_color_DarkBg" />
 
     <com.wzy.yuka.tools.floatwindow.ScaleImageView
         android:id="@+id/sw_scale"
