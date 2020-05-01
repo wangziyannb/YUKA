@@ -33,19 +33,7 @@
             android:title="全半角转换（百度翻译）" />
     </PreferenceCategory>
     <PreferenceCategory android:title="悬浮窗设置">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="settings_window_multiple"
-            android:title="启用复数悬浮框" />
-        <SeekBarPreference
-            android:title="悬浮框数量"
-            android:dependency="settings_window_multiple"
-            android:key="settings_window_number"
-            android:max="4"
-            app:adjustable="true"
-            app:defaultValue="1"
-            app:min="1"
-            app:seekBarIncrement="1" />
+        <Preference android:title="开发中..." />
     </PreferenceCategory>
     <PreferenceCategory android:title="进阶设置">
         <SwitchPreference
@@ -55,7 +43,7 @@
         <SwitchPreference
             android:key="settings_continuousMode"
             android:summary="将强制快速截图，需禁用复数悬浮框"
-            android:title="半自动模式" />
+            android:title="半自动模式（现版本无效）" />
         <SeekBarPreference
             android:dependency="settings_continuousMode"
             android:key="settings_continuousMode_interval"

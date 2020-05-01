@@ -40,7 +40,7 @@ import okhttp3.Response;
 /**
  * Created by Ziyan on 2020/4/30.
  */
-public class SingleScreenShotService extends Service implements GlobalHandler.HandleMsgListener {
+public class ScreenShotService_Single extends Service implements GlobalHandler.HandleMsgListener {
     private final String TAG = "SingleScreenShotService";
     private GlobalHandler globalHandler;
 

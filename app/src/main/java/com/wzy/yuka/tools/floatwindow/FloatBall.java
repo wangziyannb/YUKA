@@ -3,6 +3,7 @@ package com.wzy.yuka.tools.floatwindow;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
+import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.tools.screenshot.ScreenShotService;
@@ -30,15 +32,17 @@ class FloatBall {
                 .setTag(tag)
                 .setLayout(R.layout.test, v -> {
                     ImageButton imageButton = v.findViewById(R.id.test1);
-                    imageButton.getBackground().setAlpha(0);
+                    imageButton.getBackground().setAlpha(50);
                     v.findViewById(R.id.test1).setOnClickListener(v1 -> {
                         FloatBallLayout floatWindows = v.findViewById(R.id.test);
                         if (SizeUtil.px2dp(v.getContext(), v.getWidth()) > 45) {
                             do {
                                 floatWindows.removeViewAt(floatWindows.getChildCount() - 1);
                             } while (floatWindows.getChildCount() != 1);
-                            View view = EasyFloat.getAppFloatView("mainFloatBall");
-                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            imageButton.setBackgroundResource(R.drawable.main);
+
+
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) v.getLayoutParams();
                             try {
                                 int currentFlags = (Integer) layoutParams.getClass().getField("privateFlags").get(layoutParams);
                                 layoutParams.getClass().getField("privateFlags").set(layoutParams, currentFlags | 0x00000040);
@@ -47,52 +51,8 @@ class FloatBall {
                             }
                             layoutParams.y = layoutParams.y + SizeUtil.dp2px(v.getContext(), 52);
                             WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-                            windowManager.updateViewLayout(view, layoutParams);
+                            windowManager.updateViewLayout(v, layoutParams);
                         } else {
-                            ImageButton[] imageButtons = new ImageButton[4];
-                            for (int i = 0; i < imageButtons.length; i++) {
-                                imageButtons[i] = new ImageButton(activity);
-                                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(activity, 45),
-                                        SizeUtil.dp2px(activity, 44));
-                                imageButtons[i].setLayoutParams(lp);
-                                switch (i) {
-                                    case 0:
-                                        imageButtons[i].setId(R.id.settings_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.settings);
-                                        break;
-                                    case 1:
-                                        imageButtons[i].setId(R.id.detect_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.detect);
-                                        imageButtons[i].setOnClickListener(v2 -> {
-                                            if (FloatWindowManager.getNumOfFloatWindows() > 0) {
-                                                FloatWindowManager.hideAllFloatWindow();
-                                                FloatWindowManager.startSS(activity);
-                                            } else {
-                                                Toast.makeText(activity, "还没有悬浮窗初始化呢，请从控制中启用悬浮窗", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                        break;
-                                    case 2:
-                                        imageButtons[i].setId(R.id.reset_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.reset);
-                                        imageButtons[i].setOnClickListener(v2 -> {
-                                            activity.stopService(service);
-                                            FloatWindowManager.reset(activity);
-//                                            v.findViewById(R.id.reset_button).performClick();
-                                        });
-                                        break;
-                                    case 3:
-                                        imageButtons[i].setId(R.id.exit_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.exit);
-                                        imageButtons[i].setOnClickListener(v2 -> {
-                                            activity.stopService(service);
-                                            activity.finishAffinity();
-                                            System.exit(0);
-                                        });
-                                        break;
-                                }
-                                floatWindows.addView(imageButtons[i]);
-                            }
                             View view = EasyFloat.getAppFloatView("mainFloatBall");
                             WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                             try {
@@ -101,16 +61,78 @@ class FloatBall {
                             } catch (Exception e) {
                                 //do nothing. Probably using other version of android
                             }
+                            //todo 有bug导致展开不完全
                             layoutParams.y = layoutParams.y - SizeUtil.dp2px(v.getContext(), 52);
                             WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
                             windowManager.updateViewLayout(view, layoutParams);
+                            imageButton.setVisibility(View.INVISIBLE);
+                            Handler handler = new Handler();
+                            handler.postDelayed(() -> {
+                                imageButton.setVisibility(View.VISIBLE);
+                                imageButton.setBackgroundResource(R.drawable.close);
+                                ImageButton[] imageButtons = new ImageButton[4];
+                                for (int i = 0; i < imageButtons.length; i++) {
+                                    imageButtons[i] = new ImageButton(activity);
+                                    ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(activity, 45),
+                                            SizeUtil.dp2px(activity, 44));
+                                    imageButtons[i].setLayoutParams(lp);
+                                    switch (i) {
+                                        case 0:
+                                            imageButtons[i].setId(R.id.settings_button);
+                                            imageButtons[i].setBackgroundResource(R.drawable.settings);
+                                            imageButtons[i].setOnClickListener(v2 -> {
+
+                                                Intent intent = new Intent(activity, MainActivity.class);
+                                                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                                                intent.setAction(Intent.ACTION_MAIN);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                                                activity.startActivity(intent);
+                                                MainActivity.navController.navigate(R.id.nav_settings);
+                                            });
+                                            break;
+                                        case 1:
+                                            imageButtons[i].setId(R.id.detect_button);
+                                            imageButtons[i].setBackgroundResource(R.drawable.detect);
+                                            imageButtons[i].setOnClickListener(v2 -> {
+                                                if (FloatWindowManager.getNumOfFloatWindows() > 0) {
+                                                    FloatWindowManager.hideAllFloatWindow();
+                                                    FloatWindowManager.startScreenShot(activity);
+                                                } else {
+                                                    Toast.makeText(activity, "还没有悬浮窗初始化呢！", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                            break;
+                                        case 2:
+                                            imageButtons[i].setId(R.id.reset_button);
+                                            imageButtons[i].setBackgroundResource(R.drawable.reset);
+                                            imageButtons[i].setOnClickListener(v2 -> {
+                                                activity.stopService(service);
+                                                FloatWindowManager.reset(activity);
+//                                            v.findViewById(R.id.reset_button).performClick();
+                                            });
+                                            break;
+                                        case 3:
+                                            imageButtons[i].setId(R.id.exit_button);
+                                            imageButtons[i].setBackgroundResource(R.drawable.exit);
+                                            imageButtons[i].setOnClickListener(v2 -> {
+                                                activity.stopService(service);
+                                                activity.finishAffinity();
+                                                System.exit(0);
+                                            });
+                                            break;
+                                    }
+                                    floatWindows.addView(imageButtons[i]);
+                                }
+                            }, 10);
+
+
                         }
                     });
                 })
                 .setSidePattern(SidePattern.RESULT_HORIZONTAL)
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setDragEnable(true)
-                .setLocation(100, 100).show();
+                .setLocation(500, 500).show();
     }
 
     void dismiss() {

@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.LengthUtil;
-import com.wzy.yuka.tools.screenshot.SingleScreenShotService;
+import com.wzy.yuka.tools.screenshot.ScreenShotService_Single;
 
 /**
  * The type Float window.
@@ -48,9 +48,9 @@ public class FloatWindowManager {
      *
      * @param activity the activity
      */
-    public static void startSS(Activity activity) {
+    static void startScreenShot(Activity activity) {
         setLocation();
-        Intent service = new Intent(activity, SingleScreenShotService.class);
+        Intent service = new Intent(activity, ScreenShotService_Single.class);
         if (getNumOfFloatWindows() != 0) {
             hideAllFloatWindow();
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -69,11 +69,10 @@ public class FloatWindowManager {
      * @param activity intent使用
      * @param index    调用的对象的index
      */
-    public static void startSS(Activity activity, int index) {
-        //todo
+    static void startScreenShot(Activity activity, int index) {
         location = new int[1][4];
         location[0] = selectWindows[index].location;
-        Intent service = new Intent(activity, SingleScreenShotService.class);
+        Intent service = new Intent(activity, ScreenShotService_Single.class);
         service.putExtra("index", index);
         if (getNumOfFloatWindows() != 0) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -82,6 +81,9 @@ public class FloatWindowManager {
                 activity.startForegroundService(service);
             }
         }
+    }
+
+    static void startScreenShot(Activity activity, boolean yes) {
 
     }
 
@@ -211,10 +213,6 @@ public class FloatWindowManager {
         } else {
             return 0;
         }
-    }
-
-    interface startSingleSS {
-
     }
 
 }

@@ -31,7 +31,7 @@
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".tools.screenshot.SingleScreenShotService"
+            android:name=".tools.screenshot.ScreenShotService_Single"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
     </application>

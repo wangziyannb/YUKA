@@ -55,7 +55,7 @@ public class SelectWindow {
                     view1.findViewById(R.id.sw_close).setOnClickListener(v1 -> dismiss());
                     view1.findViewById(R.id.sw_translate).setOnClickListener(v1 -> {
                         hide();
-                        FloatWindowManager.startSS(activity, index);
+                        FloatWindowManager.startScreenShot(activity, index);
                     });
                     view1.findViewById(R.id.sw_addwindows).setOnClickListener(v1 -> {
                         FloatWindowManager.addSelectWindow(activity);

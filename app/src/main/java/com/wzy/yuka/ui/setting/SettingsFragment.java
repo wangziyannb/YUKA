@@ -21,40 +21,40 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
         if (FloatWindowManager.getNumOfFloatWindows() > 0) {
-            Toast.makeText(getContext(), "没有关闭所有悬浮窗（包括启动按钮），设置暂时不可用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "没有关闭所有悬浮窗(不包括悬浮球)，设置暂时不可用", Toast.LENGTH_SHORT).show();
             for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
                 getPreferenceScreen().getPreference(i).setEnabled(false);
             }
         }
 
         getPreferenceScreen().findPreference("settings_developer").setOnPreferenceClickListener(this);
-        getPreferenceScreen().findPreference("settings_window_multiple").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue.equals(true)) {
-                    if (getPreferenceScreen().findPreference("settings_continuousMode").isEnabled()) {
-                        if (getPreferenceScreen().findPreference("settings_continuousMode")
-                                .getSharedPreferences().getBoolean("settings_continuousMode", false)) {
-                            getPreferenceScreen().findPreference("settings_continuousMode").performClick();
-                        }
-                        getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
-                    }
-                } else {
-                    getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(true);
-                }
-                return true;
-            }
-        });
+//        getPreferenceScreen().findPreference("settings_window_multiple").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                if (newValue.equals(true)) {
+//                    if (getPreferenceScreen().findPreference("settings_continuousMode").isEnabled()) {
+//                        if (getPreferenceScreen().findPreference("settings_continuousMode")
+//                                .getSharedPreferences().getBoolean("settings_continuousMode", false)) {
+//                            getPreferenceScreen().findPreference("settings_continuousMode").performClick();
+//                        }
+//                        getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
+//                    }
+//                } else {
+//                    getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(true);
+//                }
+//                return true;
+//            }
+//        });
 
         //复数窗口启动时，持续模式禁用
-        if (getPreferenceScreen().findPreference("settings_window_multiple")
-                .getSharedPreferences().getBoolean("settings_window_multiple", false)) {
-            if (getPreferenceScreen().findPreference("settings_continuousMode")
-                    .getSharedPreferences().getBoolean("settings_continuousMode", false)) {
-                getPreferenceScreen().findPreference("settings_continuousMode").performClick();
-            }
-            getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
-        }
+//        if (getPreferenceScreen().findPreference("settings_window_multiple")
+//                .getSharedPreferences().getBoolean("settings_window_multiple", false)) {
+//            if (getPreferenceScreen().findPreference("settings_continuousMode")
+//                    .getSharedPreferences().getBoolean("settings_continuousMode", false)) {
+//                getPreferenceScreen().findPreference("settings_continuousMode").performClick();
+//            }
+//            getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
+//        }
     }
 
     @Nullable
