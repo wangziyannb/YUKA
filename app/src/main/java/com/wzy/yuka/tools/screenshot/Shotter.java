@@ -135,7 +135,7 @@ public class Shotter {
             if (params == null || params.length < 1 || params[0] == null) {
                 return null;
             }
-            Log.e("shotter", "开始工作");
+            Log.d("shotter", "开始工作");
             Image image = params[0];
             int width = image.getWidth();
             int height = image.getHeight();

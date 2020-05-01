@@ -9,10 +9,9 @@
             android:key="settings_detect_language"
             android:title="识别语言" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="翻译设置">
+    <PreferenceCategory android:title="翻译设置">
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="settings_trans_switch"
             android:summaryOff="仅识别"
             android:summaryOn="已启用"
@@ -32,7 +31,25 @@
             android:summaryOn="翻译日韩文等"
             android:title="全半角转换（百度翻译）" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="悬浮窗设置">
+    <PreferenceCategory android:title="悬浮球设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_ball_autoClose"
+            android:summaryOff="点击按钮后收回面板"
+            android:summaryOn="对设置按钮无效（需要连点）"
+            android:title="自动收回" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_ball_safeMode"
+            android:summary="启用安全区域，防止错误展开"
+            android:title="安全模式" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_ball_fluidMode"
+            android:summary="流体手势启用隐藏导航栏时使用"
+            android:title="流体手势兼容" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="取词窗设置">
         <Preference android:title="开发中..." />
     </PreferenceCategory>
     <PreferenceCategory android:title="进阶设置">
@@ -53,8 +70,6 @@
             app:defaultValue="6"
             app:min="2"
             app:seekBarIncrement="1" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="进阶设置">
         <Preference
             android:key="settings_developer"
             android:title="开发者选项" />

@@ -24,7 +24,7 @@ import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
-import com.wzy.yuka.tools.params.GetClientParams;
+import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -162,7 +162,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                     }
                 };
             }
-            HttpRequest.requestTowardsYukaServer(GetClientParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
+            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
         });
     }
 

@@ -20,8 +20,8 @@ public class FloatWindowManager {
     //location 0 1 2 3 = lA 0 1 + lB 0 1
     private static int[][] location;
     private static SelectWindow[] selectWindows;
-    private static FloatBall floatBall;
-
+    public static FloatBall floatBall;
+    private static int sum = 0;
     public static void initFloatWindow(Activity activity) {
         floatBall = new FloatBall(activity, "mainFloatBall");
     }
@@ -37,7 +37,8 @@ public class FloatWindowManager {
         } else {
             location = LengthUtil.appendIndex(location);
             selectWindows = LengthUtil.appendIndex(selectWindows);
-            selectWindows[selectWindows.length - 1] = new SelectWindow(activity, "selectWindow" + (selectWindows.length - 1), selectWindows.length - 1);
+            selectWindows[selectWindows.length - 1] = new SelectWindow(activity, "selectWindow" + sum, selectWindows.length - 1);
+            sum += 1;
         }
     }
 
@@ -184,8 +185,18 @@ public class FloatWindowManager {
         }
         if (!except) {
             floatBall.dismiss();
+            floatBall = null;
         }
     }
+
+    public static void dismissFloatWindow(int index) {
+
+        if (getNumOfFloatWindows() != 0) {
+            selectWindows[index] = null;
+        }
+        selectWindows = LengthUtil.discardNull(selectWindows);
+    }
+
 
     /**
      * 重置功能：

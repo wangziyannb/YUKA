@@ -6,8 +6,8 @@
 
     <ImageButton
         android:id="@+id/test1"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:background="#00000000"
         android:scaleType="fitCenter"
         android:src="@drawable/main" />

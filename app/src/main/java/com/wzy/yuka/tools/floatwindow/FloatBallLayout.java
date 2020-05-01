@@ -2,7 +2,6 @@ package com.wzy.yuka.tools.floatwindow;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,7 +9,7 @@ import com.wzy.yuka.tools.params.SizeUtil;
 
 public class FloatBallLayout extends ViewGroup {
     //todo 需要判断在左还是在右
-    static private boolean isleft = true;
+    private boolean mIsLeft = true;
 
     public FloatBallLayout(Context context) {
         super(context);
@@ -44,8 +43,8 @@ public class FloatBallLayout extends ViewGroup {
         LayoutParams layoutParams = getLayoutParams();
         layoutParams.height = SizeUtil.dp2px(getContext(), 52 * 2 + 44);
         layoutParams.width = SizeUtil.dp2px(getContext(), (float) (52 / 2 * Math.sqrt(3) + 44));
+
         setLayoutParams(layoutParams);
-        Log.d("TAG", "addView: " + layoutParams.height + layoutParams.width);
     }
 
     @Override
@@ -53,26 +52,28 @@ public class FloatBallLayout extends ViewGroup {
         super.removeViewAt(index);
     }
 
-    public void addView() {
-
-    }
-
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d("TAG", "onSizeChanged:" + w + " " + h);
+    }
+
+    public void setIsLeft(boolean isLeft) {
+        this.mIsLeft = isLeft;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int[] center = {(right - left) / 2, (bottom - top) / 2};
-        Log.d("TAG", "onLayout: " + center[0] + " " + center[1]);
         final int count = getChildCount();
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             int radius = child.getMeasuredWidth() / 2;
             if (count > 1) {
-                center[0] = center[0] - child.getWidth() / 2;
+                if (mIsLeft) {
+                    center[0] = center[0] - child.getWidth() / 2;
+                } else {
+                    center[0] = center[0] + child.getWidth() / 2;
+                }
                 if (i == 0) {
                     child.layout(center[0] - radius, center[1] - radius,
                             center[0] + radius, center[1] + radius);
@@ -91,7 +92,11 @@ public class FloatBallLayout extends ViewGroup {
 
     private int[] calculate(int[] center, int radius, int index) {
         int[] newCoordinate = new int[2];
-        newCoordinate[0] = (int) (center[0] + radius * Math.sin(((float) index / 6) * 2 * Math.PI));
+        if (mIsLeft) {
+            newCoordinate[0] = (int) (center[0] + radius * Math.sin(((float) index / 6) * 2 * Math.PI));
+        } else {
+            newCoordinate[0] = (int) (center[0] - radius * Math.sin(((float) index / 6) * 2 * Math.PI));
+        }
         newCoordinate[1] = (int) (center[1] - radius * Math.cos(((float) index / 6) * 2 * Math.PI));
         return newCoordinate;
     }

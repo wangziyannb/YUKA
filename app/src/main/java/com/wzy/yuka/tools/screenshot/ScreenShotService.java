@@ -25,7 +25,7 @@ import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
-import com.wzy.yuka.tools.params.GetClientParams;
+import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +77,7 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
                     globalHandler.sendMessage(message);
                 }
             };
-            HttpRequest.requestTowardsYukaServer(GetClientParams.getParamsForReq(this), screenshot.getFileNames()[0], callback);
+            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames()[0], callback);
         });
     };
 
@@ -296,7 +296,7 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
                     }
                 };
             }
-            HttpRequest.requestTowardsYukaServer(GetClientParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
+            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
         });
         //怎么中断这个过程？
         if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
