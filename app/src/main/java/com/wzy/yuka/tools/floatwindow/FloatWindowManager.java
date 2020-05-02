@@ -9,7 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wzy.yuka.R;
+import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
+import com.wzy.yuka.tools.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.tools.screenshot.ScreenShotService_Single;
 
 /**
@@ -20,8 +22,9 @@ public class FloatWindowManager {
     //location 0 1 2 3 = lA 0 1 + lB 0 1
     private static int[][] location;
     private static SelectWindow[] selectWindows;
-    public static FloatBall floatBall;
+    private static FloatBall floatBall;
     private static int sum = 0;
+
     public static void initFloatWindow(Activity activity) {
         floatBall = new FloatBall(activity, "mainFloatBall");
     }
@@ -32,7 +35,11 @@ public class FloatWindowManager {
      * @param activity the activity
      */
     static void addSelectWindow(Activity activity) {
-        if (getNumOfFloatWindows() == 5) {
+        int limit = 5;
+        if (GetParams.getParamsForAdvanceSettings(activity)[1] == 1) {
+            limit = 1;
+        }
+        if (getNumOfFloatWindows() == limit) {
             Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
         } else {
             location = LengthUtil.appendIndex(location);
@@ -52,6 +59,9 @@ public class FloatWindowManager {
     static void startScreenShot(Activity activity) {
         setLocation();
         Intent service = new Intent(activity, ScreenShotService_Single.class);
+        if (GetParams.getParamsForAdvanceSettings(activity)[1] == 1) {
+            service = new Intent(activity, ScreenShotService_Continue.class);
+        }
         if (getNumOfFloatWindows() != 0) {
             hideAllFloatWindow();
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -74,6 +84,9 @@ public class FloatWindowManager {
         location = new int[1][4];
         location[0] = selectWindows[index].location;
         Intent service = new Intent(activity, ScreenShotService_Single.class);
+        if (GetParams.getParamsForAdvanceSettings(activity)[1] == 1) {
+            service = new Intent(activity, ScreenShotService_Continue.class);
+        }
         service.putExtra("index", index);
         if (getNumOfFloatWindows() != 0) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -112,22 +125,22 @@ public class FloatWindowManager {
         }
     }
 
-    /**
-     * 获取所有的在数组中的SelectWindow对象的TextView.
-     *
-     * @return TextView数组
-     */
+    @Deprecated
     public static TextView[] getAllTextViews() {
-        if (getNumOfFloatWindows() != 0) {
-            TextView[] textViews = new TextView[selectWindows.length];
-            for (int i = 0; i < selectWindows.length; i++) {
-                textViews[i] = selectWindows[i].getTextView();
-            }
-            return textViews;
-        } else {
-            Log.e(TAG, "error in getAllTextViews:selectWindows is not initialized");
-        }
         return null;
+    }
+
+    /**
+     * 显示结果于指定index的悬浮窗中
+     * origin可指定参数，如yuka error为okhttp出现错误
+     *
+     * @param origin      原文，可能为参数
+     * @param translation 译文，可能为参数对应字符串
+     * @param time        耗时，错误时为0
+     * @param index       the index
+     */
+    public static void showResultsIndex(String origin, String translation, double time, int index) {
+        selectWindows[index].showResults(origin, translation, time);
     }
 
     /**
@@ -153,20 +166,15 @@ public class FloatWindowManager {
         if (getNumOfFloatWindows() != 0) {
             if (index != 1000 && after) {
                 selectWindows[index].show();
-                TextView textView = selectWindows[index].getTextView();
-                textView.setText("目标图片已发送，请等待...");
-                textView.setTextColor(Color.WHITE);
-                textView.setBackgroundResource(R.color.blackBg);
+                selectWindows[index].showResults("before response", "目标图片已发送，请等待...", 0);
             } else {
                 for (SelectWindow selectWindow : selectWindows) {
                     selectWindow.show();
                     if (after) {
-                        TextView textView = selectWindow.getTextView();
-                        textView.setText("目标图片已发送，请等待...");
-                        textView.setTextColor(Color.WHITE);
-                        textView.setBackgroundResource(R.color.blackBg);
+                        selectWindow.showResults("before response", "目标图片已发送，请等待...", 0);
                     }
                 }
+
             }
         }
     }
@@ -189,14 +197,19 @@ public class FloatWindowManager {
         }
     }
 
-    public static void dismissFloatWindow(int index) {
+    /**
+     * 根据index删除一个SelectWindow对象
+     * 目前由SelectWindow对象调用
+     *
+     * @param index the index
+     */
+    static void dismissFloatWindow(int index) {
 
         if (getNumOfFloatWindows() != 0) {
             selectWindows[index] = null;
         }
         selectWindows = LengthUtil.discardNull(selectWindows);
     }
-
 
     /**
      * 重置功能：

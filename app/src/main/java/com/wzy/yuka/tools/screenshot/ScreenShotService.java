@@ -51,7 +51,6 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
     private int interval;
     //todo 没能解决中止得问题，removeCallback无效
     private Runnable continuouslySS = () -> {
-
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         screenshot.getScreenshot(true, 300, HomeFragment.data, () -> {
             FloatWindowManager.showAllFloatWindow(true, 1000);

@@ -8,6 +8,8 @@ import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 
+import java.util.Map;
+
 public class GetParams {
 
     public static String[] getParamsForReq(Context context) {
@@ -56,10 +58,35 @@ public class GetParams {
 
     public static boolean[] getParamsForFloatBall(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean[] params = new boolean[3];
+        boolean[] params = new boolean[4];
         params[0] = preferences.getBoolean("settings_ball_autoClose", true);
-        params[1] = preferences.getBoolean("settings_ball_safeMode", true);
-        params[2] = preferences.getBoolean("settings_ball_fluidMode", false);
+        params[1] = preferences.getBoolean("settings_ball_openLock", true);
+        params[2] = preferences.getBoolean("settings_ball_safeMode", true);
+        params[3] = preferences.getBoolean("settings_ball_fluidMode", false);
+
+        return params;
+    }
+
+    public static boolean[] getParamsForSelectWindow(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean[] params = new boolean[3];
+        params[0] = preferences.getBoolean("settings_window_textBlackBg", true);
+        //params[1] = preferences.getInt("settings_window_opacityBg", 50);
+        params[1] = preferences.getBoolean("settings_window_originalText", false);
+        params[2] = preferences.getBoolean("settings_window_showTime", false);
+        return params;
+    }
+
+    public static int[] getParamsForAdvanceSettings(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int[] params = new int[3];
+        if(preferences.getBoolean("settings_fastMode", true)){
+            params[0] = 1;
+        }
+        if(preferences.getBoolean("settings_continuousMode", false)){
+            params[1] = 1;
+        }
+        params[2] = preferences.getInt("settings_continuousMode_interval", 6);
         return params;
     }
 }

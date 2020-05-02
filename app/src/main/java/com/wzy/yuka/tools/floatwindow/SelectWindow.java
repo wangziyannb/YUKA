@@ -1,19 +1,29 @@
 package com.wzy.yuka.tools.floatwindow;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.R;
+import com.wzy.yuka.tools.params.GetParams;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.text.DecimalFormat;
 
 /**
  * Created by Ziyan on 2020/4/29.
@@ -23,6 +33,7 @@ public class SelectWindow implements View.OnClickListener {
     private int index;
     private String tag;
     private Activity activity;
+
     SelectWindow(Activity activity, String tag, int index) {
         location = new int[4];
         this.activity = activity;
@@ -32,6 +43,15 @@ public class SelectWindow implements View.OnClickListener {
                 .setTag(tag)
                 .setLayout(R.layout.select_window, view1 -> {
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
+                    //改变悬浮框透明度
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+                    GradientDrawable drawable = (GradientDrawable) rl.getBackground();
+                    int alpha=(int)Math.round(preferences.getInt("settings_window_opacityBg", 50)*2.55);
+                    String alpha_hex=Integer.toHexString(alpha).toUpperCase();
+                    if(alpha_hex.length()==1){
+                        alpha_hex="0"+alpha_hex;
+                    }
+                    drawable.setColor(Color.parseColor("#"+alpha_hex+"000000"));
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rl.getLayoutParams();
                     ScaleImageView si = view1.findViewById(R.id.sw_scale);
                     si.setOnScaledListener((x, y, event) -> {
@@ -53,11 +73,9 @@ public class SelectWindow implements View.OnClickListener {
                         setLocation();
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                     });
-                    view1.findViewById(R.id.sw_close).setOnClickListener(v1 -> dismiss());
+                    view1.findViewById(R.id.sw_close).setOnClickListener(this);
                     view1.findViewById(R.id.sw_translate).setOnClickListener(this);
-                    view1.findViewById(R.id.sw_addwindows).setOnClickListener(v1 -> {
-                        FloatWindowManager.addSelectWindow(activity);
-                    });
+                    view1.findViewById(R.id.sw_addwindows).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setLocation(100, 100)
@@ -118,10 +136,38 @@ public class SelectWindow implements View.OnClickListener {
         this.index = index;
     }
 
-    TextView getTextView() {
+    void showResults(String origin, String translation, double time){
         View view = EasyFloat.getAppFloatView(tag);
-
-        return view.findViewById(R.id.translatedText);
+        TextView textView=view.findViewById(R.id.translatedText);
+        boolean[]params =GetParams.getParamsForSelectWindow(activity);
+        if(params[0]){
+            textView.setBackgroundResource(R.color.blackBg);
+        }else{
+            textView.setBackgroundResource(0);
+        }
+        if(origin.equals("yuka error")){
+            textView.setText(translation);
+            textView.setTextColor(activity.getResources().getColor(R.color.colorError,null));
+            return;
+        }
+        if(origin.equals("before response")){
+            textView.setText(translation);
+            textView.setTextColor(activity.getResources().getColor(R.color.text_color_DarkBg,null));
+            return;
+        }
+        if(params[1]){
+            textView.setText("原文： ");
+            textView.append(origin);
+            textView.append("\n译文： ");
+            textView.append(translation);
+        }else{
+            textView.setText("译文： ");
+            textView.append(translation);
+        }
+        if(params[2]){
+            DecimalFormat df = new DecimalFormat("#0.000");
+            Toast.makeText(activity,"耗时"+df.format(time)+"秒",Toast.LENGTH_SHORT).show();
+        }
     }
 
     void dismiss() {
@@ -139,7 +185,17 @@ public class SelectWindow implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        hide();
-        FloatWindowManager.startScreenShot(activity, index);
+        switch (v.getId()) {
+            case R.id.sw_close:
+                dismiss();
+                break;
+            case R.id.sw_translate:
+                hide();
+                FloatWindowManager.startScreenShot(activity, index);
+                break;
+            case R.id.sw_addwindows:
+
+                FloatWindowManager.addSelectWindow(activity);
+        }
     }
 }

@@ -57,21 +57,18 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     }
 
     private void responseProcess(Message message) {
-        TextView[] textViews = FloatWindowManager.getAllTextViews();
         Bundle bundle = message.getData();
         int index = bundle.getInt("index");
         String response = bundle.getString("response");
-
         String fileName = bundle.getString("fileName");
         boolean save = bundle.getBoolean("save");
-
         Log.d(TAG, response);
         try {
             JSONObject resultJson = new JSONObject(response);
+            String origin = resultJson.getString("origin");
             String result = resultJson.getString("results");
-            textViews[index].setText(result);
-            textViews[index].setBackgroundResource(R.color.blackBg);
-            textViews[index].setTextColor(getResources().getColor(R.color.text_color_DarkBg));
+            double time = resultJson.getDouble("time");
+            FloatWindowManager.showResultsIndex(origin,result,time,index);
             if (save) {
                 ResultOutput.appendResult(this.getExternalFilesDir("screenshot").getAbsolutePath() + "/imgList.txt", fileName, result);
             }
@@ -82,13 +79,10 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     }
 
     private void errorProcess(Message message) {
-        TextView[] textViews = FloatWindowManager.getAllTextViews();
         Bundle bundle = message.getData();
         int index = bundle.getInt("index");
         String error = bundle.getString("error");
-        textViews[index].setText(error);
-        textViews[index].setBackgroundResource(R.color.blackBg);
-        textViews[index].setTextColor(getResources().getColor(R.color.colorError));
+        FloatWindowManager.showResultsIndex("yuka error",error,0,index);
     }
 
     @Override
@@ -125,7 +119,6 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         }
 
         screenshot.getScreenshot(true, delay, HomeFragment.data, () -> {
-            Log.d(TAG, "getScreenshot: " + index);
             FloatWindowManager.showAllFloatWindow(true, index);
             Callback[] callbacks = new Callback[FloatWindowManager.getLocation().length];
             String[] fileNames = screenshot.getFileNames();
@@ -171,7 +164,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         String id = "channel_01";
         CharSequence name = "Yuka";
-        String description = "服务已启动";
+        String description = "单次截屏服务已启动";
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
