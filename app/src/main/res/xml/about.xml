@@ -21,7 +21,7 @@
         <Preference
             android:iconSpaceReserved="false"
             android:key="about_about_server"
-            android:summary="2.2"
+            android:summary="2.3"
             android:title="服务器版本" />
         <Preference
             android:iconSpaceReserved="false"

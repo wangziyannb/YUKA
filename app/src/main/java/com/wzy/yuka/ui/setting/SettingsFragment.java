@@ -20,8 +20,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-        if (FloatWindowManager.getNumOfFloatWindows() > 0) {
-            Toast.makeText(getContext(), "没有关闭所有悬浮窗(不包括悬浮球)，持续模式设置暂时不可更改", Toast.LENGTH_SHORT).show();
+        if (FloatWindowManager.floatBall != null) {
+            Toast.makeText(getContext(), "没有关闭所有悬浮窗(包括悬浮球)，持续模式设置暂时不可更改", Toast.LENGTH_SHORT).show();
 //            for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
 //                getPreferenceScreen().getPreference(i).setEnabled(false);
 //            }

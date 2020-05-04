@@ -2,13 +2,11 @@ package com.wzy.yuka.tools.floatwindow;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
 import com.wzy.yuka.tools.screenshot.ScreenShotService_Continue;
@@ -22,7 +20,7 @@ public class FloatWindowManager {
     //location 0 1 2 3 = lA 0 1 + lB 0 1
     private static int[][] location;
     private static SelectWindow[] selectWindows;
-    private static FloatBall floatBall;
+    public static FloatBall floatBall;
     private static int sum = 0;
 
     public static void initFloatWindow(Activity activity) {

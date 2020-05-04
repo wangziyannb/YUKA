@@ -39,8 +39,9 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
                 String response = bundle1.getString("response");
                 try {
                     JSONObject resultJson = new JSONObject(response);
-                    String ocrResult = resultJson.getString("results");
-                    Toast.makeText(getContext(), ocrResult, Toast.LENGTH_SHORT).show();
+                    String version = resultJson.getString("origin");
+                    String update = resultJson.getString("results");
+                    Toast.makeText(getContext(), version + "\n" + update, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

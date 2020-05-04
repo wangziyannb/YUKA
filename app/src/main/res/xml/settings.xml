@@ -35,6 +35,11 @@
     <PreferenceCategory android:title="悬浮球设置">
         <SwitchPreference
             android:defaultValue="true"
+            android:key="settings_ball_autoHide"
+            android:summary="拖曳后3秒未点击自动隐藏"
+            android:title="贴边隐藏" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="settings_ball_autoClose"
             android:summaryOff="点击按钮后收回面板"
             android:summaryOn="对设置按钮无效（需要连点）"
@@ -94,7 +99,7 @@
         <SeekBarPreference
             android:dependency="settings_continuousMode"
             android:key="settings_continuousMode_interval"
-            android:max="6"
+            android:max="30"
             android:title="识别间隔（秒）"
             app:adjustable="true"
             app:defaultValue="6"

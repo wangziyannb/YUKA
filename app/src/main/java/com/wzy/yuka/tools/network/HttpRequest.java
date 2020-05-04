@@ -60,7 +60,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_main")
+                .url("https://wangclimxnb.xyz/yuka/")
                 .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient.Builder()

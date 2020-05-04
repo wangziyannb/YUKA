@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,11 +15,15 @@ import android.widget.Toast;
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
+import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.tools.screenshot.ScreenShotService;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by Ziyan on 2020/4/30.
@@ -33,7 +38,7 @@ class FloatBall implements View.OnClickListener {
         this.tag = tag;
         service = new Intent(activity, ScreenShotService.class);
         boolean[] params1 = GetParams.getParamsForFloatBall(activity);
-        if (!params1[3]) {
+        if (!params1[4]) {
             EasyFloat.with(activity)
                     .setTag(tag)
                     .setLayout(R.layout.float_ball, v -> {
@@ -44,12 +49,71 @@ class FloatBall implements View.OnClickListener {
                     .setSidePattern(SidePattern.RESULT_HORIZONTAL)
                     .setShowPattern(ShowPattern.ALL_TIME)
                     .setDragEnable(true)
+                    .registerCallbacks(new OnFloatCallbacks() {
+                        //WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                        WindowManager windowManager = activity.getWindowManager();
+                        Handler handler = new Handler();
+                        Runnable runnable = () -> {
+                            Point size = new Point();
+                            windowManager.getDefaultDisplay().getSize(size);
+                            View view = EasyFloat.getAppFloatView(tag);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                            if (layoutParams.x > size.x / 2) {
+                                //右边
+                                layoutParams.x += 70;
+                            } else {
+                                layoutParams.x = -70;
+                            }
+                            windowManager.updateViewLayout(view, layoutParams);
+                        };
+
+                        @Override
+                        public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
+
+                        }
+
+                        @Override
+                        public void show(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void hide(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void dismiss() {
+
+                        }
+
+                        @Override
+                        public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
+                            handler.removeCallbacks(runnable);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                            windowManager.updateViewLayout(view, layoutParams);
+                        }
+
+                        @Override
+                        public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
+
+                        }
+
+                        @Override
+                        public void dragEnd(@NotNull View view) {
+                            if (GetParams.getParamsForFloatBall(activity)[0]) {
+                                handler.postDelayed(runnable, 3000);
+                            }
+                        }
+                    })
                     .setDisplayHeight(context -> {
                         boolean[] params = GetParams.getParamsForFloatBall(activity);
                         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                         Point size = new Point();
                         windowManager.getDefaultDisplay().getSize(size);
-                        if (params[2]) {
+                        if (params[3]) {
                             if (size.x < size.y) {
                                 //竖屏
                                 return size.y - SizeUtil.dp2px(context, 52 + 11);
@@ -72,6 +136,65 @@ class FloatBall implements View.OnClickListener {
                     })
                     .setSidePattern(SidePattern.RESULT_HORIZONTAL)
                     .setShowPattern(ShowPattern.ALL_TIME)
+                    .registerCallbacks(new OnFloatCallbacks() {
+                        //WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                        WindowManager windowManager = activity.getWindowManager();
+                        Handler handler = new Handler();
+                        Runnable runnable = () -> {
+                            Point size = new Point();
+                            windowManager.getDefaultDisplay().getSize(size);
+                            View view = EasyFloat.getAppFloatView(tag);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                            if (layoutParams.x > size.x / 2) {
+                                //右边
+                                layoutParams.x += 70;
+                            } else {
+                                layoutParams.x = -70;
+                            }
+                            windowManager.updateViewLayout(view, layoutParams);
+                        };
+
+                        @Override
+                        public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
+
+                        }
+
+                        @Override
+                        public void show(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void hide(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void dismiss() {
+
+                        }
+
+                        @Override
+                        public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
+                            handler.removeCallbacks(runnable);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                            windowManager.updateViewLayout(view, layoutParams);
+                        }
+
+                        @Override
+                        public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
+
+                        }
+
+                        @Override
+                        public void dragEnd(@NotNull View view) {
+                            if (GetParams.getParamsForFloatBall(activity)[0]) {
+                                handler.postDelayed(runnable, 3000);
+                            }
+                        }
+                    })
                     .setDragEnable(true)
                     .setLocation(100, 100).show();
         }
@@ -105,7 +228,7 @@ class FloatBall implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.test1:
                 FloatBallLayout FloatBallLayout = view.findViewById(R.id.test);
-                WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                WindowManager windowManager = activity.getWindowManager();
                 Point size = new Point();
                 windowManager.getDefaultDisplay().getSize(size);
                 //判断左右
@@ -122,7 +245,7 @@ class FloatBall implements View.OnClickListener {
                         layoutParams.x = layoutParams.x + SizeUtil.dp2px(view.getContext(), (float) (52 / 2 * Math.sqrt(3)));
                         windowManager.updateViewLayout(view, layoutParams);
                     } else {
-                        if (params[1]) {
+                        if (params[2]) {
                             EasyFloat.appFloatDragEnable(false, "mainFloatBall");
                         } else {
                             EasyFloat.appFloatDragEnable(true, "mainFloatBall");
@@ -180,7 +303,7 @@ class FloatBall implements View.OnClickListener {
                         layoutParams.y = layoutParams.y + SizeUtil.dp2px(view.getContext(), 52);
                         windowManager.updateViewLayout(view, layoutParams);
                     } else {
-                        if (params[1]) {
+                        if (params[2]) {
                             EasyFloat.appFloatDragEnable(false, "mainFloatBall");
                         } else {
                             EasyFloat.appFloatDragEnable(true, "mainFloatBall");
@@ -241,7 +364,7 @@ class FloatBall implements View.OnClickListener {
                     FloatWindowManager.hideAllFloatWindow();
                     FloatWindowManager.startScreenShot(activity);
                     //params[]是获取的关于悬浮窗的设置！
-                    if (params[0]) {
+                    if (params[1]) {
                         imageButton.performClick();
                     }
                 } else {
@@ -251,7 +374,7 @@ class FloatBall implements View.OnClickListener {
             case R.id.reset_button:
                 activity.stopService(service);
                 FloatWindowManager.reset(activity);
-                if (params[0]) {
+                if (params[1]) {
                     imageButton.performClick();
                 }
                 break;
