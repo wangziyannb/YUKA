@@ -26,12 +26,16 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.setting.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.NotFullActivity"></activity>
         <service
-            android:name=".tools.screenshot.ScreenShotService_Single"
+            android:name=".core.screenshot.ScreenShotService_Single"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".tools.screenshot.ScreenShotService_Continue"
+            android:name=".core.screenshot.ScreenShotService_Continue"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
     </application>
