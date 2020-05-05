@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.screenshot;
+package com.wzy.yuka.core.screenshot;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -21,7 +21,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;

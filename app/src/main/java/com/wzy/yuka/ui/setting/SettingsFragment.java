@@ -11,7 +11,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 

@@ -1,9 +1,11 @@
 package com.wzy.yuka.ui.setting;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
@@ -30,5 +32,12 @@ public class SettingsActivity extends FragmentActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        //只有app内能用
+        super.onConfigurationChanged(newConfig);
+        this.finish();
     }
 }

@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.floatwindow;
+package com.wzy.yuka.core.floatwindow;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,9 +16,10 @@ import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.tools.screenshot.ScreenShotService;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,13 +29,10 @@ import org.jetbrains.annotations.Nullable;
  */
 class FloatBall implements View.OnClickListener {
     private String tag;
-    private Intent service;
     private Activity activity;
-
     FloatBall(Activity activity, String tag) {
         this.activity = activity;
         this.tag = tag;
-        service = new Intent(activity, ScreenShotService.class);
         boolean[] params1 = GetParams.getParamsForFloatBall(activity);
         if (!params1[4]) {
             EasyFloat.with(activity)
@@ -210,6 +208,8 @@ class FloatBall implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent service_Single = new Intent(activity, ScreenShotService_Single.class);
+        Intent service_Continue = new Intent(activity, ScreenShotService_Continue.class);
         View view = EasyFloat.getAppFloatView("mainFloatBall");
         ImageButton imageButton = view.findViewById(R.id.test1);
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
@@ -367,14 +367,16 @@ class FloatBall implements View.OnClickListener {
                 }
                 break;
             case R.id.reset_button:
-                activity.stopService(service);
+                activity.stopService(service_Continue);
+                activity.stopService(service_Single);
                 FloatWindowManager.reset(activity);
                 if (params[1]) {
                     imageButton.performClick();
                 }
                 break;
             case R.id.exit_button:
-                activity.stopService(service);
+                activity.stopService(service_Continue);
+                activity.stopService(service_Single);
                 activity.finishAffinity();
                 System.exit(0);
                 break;

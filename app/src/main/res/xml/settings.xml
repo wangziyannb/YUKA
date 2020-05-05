@@ -2,15 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="识别设置">
+    <PreferenceCategory android:title="翻译设置">
         <ListPreference
             android:entries="@array/detect_languages"
             android:entryValues="@array/model"
             android:key="settings_detect_language"
             android:title="识别语言"
-            android:summary="如开启翻译则可无视此选项"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="翻译设置">
+            android:summary="可无视此选项" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_trans_switch"
@@ -41,8 +39,7 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_ball_autoClose"
-            android:summaryOff="点击按钮后收回面板"
-            android:summaryOn="对设置按钮无效（需要连点）"
+            android:summary="点击按钮后收回面板"
             android:title="自动收回" />
         <SwitchPreference
             android:defaultValue="true"
@@ -95,7 +92,7 @@
         <SwitchPreference
             android:key="settings_continuousMode"
             android:summary="强制快速识别，最多一个取词框"
-            android:title="半自动模式（现版本没有中止按钮！）" />
+            android:title="持续模式" />
         <SeekBarPreference
             android:dependency="settings_continuousMode"
             android:key="settings_continuousMode_interval"
