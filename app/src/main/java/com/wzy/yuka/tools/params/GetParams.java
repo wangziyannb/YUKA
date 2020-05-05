@@ -3,12 +3,24 @@ package com.wzy.yuka.tools.params;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.view.WindowManager;
 
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 
 public class GetParams {
+
+    public static int[] getParamsForScreen(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        windowManager.getDefaultDisplay().getSize(point);
+        int[] size = new int[2];
+        size[0] = point.x;
+        size[1] = point.y;
+        return size;
+    }
 
     public static String[] getParamsForReq(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

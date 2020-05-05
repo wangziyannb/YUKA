@@ -43,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        if (isFinishing()) {
+            //释放资源
+        }
+        super.onPause();
+    }
+
+    @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         //只有app内能用
         super.onConfigurationChanged(newConfig);

@@ -26,6 +26,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.setting.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.NotFullActivity"></activity>
         <service
             android:name=".tools.screenshot.ScreenShotService_Single"
             android:enabled="true"

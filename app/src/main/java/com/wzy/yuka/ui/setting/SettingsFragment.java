@@ -1,6 +1,5 @@
 package com.wzy.yuka.ui.setting;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,19 +15,26 @@ import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener {
 
-    @SuppressLint("RestrictedApi")
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-        if (FloatWindowManager.floatBall != null) {
-            Toast.makeText(getContext(), "没有关闭所有悬浮窗(包括悬浮球)，持续模式设置暂时不可更改", Toast.LENGTH_SHORT).show();
+        if (FloatWindowManager.getNumOfFloatWindows() > 1) {
+            Toast.makeText(getContext(), "有较多悬浮窗活动中，持续模式设置暂时不可更改", Toast.LENGTH_SHORT).show();
 //            for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
 //                getPreferenceScreen().getPreference(i).setEnabled(false);
 //            }
             getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
             getPreferenceScreen().findPreference("settings_continuousMode_interval").setEnabled(false);
         }
-
+        getPreferenceScreen().findPreference("settings_continuousMode").setOnPreferenceChangeListener((preference, newValue) -> {
+            if (FloatWindowManager.getNumOfFloatWindows() > 1) {
+                getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
+                return false;
+            } else {
+                return true;
+            }
+        });
         getPreferenceScreen().findPreference("settings_developer").setOnPreferenceClickListener(this);
     }
 
@@ -43,7 +49,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     }
 
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
