@@ -2,17 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="基本设置">
+    <PreferenceCategory android:title="识别设置">
         <ListPreference
             android:entries="@array/detect_languages"
             android:entryValues="@array/model"
             android:key="settings_detect_language"
-            android:title="识别语言" />
+            android:title="识别语言"
+            android:summary="如开启翻译则可无视此选项"/>
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="翻译设置">
+    <PreferenceCategory android:title="翻译设置">
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="settings_trans_switch"
             android:summaryOff="仅识别"
             android:summaryOn="已启用"
@@ -32,20 +32,60 @@
             android:summaryOn="翻译日韩文等"
             android:title="全半角转换（百度翻译）" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="悬浮窗设置">
+    <PreferenceCategory android:title="悬浮球设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_ball_autoHide"
+            android:summary="拖曳后3秒未点击自动隐藏"
+            android:title="贴边隐藏" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_ball_autoClose"
+            android:summaryOff="点击按钮后收回面板"
+            android:summaryOn="对设置按钮无效（需要连点）"
+            android:title="自动收回" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_ball_openLock"
+            android:title="展开后锁定位置" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_ball_safeMode"
+            android:summary="启用安全区域，防止错误展开悬浮球"
+            android:title="安全模式" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="settings_window_multiple"
-            android:title="启用复数悬浮框" />
+            android:key="settings_ball_fluidMode"
+            android:summary="启用隐藏导航栏时使用,重启悬浮球生效"
+            android:title="流体手势兼容" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="选词窗设置">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_window_textBlackBg"
+            android:summary="叠字现象严重时开启"
+            android:title="文字背景描黑" />
         <SeekBarPreference
-            android:title="悬浮框数量"
-            android:dependency="settings_window_multiple"
-            android:key="settings_window_number"
-            android:max="4"
+            android:key="settings_window_opacityBg"
+            android:max="85"
+            android:title="选词窗背景透明度（%）"
+            android:summary="默认30%"
             app:adjustable="true"
-            app:defaultValue="1"
-            app:min="1"
-            app:seekBarIncrement="1" />
+            app:defaultValue="30"
+            app:min="5"
+            app:seekBarIncrement="10"
+            app:showSeekBarValue="true"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_window_originalText"
+            android:summaryOff="只显示翻译"
+            android:summaryOn="原文将同框显示"
+            android:title="显示原文" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_window_showTime"
+            android:summary="不包括网络用时"
+            android:title="显示翻译所用时间" />
     </PreferenceCategory>
     <PreferenceCategory android:title="进阶设置">
         <SwitchPreference
@@ -54,19 +94,17 @@
             android:title="快速识别" />
         <SwitchPreference
             android:key="settings_continuousMode"
-            android:summary="将强制快速截图，需禁用复数悬浮框"
-            android:title="半自动模式" />
+            android:summary="强制快速识别，最多一个取词框"
+            android:title="半自动模式（现版本没有中止按钮！）" />
         <SeekBarPreference
             android:dependency="settings_continuousMode"
             android:key="settings_continuousMode_interval"
-            android:max="6"
+            android:max="30"
             android:title="识别间隔（秒）"
             app:adjustable="true"
             app:defaultValue="6"
             app:min="2"
             app:seekBarIncrement="1" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="进阶设置">
         <Preference
             android:key="settings_developer"
             android:title="开发者选项" />

@@ -21,11 +21,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindow;
+import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
-import com.wzy.yuka.tools.params.GetClientParams;
+import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +49,11 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
     private boolean continuous = false;
     private GlobalHandler globalHandler;
     private int interval;
+    //todo 没能解决中止得问题，removeCallback无效
     private Runnable continuouslySS = () -> {
-        Screenshot screenshot = new Screenshot(this, FloatWindow.location);
-        FloatWindow.hideAllFloatWindow();
+        Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         screenshot.getScreenshot(true, 300, HomeFragment.data, () -> {
-            FloatWindow.showAllFloatWindow(true);
+            FloatWindowManager.showAllFloatWindow(true, 1000);
             Callback callback = new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -76,12 +76,14 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
                     globalHandler.sendMessage(message);
                 }
             };
-            HttpRequest.requestTowardsYukaServer(GetClientParams.getParamsForReq(this), screenshot.getFileNames()[0], callback);
+            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames()[0], callback);
         });
     };
+
+    //todo 需要考虑无上限取词框对message的影响
     @Override
     public void handleMsg(Message msg) {
-        TextView[] textViews = FloatWindow.getAllTextViews();
+        TextView[] textViews = FloatWindowManager.getAllTextViews();
         Bundle bundle;
         String error;
         String response;
@@ -254,7 +256,7 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
 
     private void getScreenshot() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Screenshot screenshot = new Screenshot(this, FloatWindow.location);
+        Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         int delay = 800;
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
         if (sharedPreferences.getBoolean("settings_fastMode", false)) {
@@ -262,10 +264,10 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
             delay = 200;
         }
         screenshot.getScreenshot(true, delay, HomeFragment.data, () -> {
-            FloatWindow.showAllFloatWindow(true);
-            Callback[] callbacks = new Callback[FloatWindow.NumOfFloatWindows - 1];
+            FloatWindowManager.showAllFloatWindow(true, 1000);
+            Callback[] callbacks = new Callback[FloatWindowManager.getNumOfFloatWindows()];
             String[] fileNames = screenshot.getFileNames();
-            for (int i = 0; i < (FloatWindow.NumOfFloatWindows - 1); i++) {
+            for (int i = 0; i < callbacks.length; i++) {
                 int a = i;
                 String fileName = fileNames[i];
                 callbacks[i] = new Callback() {
@@ -293,7 +295,7 @@ public class ScreenShotService extends Service implements GlobalHandler.HandleMs
                     }
                 };
             }
-            HttpRequest.requestTowardsYukaServer(GetClientParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
+            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
         });
         //怎么中断这个过程？
         if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {

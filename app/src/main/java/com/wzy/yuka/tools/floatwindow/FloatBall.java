@@ -1,101 +1,388 @@
 package com.wzy.yuka.tools.floatwindow;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.AttributeSet;
-import android.util.Log;
+import android.content.Intent;
+import android.graphics.Point;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.lzf.easyfloat.EasyFloat;
+import com.lzf.easyfloat.enums.ShowPattern;
+import com.lzf.easyfloat.enums.SidePattern;
+import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
+import com.wzy.yuka.MainActivity;
+import com.wzy.yuka.R;
+import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.tools.screenshot.ScreenShotService;
 
-public class FloatBall extends ViewGroup {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-    static private boolean isleft = true;
+/**
+ * Created by Ziyan on 2020/4/30.
+ */
+class FloatBall implements View.OnClickListener {
+    private String tag;
+    private Intent service;
+    private Activity activity;
 
-    public FloatBall(Context context) {
-        super(context);
-    }
+    FloatBall(Activity activity, String tag) {
+        this.activity = activity;
+        this.tag = tag;
+        service = new Intent(activity, ScreenShotService.class);
+        boolean[] params1 = GetParams.getParamsForFloatBall(activity);
+        if (!params1[4]) {
+            EasyFloat.with(activity)
+                    .setTag(tag)
+                    .setLayout(R.layout.float_ball, v -> {
+                        ImageButton imageButton = v.findViewById(R.id.test1);
+                        imageButton.getBackground().setAlpha(50);
+                        v.findViewById(R.id.test1).setOnClickListener(this);
+                    })
+                    .setSidePattern(SidePattern.RESULT_HORIZONTAL)
+                    .setShowPattern(ShowPattern.ALL_TIME)
+                    .setDragEnable(true)
+                    .registerCallbacks(new OnFloatCallbacks() {
+                        //WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                        WindowManager windowManager = activity.getWindowManager();
+                        Handler handler = new Handler();
+                        Runnable runnable = () -> {
+                            Point size = new Point();
+                            windowManager.getDefaultDisplay().getSize(size);
+                            View view = EasyFloat.getAppFloatView(tag);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                            if (layoutParams.x > size.x / 2) {
+                                //右边
+                                layoutParams.x += 70;
+                            } else {
+                                layoutParams.x = -70;
+                            }
+                            windowManager.updateViewLayout(view, layoutParams);
+                        };
 
-    public FloatBall(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+                        @Override
+                        public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
 
-    public FloatBall(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+                        }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
-        //测量并保存layout的宽高(使用getDefaultSize时，wrap_content和match_perent都是填充屏幕)
-        //稍后会重新写这个方法，能达到wrap_content的效果
-        if (getChildCount() == 1) {
-            setMeasuredDimension(getChildAt(0).getMeasuredWidth(), getChildAt(0).getMeasuredHeight());
+                        @Override
+                        public void show(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void hide(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void dismiss() {
+
+                        }
+
+                        @Override
+                        public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
+                            handler.removeCallbacks(runnable);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                            windowManager.updateViewLayout(view, layoutParams);
+                        }
+
+                        @Override
+                        public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
+
+                        }
+
+                        @Override
+                        public void dragEnd(@NotNull View view) {
+                            if (GetParams.getParamsForFloatBall(activity)[0]) {
+                                handler.postDelayed(runnable, 3000);
+                            }
+                        }
+                    })
+                    .setDisplayHeight(context -> {
+                        boolean[] params = GetParams.getParamsForFloatBall(activity);
+                        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                        Point size = new Point();
+                        windowManager.getDefaultDisplay().getSize(size);
+                        if (params[3]) {
+                            if (size.x < size.y) {
+                                //竖屏
+                                return size.y - SizeUtil.dp2px(context, 52 + 11);
+                            } else {
+                                return size.y - SizeUtil.dp2px(context, 52 + 11);
+                            }
+                        } else {
+                            return size.y;
+                        }
+
+                    })
+                    .setLocation(100, 100).show();
         } else {
-            setMeasuredDimension(widthMeasureSpec,
-                    heightMeasureSpec);
+            EasyFloat.with(activity)
+                    .setTag(tag)
+                    .setLayout(R.layout.float_ball, v -> {
+                        ImageButton imageButton = v.findViewById(R.id.test1);
+                        imageButton.getBackground().setAlpha(50);
+                        v.findViewById(R.id.test1).setOnClickListener(this);
+                    })
+                    .setSidePattern(SidePattern.RESULT_HORIZONTAL)
+                    .setShowPattern(ShowPattern.ALL_TIME)
+                    .registerCallbacks(new OnFloatCallbacks() {
+                        //WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                        WindowManager windowManager = activity.getWindowManager();
+                        Handler handler = new Handler();
+                        Runnable runnable = () -> {
+                            Point size = new Point();
+                            windowManager.getDefaultDisplay().getSize(size);
+                            View view = EasyFloat.getAppFloatView(tag);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                            if (layoutParams.x > size.x / 2) {
+                                //右边
+                                layoutParams.x += 70;
+                            } else {
+                                layoutParams.x = -70;
+                            }
+                            windowManager.updateViewLayout(view, layoutParams);
+                        };
+
+                        @Override
+                        public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
+
+                        }
+
+                        @Override
+                        public void show(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void hide(@NotNull View view) {
+
+                        }
+
+                        @Override
+                        public void dismiss() {
+
+                        }
+
+                        @Override
+                        public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
+                            handler.removeCallbacks(runnable);
+                            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                            windowManager.updateViewLayout(view, layoutParams);
+                        }
+
+                        @Override
+                        public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
+
+                        }
+
+                        @Override
+                        public void dragEnd(@NotNull View view) {
+                            if (GetParams.getParamsForFloatBall(activity)[0]) {
+                                handler.postDelayed(runnable, 3000);
+                            }
+                        }
+                    })
+                    .setDragEnable(true)
+                    .setLocation(100, 100).show();
         }
+    }
 
+    void dismiss() {
+
+        EasyFloat.dismissAppFloat(tag);
+    }
+
+    void hide() {
+        EasyFloat.hideAppFloat(tag);
+    }
+
+    void show() {
+        EasyFloat.showAppFloat(tag);
     }
 
     @Override
-    public void addView(View child) {
-        final int count = getChildCount();
-        super.addView(child, count);
-        LayoutParams layoutParams = getLayoutParams();
-        layoutParams.height = SizeUtil.dp2px(getContext(), 52 * 2 + 44);
-        layoutParams.width = SizeUtil.dp2px(getContext(), (float) (52 / 2 * Math.sqrt(3) + 44));
-        setLayoutParams(layoutParams);
-        Log.d("TAG", "addView: " + layoutParams.height + layoutParams.width);
-    }
-
-    @Override
-    public void removeViewAt(int index) {
-        super.removeViewAt(index);
-    }
-
-    public void addView() {
-
-    }
-
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d("TAG", "onSizeChanged:" + w + " " + h);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int[] center = {(right - left) / 2, (bottom - top) / 2};
-        Log.d("TAG", "onLayout: " + center[0] + " " + center[1]);
-        final int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            int radius = child.getMeasuredWidth() / 2;
-            if (count > 1) {
-                center[0] = center[0] - child.getWidth() / 2;
-                if (i == 0) {
-                    child.layout(center[0] - radius, center[1] - radius,
-                            center[0] + radius, center[1] + radius);
+    public void onClick(View v) {
+        View view = EasyFloat.getAppFloatView("mainFloatBall");
+        ImageButton imageButton = view.findViewById(R.id.test1);
+        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+        try {
+            int currentFlags = (Integer) layoutParams.getClass().getField("privateFlags").get(layoutParams);
+            layoutParams.getClass().getField("privateFlags").set(layoutParams, currentFlags | 0x00000040);
+        } catch (Exception e) {
+            //do nothing. Probably using other version of android
+        }
+        boolean[] params = GetParams.getParamsForFloatBall(activity);
+        switch (v.getId()) {
+            case R.id.test1:
+                FloatBallLayout FloatBallLayout = view.findViewById(R.id.test);
+                WindowManager windowManager = activity.getWindowManager();
+                Point size = new Point();
+                windowManager.getDefaultDisplay().getSize(size);
+                //判断左右
+                if (layoutParams.x > size.x / 2) {
+                    //右边
+                    if (SizeUtil.px2dp(view.getContext(), view.getWidth()) > 45) {
+                        //展开则关闭
+                        EasyFloat.appFloatDragEnable(true, "mainFloatBall");
+                        do {
+                            FloatBallLayout.removeViewAt(FloatBallLayout.getChildCount() - 1);
+                        } while (FloatBallLayout.getChildCount() != 1);
+                        imageButton.setBackgroundResource(R.drawable.main);
+                        layoutParams.y = layoutParams.y + SizeUtil.dp2px(view.getContext(), 52);
+                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(view.getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                        windowManager.updateViewLayout(view, layoutParams);
+                    } else {
+                        if (params[2]) {
+                            EasyFloat.appFloatDragEnable(false, "mainFloatBall");
+                        } else {
+                            EasyFloat.appFloatDragEnable(true, "mainFloatBall");
+                        }
+                        FloatBallLayout.setIsLeft(false);
+                        layoutParams.x = layoutParams.x - SizeUtil.dp2px(view.getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                        layoutParams.y = layoutParams.y - SizeUtil.dp2px(view.getContext(), 52);
+                        windowManager.updateViewLayout(view, layoutParams);
+                        imageButton.setVisibility(View.INVISIBLE);
+                        Handler handler = new Handler();
+                        handler.postDelayed(() -> {
+                            imageButton.setVisibility(View.VISIBLE);
+                            imageButton.setBackgroundResource(R.drawable.close);
+                            ImageButton[] imageButtons = new ImageButton[4];
+                            for (int i = 0; i < imageButtons.length; i++) {
+                                imageButtons[i] = new ImageButton(activity);
+                                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(activity, 44),
+                                        SizeUtil.dp2px(activity, 44));
+                                imageButtons[i].setLayoutParams(lp);
+                                switch (i) {
+                                    case 0:
+                                        imageButtons[i].setId(R.id.settings_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.settings);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 1:
+                                        imageButtons[i].setId(R.id.detect_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.detect);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 2:
+                                        imageButtons[i].setId(R.id.reset_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.reset);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 3:
+                                        imageButtons[i].setId(R.id.exit_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.exit);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                }
+                                FloatBallLayout.addView(imageButtons[i]);
+                            }
+                        }, 30);
+                    }
                 } else {
-                    int[] newCoordinate = calculate(center, SizeUtil.dp2px(getContext(), 52), i - 1);
-                    child.layout(newCoordinate[0] - radius, newCoordinate[1] - radius,
-                            newCoordinate[0] + radius, newCoordinate[1] + radius);
+                    //左边
+                    if (SizeUtil.px2dp(view.getContext(), view.getWidth()) > 45) {
+                        //展开后关闭
+                        EasyFloat.appFloatDragEnable(true, "mainFloatBall");
+                        do {
+                            FloatBallLayout.removeViewAt(FloatBallLayout.getChildCount() - 1);
+                        } while (FloatBallLayout.getChildCount() != 1);
+                        imageButton.setBackgroundResource(R.drawable.main);
+                        layoutParams.y = layoutParams.y + SizeUtil.dp2px(view.getContext(), 52);
+                        windowManager.updateViewLayout(view, layoutParams);
+                    } else {
+                        if (params[2]) {
+                            EasyFloat.appFloatDragEnable(false, "mainFloatBall");
+                        } else {
+                            EasyFloat.appFloatDragEnable(true, "mainFloatBall");
+                        }
+
+                        FloatBallLayout.setIsLeft(true);
+                        layoutParams.y = layoutParams.y - SizeUtil.dp2px(view.getContext(), 52);
+                        windowManager.updateViewLayout(view, layoutParams);
+                        imageButton.setVisibility(View.INVISIBLE);
+                        Handler handler = new Handler();
+                        handler.postDelayed(() -> {
+                            imageButton.setVisibility(View.VISIBLE);
+                            imageButton.setBackgroundResource(R.drawable.close);
+                            ImageButton[] imageButtons = new ImageButton[4];
+                            for (int i = 0; i < imageButtons.length; i++) {
+                                imageButtons[i] = new ImageButton(activity);
+                                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(activity, 45),
+                                        SizeUtil.dp2px(activity, 44));
+                                imageButtons[i].setLayoutParams(lp);
+                                switch (i) {
+                                    case 0:
+                                        imageButtons[i].setId(R.id.settings_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.settings);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 1:
+                                        imageButtons[i].setId(R.id.detect_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.detect);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 2:
+                                        imageButtons[i].setId(R.id.reset_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.reset);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 3:
+                                        imageButtons[i].setId(R.id.exit_button);
+                                        imageButtons[i].setBackgroundResource(R.drawable.exit);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                }
+                                FloatBallLayout.addView(imageButtons[i]);
+                            }
+                        }, 30);
+                    }
                 }
-            } else {
-                child.layout(center[0] - radius, center[1] - radius,
-                        center[0] + radius, center[1] + radius);
-            }
-            //确定子控件的位置，四个参数分别代表（左上右下）点的坐标值
+                break;
+            case R.id.settings_button:
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                activity.startActivity(intent);
+                MainActivity.navController.navigate(R.id.nav_settings);
+                break;
+            case R.id.detect_button:
+                if (FloatWindowManager.getNumOfFloatWindows() > 0) {
+                    FloatWindowManager.hideAllFloatWindow();
+                    FloatWindowManager.startScreenShot(activity);
+                    //params[]是获取的关于悬浮窗的设置！
+                    if (params[1]) {
+                        imageButton.performClick();
+                    }
+                } else {
+                    Toast.makeText(activity, "还没有悬浮窗初始化呢！", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.reset_button:
+                activity.stopService(service);
+                FloatWindowManager.reset(activity);
+                if (params[1]) {
+                    imageButton.performClick();
+                }
+                break;
+            case R.id.exit_button:
+                activity.stopService(service);
+                activity.finishAffinity();
+                System.exit(0);
+                break;
         }
     }
-
-
-    private int[] calculate(int[] center, int radius, int index) {
-        int[] newCoordinate = new int[2];
-        newCoordinate[0] = (int) (center[0] + radius * Math.sin(((float) index / 6) * 2 * Math.PI));
-        newCoordinate[1] = (int) (center[1] - radius * Math.cos(((float) index / 6) * 2 * Math.PI));
-        return newCoordinate;
-    }
-
 }

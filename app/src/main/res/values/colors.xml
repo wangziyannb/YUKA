@@ -13,4 +13,6 @@
     <color name="translucent">#66000000</color>
     <color name="text_color_LightBg">#999999</color>
     <color name="text_color_DarkBg">#FFFFFF</color>
+
+    <color name="blackBg">#FF000000</color>
 </resources>

@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindow;
+import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     static final String TAG = "HomeFragment";
@@ -48,11 +48,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     requestScreenShot();
                 }
                 if (data != null) {
-                    FloatWindow.initFloatWindow(getActivity());
+                    FloatWindowManager.initFloatWindow(getActivity());
                 }
                 break;
             case R.id.closeBtn:
-                FloatWindow.dismissAllFloatWindow(false);
+                FloatWindowManager.dismissAllFloatWindow(false);
                 break;
             case R.id.exitBtn:
                 getActivity().finishAffinity();
@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 return;
             }
             HomeFragment.data = data;
-            FloatWindow.initFloatWindow(getActivity());
+            FloatWindowManager.initFloatWindow(getActivity());
         }
     }
 

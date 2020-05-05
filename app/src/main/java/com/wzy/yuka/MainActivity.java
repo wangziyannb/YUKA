@@ -14,12 +14,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
-import com.lzf.easyfloat.EasyFloat;
-import com.wzy.yuka.tools.floatwindow.FloatWindow;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
-
+    public static NavController navController;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 .Builder(R.id.navhome, R.id.nav_settings, R.id.nav_help, R.id.nav_about)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
@@ -46,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        //只有app内能用
         super.onConfigurationChanged(newConfig);
-        if (EasyFloat.getAppFloatView("startBtn") != null) {
-            FloatWindow.dismissAllFloatWindow(true);
-            FloatWindow.initFloatWindow(this);
-        }
+//        if (FloatWindowManager.floatBall!= null) {
+//            FloatWindowManager.dismissAllFloatWindow(false);
+//            FloatWindowManager.initFloatWindow(this);
+//        }
     }
 }
 
