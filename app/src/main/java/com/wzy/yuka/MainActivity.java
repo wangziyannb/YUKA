@@ -24,14 +24,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.navhome, R.id.nav_settings, R.id.nav_help, R.id.nav_about)
+                .Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_help, R.id.nav_about)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        navigationView.getHeaderView(0).findViewById(R.id.line_header).findViewById(R.id.login_nav_header).setOnClickListener((v) -> {
+            navController.navigate(R.id.action_nav_home_to_login);
+        });
     }
 
     @Override
