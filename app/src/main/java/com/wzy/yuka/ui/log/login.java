@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.wzy.yuka.R;
 
@@ -24,7 +23,7 @@ public class login extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.register:
-                Navigation.findNavController(getView()).navigate(R.id.action_login_to_register);
+
         }
 
     }
