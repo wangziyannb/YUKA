@@ -47,7 +47,12 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         FloatWindowManager.hideAllFloatWindow();
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int delay = 200;
+        int delay = 800;
+        int[] params = GetParams.getParamsForAdvanceSettings(this);
+        if (params[0] == 1) {
+            //危险，性能不足会导致窗子不再出现（消失动画未完成）
+            delay = 200;
+        }
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
         if (!save) {
             //时间足够长，点击退出按钮会导致本过程失效
@@ -143,6 +148,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
      * 注意一定只有一个取词窗
      */
     private void startScreenshot(int interval) {
+
         globalHandler.postDelayed(runnable, interval);
     }
 
@@ -152,7 +158,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         createNotificationChannel();
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
-        startScreenshot(10);
+        startScreenshot(50);
         return Service.START_NOT_STICKY;
     }
 
@@ -165,8 +171,8 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background)).setAutoCancel(true).build();
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius)).setAutoCancel(true).build();
             startForeground(110, notification);
         } else {
             NotificationChannel notificationChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
@@ -176,8 +182,8 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             manager.createNotificationChannel(notificationChannel);
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background))
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius))
                     .setAutoCancel(true).build();
             startForeground(110, notification);
         }

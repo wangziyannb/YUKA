@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 
@@ -37,8 +38,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         root.findViewById(R.id.startBtn).setOnClickListener(this);
         root.findViewById(R.id.closeBtn).setOnClickListener(this);
         root.findViewById(R.id.exitBtn).setOnClickListener(this);
+        BottomNavigationView bottomNavigationView = root.findViewById(R.id.bottomNavigationView2);
         return root;
     }
+
 
     @Override
     public void onClick(View v) {

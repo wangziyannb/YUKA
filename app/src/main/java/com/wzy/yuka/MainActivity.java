@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         navigationView.getHeaderView(0).findViewById(R.id.line_header).findViewById(R.id.login_nav_header).setOnClickListener((v) -> {
-            navController.navigate(R.id.action_nav_home_to_login);
+            navController.navigate(R.id.action_nav_home_to_nav_login);
+            drawer.closeDrawers();
         });
     }
 

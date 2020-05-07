@@ -14,23 +14,27 @@
             android:id="@+id/action_nav_home_to_nav_settings"
             app:destination="@id/nav_settings" />
         <action
-            android:id="@+id/action_nav_home_to_login"
+            android:id="@+id/action_nav_home_to_nav_login"
             app:destination="@id/nav_login" />
+
     </fragment>
     <fragment
         android:id="@+id/nav_login"
         android:name="com.wzy.yuka.ui.log.login"
-        android:label="登陆">
+        android:label="登陆"
+        tools:layout="@layout/login">
 
         <action
-            android:id="@+id/action_login_to_register"
+            android:id="@+id/action_nav_login_to_nav_register"
             app:destination="@id/nav_register" />
     </fragment>
     <fragment
         android:id="@+id/nav_register"
         android:name="com.wzy.yuka.ui.setting.SettingsFragment"
         android:label="注册"
-        tools:layout="@layout/register"></fragment>
+        tools:layout="@layout/register">
+
+    </fragment>
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.wzy.yuka.ui.setting.SettingsFragment"

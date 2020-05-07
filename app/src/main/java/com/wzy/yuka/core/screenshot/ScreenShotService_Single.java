@@ -105,12 +105,13 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     private void getScreenshot(int index) {
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         //各项设置，包括快速模式、保存照片
+        int[] params = GetParams.getParamsForAdvanceSettings(this);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int delay = 800;
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-        if (sharedPreferences.getBoolean("settings_fastMode", false)) {
+        if (params[0] == 1) {
             //危险，性能不足会导致窗子不再出现（消失动画未完成）
-            delay = 150;
+            delay = 200;
         }
         if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
             //时间足够长，点击退出按钮会导致本过程失效
@@ -167,8 +168,8 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background)).setAutoCancel(true).build();
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius)).setAutoCancel(true).build();
             startForeground(110, notification);
         } else {
             NotificationChannel notificationChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
@@ -178,8 +179,8 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
             manager.createNotificationChannel(notificationChannel);
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background))
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius))
                     .setAutoCancel(true).build();
             startForeground(110, notification);
         }
