@@ -54,7 +54,7 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         getPreferenceScreen().findPreference("settings_debug_server").setOnPreferenceClickListener(preference -> {
-            HttpRequest.requestTowardsYukaServer(
+            HttpRequest.yuka(
                     new String[]{getContext().getResources().getStringArray(R.array.mode)[2]},
                     "",
                     new Callback() {

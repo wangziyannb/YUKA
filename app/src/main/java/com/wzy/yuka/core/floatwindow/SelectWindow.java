@@ -1,10 +1,9 @@
-package com.wzy.yuka.tools.floatwindow;
+package com.wzy.yuka.core.floatwindow;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,6 +17,7 @@ import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.tools.params.GetParams;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +42,10 @@ public class SelectWindow implements View.OnClickListener {
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.select_window, view1 -> {
+                    if (GetParams.AdvanceSettings(activity)[1] == 1) {
+                        view1.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
+                        view1.findViewById(R.id.sw_stopContinue).setVisibility(View.VISIBLE);
+                    }
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -76,6 +80,7 @@ public class SelectWindow implements View.OnClickListener {
                     view1.findViewById(R.id.sw_close).setOnClickListener(this);
                     view1.findViewById(R.id.sw_translate).setOnClickListener(this);
                     view1.findViewById(R.id.sw_addwindows).setOnClickListener(this);
+                    view1.findViewById(R.id.sw_stopContinue).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setLocation(100, 100)
@@ -109,11 +114,15 @@ public class SelectWindow implements View.OnClickListener {
                     public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                         setLocation();
+                        if (GetParams.AdvanceSettings(activity)[1] == 1) {
+                            view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
+                            view.findViewById(R.id.sw_stopContinue).setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
                     public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
-
+                        setLocation();
                     }
 
                     @Override
@@ -139,7 +148,7 @@ public class SelectWindow implements View.OnClickListener {
     void showResults(String origin, String translation, double time){
         View view = EasyFloat.getAppFloatView(tag);
         TextView textView=view.findViewById(R.id.translatedText);
-        boolean[]params =GetParams.getParamsForSelectWindow(activity);
+        boolean[] params = GetParams.SelectWindow(activity);
         if(params[0]){
             textView.setBackgroundResource(R.color.blackBg);
         }else{
@@ -194,8 +203,11 @@ public class SelectWindow implements View.OnClickListener {
                 FloatWindowManager.startScreenShot(activity, index);
                 break;
             case R.id.sw_addwindows:
-
                 FloatWindowManager.addSelectWindow(activity);
+                break;
+            case R.id.sw_stopContinue:
+                ScreenShotService_Continue.stopScreenshot();
+                break;
         }
     }
 }

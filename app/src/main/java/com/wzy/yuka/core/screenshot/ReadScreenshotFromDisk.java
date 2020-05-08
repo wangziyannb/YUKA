@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.screenshot;
+package com.wzy.yuka.core.screenshot;
 
 public class ReadScreenshotFromDisk {
 }

@@ -9,6 +9,7 @@
     <item
         android:id="@+id/navstart"
         android:icon="@drawable/nav_colse"
+        android:title="启动"
         app:showAsAction="never" />
     <item
         android:id="@+id/navboutique"

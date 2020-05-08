@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E5E5E5"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -20,25 +21,30 @@
         android:id="@+id/startBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:text="启动" />
 
     <Button
         android:id="@+id/closeBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:text="关闭" />
 
     <Button
         android:id="@+id/exitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
         android:text="退出" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#000000"
@@ -47,7 +53,48 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/nav_menu" />
+            app:menu="@menu/nav_menu">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="164dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="51dp"
+                android:layout_height="37dp"
+                app:srcCompat="@drawable/nothing" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="这里空空如也 . . . " />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avater"
+            android:translationZ="55dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
