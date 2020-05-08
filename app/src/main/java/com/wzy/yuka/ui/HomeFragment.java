@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         root.findViewById(R.id.startBtn).setOnClickListener(this);
         root.findViewById(R.id.closeBtn).setOnClickListener(this);
         root.findViewById(R.id.exitBtn).setOnClickListener(this);
-        root.findViewById(R.id.imageButton).setOnClickListener(this);
+        root.findViewById(R.id.nav_start).setOnClickListener(this);
         return root;
     }
 
@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 getActivity().finishAffinity();
                 android.os.Process.killProcess(android.os.Process.myPid());
                 break;
-            case R.id.imageButton:
+            case R.id.nav_start:
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean("isLogin", false);
