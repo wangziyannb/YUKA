@@ -24,7 +24,6 @@ import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -105,7 +104,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     private void getScreenshot(int index) {
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         //各项设置，包括快速模式、保存照片
-        int[] params = GetParams.getParamsForAdvanceSettings(this);
+        int[] params = GetParams.AdvanceSettings(this);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int delay = 800;
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
@@ -118,7 +117,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
             globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
         }
 
-        screenshot.getScreenshot(true, delay, HomeFragment.data, () -> {
+        screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
             FloatWindowManager.showAllFloatWindow(true, index);
             Callback[] callbacks = new Callback[FloatWindowManager.getLocation().length];
             String[] fileNames = screenshot.getFileNames();
@@ -155,7 +154,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                     }
                 };
             }
-            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
+            HttpRequest.yuka(GetParams.Yuka(this), screenshot.getFileNames(), callbacks);
         });
     }
 

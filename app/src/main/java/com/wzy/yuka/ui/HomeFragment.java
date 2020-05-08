@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,16 +21,15 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    static final String TAG = "HomeFragment";
-    public static final int REQUEST_MEDIA_PROJECTION = 0x2893;
-    public static Intent data;
-    private MediaProjectionManager mMediaProjectionManager;
+    private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
+    private final String TAG = "HomeFragment";
+    private Intent data;
 
     @Nullable
     @Override
@@ -38,10 +38,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         root.findViewById(R.id.startBtn).setOnClickListener(this);
         root.findViewById(R.id.closeBtn).setOnClickListener(this);
         root.findViewById(R.id.exitBtn).setOnClickListener(this);
-        BottomNavigationView bottomNavigationView = root.findViewById(R.id.bottomNavigationView2);
+        root.findViewById(R.id.imageButton).setOnClickListener(this);
         return root;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     requestScreenShot();
                 }
                 if (data != null) {
-                    FloatWindowManager.initFloatWindow(getActivity());
+                    FloatWindowManager.initFloatWindow(getActivity(), data);
                 }
                 break;
             case R.id.closeBtn:
@@ -60,16 +59,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.exitBtn:
                 getActivity().finishAffinity();
                 android.os.Process.killProcess(android.os.Process.myPid());
-            default:
+                break;
+            case R.id.imageButton:
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("isLogin", false);
+                editor.commit();
                 break;
         }
     }
 
     //unknown wrong
     @SuppressLint("WrongConstant")
-    public void requestScreenShot() {
+    private void requestScreenShot() {
         Log.d(TAG, "requestScreenShot");
-        mMediaProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
+        MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
         Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();
         startActivityForResult(captureIntent, REQUEST_MEDIA_PROJECTION);
     }
@@ -88,8 +92,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Log.e(TAG, "MediaProjection error");
                 return;
             }
-            HomeFragment.data = data;
-            FloatWindowManager.initFloatWindow(getActivity());
+            this.data = data;
+            FloatWindowManager.initFloatWindow(getActivity(), data);
         }
     }
 

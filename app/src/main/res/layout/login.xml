@@ -18,20 +18,20 @@
         android:layout_marginEnd="96dp"
         android:layout_marginBottom="32dp"
         android:contentDescription="@string/avatar"
-        app:layout_constraintBottom_toTopOf="@+id/username"
+        app:layout_constraintBottom_toTopOf="@id/id"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/avater" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/id"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="240dp"
         android:layout_marginEnd="24dp"
-        android:hint="@string/username"
+        android:hint="@string/id"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,17 +52,7 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
-
-    <CheckBox
-        android:id="@+id/remember_password"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:text="记住密码"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@id/id" />
 
     <TextView
         android:id="@+id/forget_password"
@@ -72,7 +62,7 @@
         android:layout_marginEnd="24dp"
         android:text="忘记密码"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <Button
         android:id="@+id/login"
@@ -83,13 +73,13 @@
         android:layout_marginTop="48dp"
         android:layout_marginBottom="36dp"
         android:backgroundTint="#FFA2A2"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/action_sign_in"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:layout_constraintEnd_toStartOf="@+id/register"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintBottom_toTopOf="@id/checkBox"
+        app:layout_constraintEnd_toStartOf="@id/register"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <Button
         android:id="@+id/register"
@@ -101,9 +91,9 @@
         android:layout_marginBottom="36dp"
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
-        app:layout_constraintStart_toEndOf="@+id/login"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintBottom_toTopOf="@id/checkBox"
+        app:layout_constraintStart_toEndOf="@id/login"
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <CheckBox
         android:id="@+id/checkBox"

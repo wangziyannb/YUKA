@@ -42,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView2"
             android:layout_width="wrap_content"
@@ -52,9 +53,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/nav_menu" />
+            app:menu="@menu/nav_menu">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="164dp"
             android:layout_height="40dp"
             android:layout_marginBottom="8dp"
@@ -78,6 +82,19 @@
                 android:gravity="center_vertical"
                 android:text="这里空空如也 . . . " />
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avater"
+            android:translationZ="55dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

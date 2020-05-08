@@ -12,7 +12,7 @@ import com.wzy.yuka.R;
 
 public class GetParams {
 
-    public static int[] getParamsForScreen(Context context) {
+    public static int[] Screen(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         windowManager.getDefaultDisplay().getSize(point);
@@ -22,7 +22,7 @@ public class GetParams {
         return size;
     }
 
-    public static String[] getParamsForReq(Context context) {
+    public static String[] Yuka(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         //0:mode 1:model 2:translator 3:SBCS
         String[] params = new String[4];
@@ -66,7 +66,7 @@ public class GetParams {
         return params;
     }
 
-    public static boolean[] getParamsForFloatBall(Context context) {
+    public static boolean[] FloatBall(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean[] params = new boolean[5];
         params[0] = preferences.getBoolean("settings_ball_autoHide", true);
@@ -78,7 +78,7 @@ public class GetParams {
         return params;
     }
 
-    public static boolean[] getParamsForSelectWindow(Context context) {
+    public static boolean[] SelectWindow(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean[] params = new boolean[3];
         params[0] = preferences.getBoolean("settings_window_textBlackBg", true);
@@ -88,7 +88,7 @@ public class GetParams {
         return params;
     }
 
-    public static int[] getParamsForAdvanceSettings(Context context){
+    public static int[] AdvanceSettings(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         int[] params = new int[3];
         if(preferences.getBoolean("settings_fastMode", true)){
@@ -98,6 +98,16 @@ public class GetParams {
             params[1] = 1;
         }
         params[2] = preferences.getInt("settings_continuousMode_interval", 6);
+        return params;
+    }
+
+    public static String[] Account(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String[] params = new String[4];
+        params[0] = preferences.getString("id", "");
+        params[1] = preferences.getString("pwd", "");
+        params[2] = preferences.getString("uuid", "");
+        params[3] = preferences.getString("u_name", "");
         return params;
     }
 }

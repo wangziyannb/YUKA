@@ -2,6 +2,7 @@
     <string name="app_name">YUKA</string>
     <string name="True">1</string>
     <string name="False">0</string>
+    <string name="id">账号</string>
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="action_sign_in">登录</string>

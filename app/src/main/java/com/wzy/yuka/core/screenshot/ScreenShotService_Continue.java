@@ -24,7 +24,6 @@ import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -48,7 +47,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int delay = 800;
-        int[] params = GetParams.getParamsForAdvanceSettings(this);
+        int[] params = GetParams.AdvanceSettings(this);
         if (params[0] == 1) {
             //危险，性能不足会导致窗子不再出现（消失动画未完成）
             delay = 200;
@@ -59,7 +58,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
         }
         if(continuous){
-            screenshot.getScreenshot(true, delay, HomeFragment.data, () -> {
+            screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
                 FloatWindowManager.showAllFloatWindow(true, 0);
                 String fileName = screenshot.getFileNames()[0];
                 Callback callback = new Callback() {
@@ -86,7 +85,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                         globalHandler.sendMessage(message);
                     }
                 };
-                HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), fileName, callback);
+                HttpRequest.yuka(GetParams.Yuka(this), fileName, callback);
             });
         } else {
             FloatWindowManager.showAllFloatWindow(false, 0);
@@ -119,7 +118,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             String result = resultJson.getString("results");
             double time = resultJson.getDouble("time");
             FloatWindowManager.showResultsIndex(origin, result, time, index);
-            int[] params=GetParams.getParamsForAdvanceSettings(this);
+            int[] params = GetParams.AdvanceSettings(this);
             if(params[1]==1&&continuous){
                 startScreenshot(params[2]*1000);
             }

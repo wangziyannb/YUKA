@@ -20,7 +20,7 @@ public class SettingsActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test2);
-        int[] size = GetParams.getParamsForScreen(this);
+        int[] size = GetParams.Screen(this);
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
         attributes.gravity = Gravity.CENTER;
         attributes.dimAmount = 0.6f; //设置窗口之外部分透明程度
