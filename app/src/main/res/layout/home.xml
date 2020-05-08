@@ -7,16 +7,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/input_box"
-        android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:hint="输入文本"
-        android:singleLine="false"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/startBtn"
         android:layout_width="wrap_content"
@@ -44,7 +34,7 @@
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView2"
+            android:id="@+id/bottomNavigationView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#000000"
@@ -55,6 +45,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/nav_menu">
 
+            <Button
+                android:id="@+id/nav_start"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/nav_colse"
+                android:backgroundTint="#F06292"
+                android:gravity="center" />
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 
         <LinearLayout
@@ -64,7 +63,7 @@
             android:layout_marginBottom="8dp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView2"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -81,18 +80,21 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="这里空空如也 . . . " />
+
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avater"
-            android:translationZ="55dp"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomNavigationView2"
+        <fragment
+            android:id="@+id/fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/navigation" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
