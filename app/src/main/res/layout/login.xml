@@ -34,6 +34,7 @@
         android:hint="@string/id"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
+        android:imeOptions="actionNext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -15,12 +15,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
+import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.params.GetParams;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -66,6 +70,30 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         }
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.login, container, false);
+        TextView id_t = root.findViewById(R.id.id);
+        TextView pwd_t = root.findViewById(R.id.password);
+        String[] params = GetParams.Account(getContext());
+        id_t.setText(params[0]);
+        pwd_t.setText(params[1]);
+
+        final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        final MutableLiveData<String> id = (MutableLiveData<String>) mainViewModel.getid();
+        final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
+
+        id.observe(getViewLifecycleOwner(), id_t::setText);
+        pwd.observe(getViewLifecycleOwner(), pwd_t::setText);
+
+        root.findViewById(R.id.login).setOnClickListener(this);
+        root.findViewById(R.id.register).setOnClickListener(this);
+        globalHandler = GlobalHandler.getInstance();
+        globalHandler.setHandleMsgListener(this);
+        return root;
+    }
+
     @Override
     public void onClick(View v) {
         View view = (View) v.getParent();
@@ -107,23 +135,6 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         }
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.login, container, false);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String id = preferences.getString("id", "");
-        String pwd = preferences.getString("pwd", "");
-        TextView idt = root.findViewById(R.id.id);
-        TextView passwordt = root.findViewById(R.id.password);
-        idt.setText(id);
-        passwordt.setText(pwd);
-        root.findViewById(R.id.login).setOnClickListener(this);
-        root.findViewById(R.id.register).setOnClickListener(this);
-        globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
-        return root;
-    }
 
     @Nullable
     @Override

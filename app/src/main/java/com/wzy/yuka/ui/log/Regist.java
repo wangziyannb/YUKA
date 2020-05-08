@@ -14,8 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
+import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
@@ -37,11 +41,11 @@ public class Regist extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        EditText id_t = tableLayout.findViewById(R.id.id_regist);
+        EditText un_t = tableLayout.findViewById(R.id.username_regist);
+        EditText pwd_t = tableLayout.findViewById(R.id.password_regist);
         switch (v.getId()) {
             case R.id.register_button:
-                EditText id_t = tableLayout.findViewById(R.id.id_regist);
-                EditText un_t = tableLayout.findViewById(R.id.username_regist);
-                EditText pwd_t = tableLayout.findViewById(R.id.password_regist);
                 String[] params = new String[4];
                 String[] account = GetParams.Account(getContext());
                 params[0] = id_t.getText() + "";
@@ -55,7 +59,14 @@ public class Regist extends Fragment implements View.OnClickListener {
                     editor.putString("pwd", params[1]);
                     editor.putString("u_name", params[3]);
                     editor.commit();
+                    final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+                    final MutableLiveData<String> id = (MutableLiveData<String>) mainViewModel.getid();
+                    final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
+                    id.setValue(params[0]);
+                    pwd.setValue(params[1]);
                 }
+
+
                 break;
         }
     }
@@ -70,6 +81,7 @@ public class Regist extends Fragment implements View.OnClickListener {
                 String result = resultJson.getString("results");
                 if (origin.equals("200")) {
                     Toast.makeText(getContext(), "注册成功，请返回登陆", Toast.LENGTH_SHORT).show();
+                    NavHostFragment.findNavController(this).navigateUp();
                     return true;
                 }
                 if (origin.equals("600")) {

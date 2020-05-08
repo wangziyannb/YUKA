@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -29,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -44,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
         setContentView(R.layout.main_activity);
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
-        checkUUID();
+//        checkUUID();
         login();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -122,16 +120,16 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
 //        }
     }
 
-    private void checkUUID() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getString("uuid", "").equals("")) {
-            String uuid = UUID.randomUUID().toString();
-            Log.d("MainActivity", "初次安装,UUID:" + uuid);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("uuid", uuid);
-            editor.commit();
-        }
-    }
+//    private void checkUUID() {
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        if (preferences.getString("uuid", "").equals("")) {
+//            String uuid = UUID.randomUUID().toString();
+//            Log.d("MainActivity", "初次安装,UUID:" + uuid);
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putString("uuid", uuid);
+//            editor.commit();
+//        }
+//    }
 
     private void login() {
         HttpRequest.Login(GetParams.Account(this), new Callback() {
@@ -185,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
                 editor.commit();
             }
             if (origin.equals("601")) {
-                Toast.makeText(this, "账号或密码错误，请重新登陆", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "请重新登陆", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
