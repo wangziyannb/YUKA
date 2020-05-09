@@ -4,4 +4,5 @@
     <item name="detect_button" type="id" />
     <item name="reset_button" type="id" />
     <item name="exit_button" type="id" />
+    <item name="nav_start" type="id" />
 </resources>
