@@ -24,6 +24,8 @@ import androidx.preference.PreferenceManager;
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.interaction.LoadingViewManager;
+import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
 
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +63,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                         editor.commit();
                     }
                     String result = resultJson.getString("results");
+                    LoadingViewManager.dismiss();
                     Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                     NavHostFragment.findNavController(this).navigateUp();
                 } catch (JSONException e) {
@@ -110,7 +113,15 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 params[0] = id.getText() + "";
                 params[1] = password.getText() + "";
                 params[2] = preferences.getString("uuid", "");
-                com.wzy.yuka.tools.network.HttpRequest.Login(params, new Callback() {
+                LoadingViewManager
+                        .with(getActivity())
+                        .setHintText("登录中...")
+                        .setAnimationStyle("BallScaleIndicator")
+                        .setShowInnerRectangle(true)
+                        .setOutsideAlpha(0f)
+                        .setLoadingContentMargins(50, 50, 50, 50)
+                        .build();
+                HttpRequest.Login(params, new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Bundle bundle = new Bundle();

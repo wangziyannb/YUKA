@@ -35,12 +35,12 @@ public class HttpRequest {
             .cookieJar(new CookieJar() {
                 @Override
                 public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
+                    Log.d(Tag, "saveFromResponse: " + httpUrl);
                     cookieStore.put(httpUrl.host(), list);
-                    for (Cookie cookie : list) {
-                        Log.d(Tag, "cookie Name:" + cookie.name());
-                        Log.d(Tag, "cookie value:" + cookie.value());
-                        Log.d(Tag, "cookie path:" + cookie.path());
-                    }
+//                    Cookie cookie=list.get(0);
+//                    editor.commit();
+//                    cookie.name()
+//                    cookie.value()
                 }
 
                 @NotNull
@@ -115,7 +115,6 @@ public class HttpRequest {
 
     }
 
-
     /**
      * Login.
      *
@@ -183,5 +182,9 @@ public class HttpRequest {
         }
         return "";
     }
+
+//    public static Cookie getCookie(){
+//        cookieStore.get()
+//    }
 }
 

@@ -10,7 +10,14 @@ import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 
+import java.lang.ref.WeakReference;
+
 public class GetParams {
+    static WeakReference<Context> mContext;
+
+    public static void setContext(Context context) {
+        mContext = new WeakReference<>(context);
+    }
 
     public static int[] Screen(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
