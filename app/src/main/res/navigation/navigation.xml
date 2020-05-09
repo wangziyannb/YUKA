@@ -2,11 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation">
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.wzy.yuka.ui.HomeFragment"
+        android:name="com.wzy.yuka.ui.home.HomeFragment"
         android:label="主页"
         tools:layout="@layout/home">
         <action
@@ -15,9 +16,6 @@
         <action
             android:id="@+id/action_nav_home_to_nav_login"
             app:destination="@id/nav_login" />
-        <action
-            android:id="@+id/action_nav_home_to_nav_boutique"
-            app:destination="@id/nav_boutique" />
 
     </fragment>
     <fragment
@@ -111,9 +109,5 @@
         android:id="@+id/nav_about_reference"
         android:name="com.wzy.yuka.ui.about.AboutReference"
         android:label="参考文献" />
-    <fragment
-        android:id="@+id/nav_boutique"
-        android:name="com.wzy.yuka.NavBoutiqueFragment"
-        android:label="精选"
-        tools:layout="@layout/nav_boutique_fragment" />
+
 </navigation>

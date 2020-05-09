@@ -5,7 +5,9 @@
         android:id="@+id/nav_home"
         android:icon="@drawable/home_no"
         android:title="主页" />
-    <item />
+    <item
+        android:enabled="false"
+        android:title="" />
     <item
         android:id="@+id/nav_boutique"
         android:icon="@drawable/boutique_no"

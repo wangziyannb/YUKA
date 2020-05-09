@@ -1,11 +1,10 @@
-package com.wzy.yuka.ui;
+package com.wzy.yuka.ui.home;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +20,10 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 
@@ -30,41 +31,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
     private final String TAG = "HomeFragment";
     private Intent data;
-
+    private NavController navController;
+    private BottomNavigationView bottomNavigationView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.home, container, false);
-        root.findViewById(R.id.startBtn).setOnClickListener(this);
-        root.findViewById(R.id.closeBtn).setOnClickListener(this);
-        root.findViewById(R.id.exitBtn).setOnClickListener(this);
-        root.findViewById(R.id.nav_start).setOnClickListener(this);
+        bottomNavigationView = root.findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.findViewById(R.id.nav_start).setOnClickListener(this);
+        bottomNavigationView.findViewById(R.id.nav_home).setOnClickListener(this);
+        bottomNavigationView.findViewById(R.id.nav_boutique).setOnClickListener(this);
+
+        navController = Navigation.findNavController(root.findViewById(R.id.fragment));
         return root;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.startBtn:
+            case R.id.nav_start:
                 if (data == null) {
                     requestScreenShot();
                 }
                 if (data != null) {
-                    FloatWindowManager.initFloatWindow(getActivity(), data);
+                    if (FloatWindowManager.floatBall == null) {
+                        FloatWindowManager.initFloatWindow(getActivity(), data);
+                    } else {
+                        FloatWindowManager.dismissAllFloatWindow(false);
+                    }
                 }
                 break;
-            case R.id.closeBtn:
-                FloatWindowManager.dismissAllFloatWindow(false);
+            case R.id.nav_home:
+                if (bottomNavigationView.getSelectedItemId() != R.id.nav_home) {
+                    navController.navigate(R.id.home_main);
+                    bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                }
                 break;
-            case R.id.exitBtn:
-                getActivity().finishAffinity();
-                android.os.Process.killProcess(android.os.Process.myPid());
-                break;
-            case R.id.nav_start:
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean("isLogin", false);
-                editor.commit();
+            case R.id.nav_boutique:
+                if (bottomNavigationView.getSelectedItemId() != R.id.nav_boutique) {
+                    navController.navigate(R.id.home_boutique);
+                    bottomNavigationView.setSelectedItemId(R.id.nav_boutique);
+                }
                 break;
         }
     }

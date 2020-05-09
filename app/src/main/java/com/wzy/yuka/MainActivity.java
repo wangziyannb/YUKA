@@ -18,7 +18,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
@@ -94,11 +93,7 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
             }
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        NavController navController1 = Navigation.findNavController(this, R.id.fragment);
-        AppBarConfiguration configuration = new AppBarConfiguration.Builder(navController1.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController1, configuration);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController1);
+
     }
 
     @Override
