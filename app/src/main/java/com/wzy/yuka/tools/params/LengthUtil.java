@@ -1,6 +1,6 @@
 package com.wzy.yuka.tools.params;
 
-import com.wzy.yuka.tools.floatwindow.SelectWindow;
+import com.wzy.yuka.core.floatwindow.SelectWindow;
 
 /**
  * Created by Ziyan on 2020/4/30.
