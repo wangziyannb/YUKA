@@ -23,52 +23,49 @@ import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.user.Account;
+import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
-import com.wzy.yuka.tools.network.HttpRequest;
-import com.wzy.yuka.tools.params.GetParams;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import java.util.HashMap;
 
 public class Login extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private GlobalHandler globalHandler;
-
+    private Account account;
+    private HashMap<String, String> hashMap;
     @Override
     public void handleMsg(Message msg) {
         Bundle bundle;
         switch (msg.what) {
-            case 10:
-                bundle = msg.getData();
-                Toast.makeText(getContext(), bundle.getString("error"), Toast.LENGTH_SHORT).show();
-                break;
-            case 11:
+            case 200:
                 bundle = msg.getData();
                 String response = bundle.getString("response");
                 Log.d("TAG", "handleMsg: " + response);
                 try {
+                    LoadingViewManager.dismiss();
                     JSONObject resultJson = new JSONObject(response);
                     String origin = resultJson.getString("origin");
+                    String result = resultJson.getString("results");
                     if (origin.equals("200")) {
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean("isLogin", true);
                         editor.commit();
+                        NavHostFragment.findNavController(this).navigateUp();
                     }
-                    String result = resultJson.getString("results");
-                    LoadingViewManager.dismiss();
                     Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                    NavHostFragment.findNavController(this).navigateUp();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
+            case 400:
+                LoadingViewManager.dismiss();
+                bundle = msg.getData();
+                Toast.makeText(getContext(), bundle.getString("error"), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -79,9 +76,10 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         View root = inflater.inflate(R.layout.login, container, false);
         TextView id_t = root.findViewById(R.id.id);
         TextView pwd_t = root.findViewById(R.id.password);
-        String[] params = GetParams.Account(getContext());
-        id_t.setText(params[0]);
-        pwd_t.setText(params[1]);
+        account = new Account(getContext());
+        hashMap = account.get();
+        id_t.setText(hashMap.get("id"));
+        pwd_t.setText(hashMap.get("pwd"));
 
         final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         final MutableLiveData<String> id = (MutableLiveData<String>) mainViewModel.getid();
@@ -105,43 +103,22 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_login_to_nav_register);
                 break;
             case R.id.login:
-                String[] params = new String[3];
                 Log.d("TAG", "onClick: ");
                 TextView id = view.findViewById(R.id.id);
                 TextView password = view.findViewById(R.id.password);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                params[0] = id.getText() + "";
-                params[1] = password.getText() + "";
-                params[2] = preferences.getString("uuid", "");
+                hashMap = account.get();
+                hashMap.put("id", id.getText() + "");
+                hashMap.put("pwd", password.getText() + "");
+                account.update(hashMap);
                 LoadingViewManager
                         .with(getActivity())
                         .setHintText("登录中...")
                         .setAnimationStyle("BallScaleIndicator")
                         .setShowInnerRectangle(true)
-                        .setOutsideAlpha(0f)
+                        .setOutsideAlpha(0.3f)
                         .setLoadingContentMargins(50, 50, 50, 50)
                         .build();
-                HttpRequest.Login(params, new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("error", e.toString());
-                        Message message = Message.obtain();
-                        message.what = 10;
-                        message.setData(bundle);
-                        globalHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("response", response.body().string());
-                        Message message = Message.obtain();
-                        message.what = 11;
-                        message.setData(bundle);
-                        globalHandler.sendMessage(message);
-                    }
-                });
+                UserManager.login();
                 break;
         }
     }

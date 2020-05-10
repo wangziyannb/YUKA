@@ -16,35 +16,41 @@ import java.util.Iterator;
 
 /**
  * Created by Ziyan on 2020/5/8.
+ * include:
+ * id,pwd,uuid,u_name,isLogin
  */
 public class Account {
-    WeakReference<Context> mContext;
-    SharedPreferences mSharedPreferences;
-    JSONObject json;
+    private SharedPreferences mSharedPreferences;
+    private JSONObject json;
 
     public Account(Context context) {
-        mContext = new WeakReference<>(context);
+        WeakReference<Context> mContext = new WeakReference<>(context);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.get());
         try {
             json = new JSONObject(mSharedPreferences.getString("account", ""));
+            Log.d("Account", json.toString());
         } catch (JSONException e) {
             json = new JSONObject();
+            e.printStackTrace();
             Log.e("Account", "Account:load json failed");
         }
     }
 
-    public HashMap<String, String> getInformation() {
+    public HashMap<String, String> get() {
         HashMap<String, String> hashMap = new HashMap<>();
-        Iterator it = json.keys();
-        while (it.hasNext()) {
-            String key = it.next().toString();
-            String value = it.next().toString();
-            hashMap.put(key, value);
+        Iterator k = json.keys();
+        while (k.hasNext()) {
+            String key = k.next().toString();
+            try {
+                String value = json.get(key).toString();
+                hashMap.put(key, value);
+            } catch (JSONException ignored) {
+            }
         }
         return hashMap;
     }
 
-    public void setInformation(@NotNull HashMap<String, String> hashMap) {
+    public void update(@NotNull HashMap<String, String> hashMap) {
         json = new JSONObject(hashMap);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString("account", json.toString());

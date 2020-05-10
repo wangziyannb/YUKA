@@ -33,7 +33,7 @@ class FloatBall implements View.OnClickListener {
     FloatBall(Activity activity, String tag) {
         this.activity = activity;
         this.tag = tag;
-        boolean[] params1 = GetParams.FloatBall(activity);
+        boolean[] params1 = GetParams.FloatBall();
         if (!params1[4]) {
             EasyFloat.with(activity)
                     .setTag(tag)
@@ -50,7 +50,7 @@ class FloatBall implements View.OnClickListener {
                         WindowManager windowManager = activity.getWindowManager();
                         Handler handler = new Handler();
                         Runnable runnable = () -> {
-                            int[] size = GetParams.Screen(activity);
+                            int[] size = GetParams.Screen();
                             View view = EasyFloat.getAppFloatView(tag);
                             WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
@@ -98,15 +98,15 @@ class FloatBall implements View.OnClickListener {
 
                         @Override
                         public void dragEnd(@NotNull View view) {
-                            if (GetParams.FloatBall(activity)[0]) {
+                            if (GetParams.FloatBall()[0]) {
                                 handler.postDelayed(runnable, 3000);
                             }
                         }
                     })
                     .setDisplayHeight(context -> {
-                        boolean[] params = GetParams.FloatBall(activity);
+                        boolean[] params = GetParams.FloatBall();
                         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                        int[] size = GetParams.Screen(activity);
+                        int[] size = GetParams.Screen();
                         if (params[3]) {
                             if (size[0] < size[1]) {
                                 //竖屏
@@ -135,7 +135,7 @@ class FloatBall implements View.OnClickListener {
                         WindowManager windowManager = activity.getWindowManager();
                         Handler handler = new Handler();
                         Runnable runnable = () -> {
-                            int[] size = GetParams.Screen(activity);
+                            int[] size = GetParams.Screen();
                             View view = EasyFloat.getAppFloatView(tag);
                             WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
@@ -183,7 +183,7 @@ class FloatBall implements View.OnClickListener {
 
                         @Override
                         public void dragEnd(@NotNull View view) {
-                            if (GetParams.FloatBall(activity)[0]) {
+                            if (GetParams.FloatBall()[0]) {
                                 handler.postDelayed(runnable, 3000);
                             }
                         }
@@ -219,12 +219,12 @@ class FloatBall implements View.OnClickListener {
         } catch (Exception e) {
             //do nothing. Probably using other version of android
         }
-        boolean[] params = GetParams.FloatBall(activity);
+        boolean[] params = GetParams.FloatBall();
         switch (v.getId()) {
             case R.id.test1:
                 FloatBallLayout FloatBallLayout = view.findViewById(R.id.test);
                 WindowManager windowManager = activity.getWindowManager();
-                int[] size = GetParams.Screen(activity);
+                int[] size = GetParams.Screen();
 
                 //判断左右
                 if (layoutParams.x > size[0] / 2) {

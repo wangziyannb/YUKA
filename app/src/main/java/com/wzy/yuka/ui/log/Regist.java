@@ -1,7 +1,8 @@
 package com.wzy.yuka.ui.log;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,24 +18,31 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.network.HttpRequest;
+import com.wzy.yuka.core.user.Account;
+import com.wzy.yuka.core.user.UserManager;
+import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.params.GetParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Regist extends Fragment implements View.OnClickListener {
-    private TableLayout tableLayout;
+import java.util.HashMap;
 
+public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
+    private GlobalHandler globalHandler;
+    private TableLayout tableLayout;
+    private String[] params;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.register, container, false);
         tableLayout = root.findViewById(R.id.tableLayout);
+        globalHandler = GlobalHandler.getInstance();
+        globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.register_button).setOnClickListener(this);
         return root;
     }
@@ -46,53 +54,28 @@ public class Regist extends Fragment implements View.OnClickListener {
         EditText pwd_t = tableLayout.findViewById(R.id.password_regist);
         switch (v.getId()) {
             case R.id.register_button:
-                String[] params = new String[4];
-                String[] account = GetParams.Account(getContext());
+                params = new String[4];
+                String[] account = GetParams.Account();
                 params[0] = id_t.getText() + "";
                 params[1] = pwd_t.getText() + "";
                 params[2] = account[2];
                 params[3] = un_t.getText() + "";
-                if (responseProcess(HttpRequest.Register(params))) {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("id", params[0]);
-                    editor.putString("pwd", params[1]);
-                    editor.putString("u_name", params[3]);
-                    editor.commit();
-                    final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-                    final MutableLiveData<String> id = (MutableLiveData<String>) mainViewModel.getid();
-                    final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
-                    id.setValue(params[0]);
-                    pwd.setValue(params[1]);
-                }
-
-
+                UserManager.register(params);
+                LoadingViewManager
+                        .with(getActivity())
+                        .setHintText("注册中...")
+                        .setAnimationStyle("BallScaleIndicator")
+                        .setShowInnerRectangle(true)
+                        .setOutsideAlpha(0.3f)
+                        .setLoadingContentMargins(50, 50, 50, 50)
+                        .build();
+                final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+                final MutableLiveData<String> id = (MutableLiveData<String>) mainViewModel.getid();
+                final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
+                id.setValue(params[0]);
+                pwd.setValue(params[1]);
                 break;
         }
-    }
-
-    private boolean responseProcess(String response) {
-        if (response == null) {
-            Toast.makeText(getContext(), "网络或服务器错误", Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                JSONObject resultJson = new JSONObject(response);
-                String origin = resultJson.getString("origin");
-                String result = resultJson.getString("results");
-                if (origin.equals("200")) {
-                    Toast.makeText(getContext(), "注册成功，请返回登陆", Toast.LENGTH_SHORT).show();
-                    NavHostFragment.findNavController(this).navigateUp();
-                    return true;
-                }
-                if (origin.equals("600")) {
-                    Toast.makeText(getContext(), "注册失败，用户名或账号与他人相同", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
     }
 
     @Nullable
@@ -102,6 +85,43 @@ public class Regist extends Fragment implements View.OnClickListener {
             return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_open_enter);
         } else {
             return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_close_exit);
+        }
+    }
+
+    @Override
+    public void handleMsg(Message msg) {
+        Bundle bundle;
+        switch (msg.what) {
+            case 202:
+                bundle = msg.getData();
+                String response = bundle.getString("response");
+                Log.d("TAG", "handleMsg: " + response);
+                LoadingViewManager.dismiss();
+                try {
+                    JSONObject resultJson = new JSONObject(response);
+                    String origin = resultJson.getString("origin");
+                    String result = resultJson.getString("results");
+                    if (origin.equals("200")) {
+                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                        Account account = new Account(getContext());
+                        HashMap<String, String> hashMap = account.get();
+                        hashMap.put("id", params[0]);
+                        hashMap.put("pwd", params[1]);
+                        hashMap.put("u_name", params[3]);
+                        account.update(hashMap);
+                        NavHostFragment.findNavController(this).navigateUp();
+                    }
+                    if (origin.equals("600")) {
+                        Toast.makeText(getContext(), "注册失败，用户名或账号与他人相同", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 400:
+                LoadingViewManager.dismiss();
+                Toast.makeText(getContext(), "注册失败！请检查网络或于开发者选项者检查服务器！", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

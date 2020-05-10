@@ -35,7 +35,7 @@ public class FloatWindowManager {
      */
     static void addSelectWindow(Activity activity) {
         int limit = 5;
-        if (GetParams.AdvanceSettings(activity)[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1) {
             limit = 1;
         }
         if (getNumOfFloatWindows() == limit) {
@@ -58,7 +58,7 @@ public class FloatWindowManager {
     static void startScreenShot(Activity activity) {
         setLocation();
         Intent service = new Intent(activity, ScreenShotService_Single.class);
-        if (GetParams.AdvanceSettings(activity)[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1) {
             service = new Intent(activity, ScreenShotService_Continue.class);
         }
         if (getNumOfFloatWindows() != 0) {
@@ -84,7 +84,7 @@ public class FloatWindowManager {
         location = new int[1][4];
         location[0] = selectWindows[index].location;
         Intent service = new Intent(activity, ScreenShotService_Single.class);
-        if (GetParams.AdvanceSettings(activity)[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1) {
             service = new Intent(activity, ScreenShotService_Continue.class);
         }
         service.putExtra("index", index);

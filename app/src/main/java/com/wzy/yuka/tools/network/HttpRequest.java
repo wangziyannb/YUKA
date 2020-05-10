@@ -1,6 +1,5 @@
 package com.wzy.yuka.tools.network;
 
-import android.os.StrictMode;
 import android.util.Log;
 
 import com.wzy.yuka.tools.params.Encrypt;
@@ -8,7 +7,6 @@ import com.wzy.yuka.tools.params.Encrypt;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,22 +23,16 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class HttpRequest {
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
     private static String Tag = HttpRequest.class.getSimpleName();
-    static OkHttpClient client = new OkHttpClient.Builder()
+    private static OkHttpClient client = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
                 @Override
                 public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
                     Log.d(Tag, "saveFromResponse: " + httpUrl);
                     cookieStore.put(httpUrl.host(), list);
-//                    Cookie cookie=list.get(0);
-//                    editor.commit();
-//                    cookie.name()
-//                    cookie.value()
                 }
 
                 @NotNull
@@ -50,9 +42,9 @@ public class HttpRequest {
                     return cookies != null ? cookies : new ArrayList<Cookie>();
                 }
             })
-            .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
-            .readTimeout(5 * 60 * 1000, TimeUnit.MILLISECONDS)
-            .writeTimeout(5 * 60 * 1000, TimeUnit.MILLISECONDS)
+            .connectTimeout(10 * 1000, TimeUnit.MILLISECONDS)
+            .readTimeout(10 * 1000, TimeUnit.MILLISECONDS)
+            .writeTimeout(10 * 1000, TimeUnit.MILLISECONDS)
             .build();
 
     public static void yuka(String[] params, String filePath, okhttp3.Callback callback) {
@@ -124,7 +116,7 @@ public class HttpRequest {
     public static void Login(String[] params, okhttp3.Callback callback) {
         RequestBody body = new FormBody.Builder()
                 .add("id", params[0])
-                .add("pwd", Encrypt.md5(params[1], params[2]))
+                .add("pwd", Encrypt.md5(params[1], params[0]))
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
@@ -135,33 +127,20 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static String Logout() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        RequestBody requestBody = new FormBody.Builder().build();
+    public static void Logout(okhttp3.Callback callback) {
+        RequestBody body = new FormBody.Builder().build();
         Request request = new Request.Builder()
                 .url("https://wangclimxnb.xyz/yuka_test/logout/")
-                .post(requestBody)
+                .post(body)
                 .build();
-        try {
-            Response response = client.newCall(request).execute();
-            //第五步，解析请求结果
-            ResponseBody responseBody = response.body();
-            if (responseBody != null) {
-                return responseBody.string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+        Call call = client.newCall(request);
+        call.enqueue(callback);
     }
 
-    public static String Register(String[] params) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+    public static void Register(String[] params, okhttp3.Callback callback) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("id", params[0])
-                .add("pwd", Encrypt.md5(params[1], params[2]))
+                .add("pwd", Encrypt.md5(params[1], params[0]))
                 .add("uuid", params[2])
                 .add("u_name", params[3])
                 .build();
@@ -169,22 +148,9 @@ public class HttpRequest {
                 .url("https://wangclimxnb.xyz/yuka_test/regist/")
                 .post(requestBody)
                 .build();
-        //第四步,开始进行同步post请求
-        try {
-            Response response = client.newCall(request).execute();
-            //第五步，解析请求结果
-            ResponseBody body = response.body();
-            if (body != null) {
-                return body.string();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+        Call call = client.newCall(request);
+        call.enqueue(callback);
     }
 
-//    public static Cookie getCookie(){
-//        cookieStore.get()
-//    }
 }
 
