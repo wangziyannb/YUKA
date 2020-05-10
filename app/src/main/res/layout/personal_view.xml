@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    tools:ignore="MissingDefaultResource">
+
+    <ImageView
+        android:id="@+id/left_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_settings" />
+
+
+    <TextView
+        android:id="@+id/left_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="#00FFFFFF"
+        android:gravity="center_vertical"
+        android:text="用户名"
+        android:textAlignment="viewStart"
+        android:textColor="#050000"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/right_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+
+        android:layout_marginLeft="10dp"
+        android:layout_toStartOf="@id/right_arrow"
+        android:gravity="center_vertical"
+        android:text="Thomsen"
+        android:textAlignment="viewEnd"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/item_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+
+        android:layout_marginTop="50dp"
+        android:background="#e9e5e5" />
+
+    <ImageView
+        android:id="@+id/right_arrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_group_collapse_01" />
+
+
+</RelativeLayout>
