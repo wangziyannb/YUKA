@@ -12,36 +12,37 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:background="@drawable/ic_settings" />
 
 
     <TextView
         android:id="@+id/left_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/left_icon"
         android:background="#00FFFFFF"
         android:gravity="center_vertical"
         android:text="用户名"
-        android:textAlignment="viewStart"
         android:textColor="#050000"
-        android:textSize="16sp" />
-
+        android:textSize="16sp"
+        tools:ignore="RtlCompat" />
 
     <TextView
         android:id="@+id/right_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
 
-        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toStartOf="@id/right_arrow"
         android:gravity="center_vertical"
         android:text="Thomsen"
-        android:textAlignment="viewEnd"
         android:textColor="@android:color/darker_gray"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:ignore="RtlCompat" />
 
     <ImageView
         android:id="@+id/item_bottom"
@@ -55,9 +56,9 @@
         android:id="@+id/right_arrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/ic_group_collapse_01" />
+        android:background="@drawable/ic_close" />
 
 
 </RelativeLayout>

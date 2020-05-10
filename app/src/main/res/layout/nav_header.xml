@@ -17,6 +17,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/user_info"
             android:layout_width="135dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -27,7 +28,7 @@
                 android:layout_height="64dp"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="32dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="Navigation header"
                 android:paddingTop="32dp"
                 android:scaleType="centerCrop"
@@ -37,13 +38,13 @@
             <TextView
                 android:layout_width="81dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
+                android:paddingTop="4dp"
                 android:text="Yuka" />
 
             <TextView
                 android:id="@+id/username"
-                android:layout_width="89dp"
-                android:layout_height="31dp"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
                 android:gravity="center_vertical"
                 android:text="绯绯色欠片" />
         </LinearLayout>

@@ -50,8 +50,10 @@ public class PersonalView extends RelativeLayout {
         rightArrow = findViewById(R.id.right_arrow);
 
         leftText.setText(PersonalViewArray.getString(R.styleable.PersonalView_left_text));
-        leftIcon.setBackgroundResource(PersonalViewArray.getResourceId(R.styleable.PersonalView_left_icon, R.drawable.settings));
+        leftIcon.setBackground(PersonalViewArray.getDrawable(R.styleable.PersonalView_left_icon));//设置左侧图标
         rightText.setText(PersonalViewArray.getString(R.styleable.PersonalView_right_text));
+
+        leftIcon.setVisibility(isLeftIcon ? View.VISIBLE : View.INVISIBLE);//设置左侧箭头图标是否显示
         bottomLine.setVisibility(isBottomLine ? View.VISIBLE : View.INVISIBLE);//设置底部图标是否显示
         rightArrow.setVisibility(isRightArrow ? View.VISIBLE : View.INVISIBLE);//设置右侧箭头图标是否显示
 

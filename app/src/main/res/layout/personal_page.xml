@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:YuKa="http://schemas.android.com/apk/res-auto"
+    xmlns:yuka="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Personal_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -20,7 +21,7 @@
             android:layout_height="80dp"
             android:layout_centerInParent="true"
             android:layout_marginTop="80dp"
-            YuKa:srcCompat="@drawable/avater" />
+            yuka:srcCompat="@drawable/avater" />
 
         <TextView
             android:id="@+id/edit_user_profile"
@@ -40,32 +41,29 @@
         android:id="@+id/personal_username"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        YuKa:left_icon="@drawable/ic_check"
-        YuKa:left_text="账号"
-        YuKa:right_text="Thomsen"
-        YuKa:show_bottom_line="true"
-        YuKa:show_left_icon="false" />
+        yuka:left_icon="@drawable/ic_check"
+        yuka:left_text="账号"
+        yuka:right_text="Thomsen"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
 
     <com.wzy.yuka.PersonalView
         android:id="@+id/personal_account"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        YuKa:left_text="用户名"
-        YuKa:right_text="Thomsen"
-        YuKa:show_bottom_line="true"
-        YuKa:show_left_icon="false" />
+        yuka:left_text="用户名"
+        yuka:right_text="Thomsen"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
 
     <com.wzy.yuka.PersonalView
         android:id="@+id/personal_sex"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        YuKa:left_text="性别"
-        YuKa:right_text="男"
-        YuKa:show_bottom_line="true"
-        YuKa:show_left_icon="false" />
+        yuka:left_text="性别"
+        yuka:right_text="男"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
 
 
 </LinearLayout>
