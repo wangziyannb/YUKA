@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yuka="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Personal_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/profile_background"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <com.wzy.yuka.RoundImageView
+            android:id="@+id/user_profile"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="80dp"
+            yuka:srcCompat="@drawable/avater" />
+
+        <TextView
+            android:id="@+id/edit_user_profile"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="166dp"
+            android:text="点击修改头像"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+
+    <com.wzy.yuka.PersonalView
+        android:id="@+id/personal_username"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        yuka:left_icon="@drawable/ic_check"
+        yuka:left_text="账号"
+        yuka:right_text="Thomsen"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
+
+    <com.wzy.yuka.PersonalView
+        android:id="@+id/personal_account"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        yuka:left_text="用户名"
+        yuka:right_text="Thomsen"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
+
+    <com.wzy.yuka.PersonalView
+        android:id="@+id/personal_sex"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        yuka:left_text="性别"
+        yuka:right_text="男"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
+
+
+</LinearLayout>
+
+
+

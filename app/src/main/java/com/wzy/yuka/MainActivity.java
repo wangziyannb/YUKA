@@ -69,6 +69,15 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
                 Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
             }
         });
+
+        RoundImageView roundImageView = header.findViewById(R.id.user_info).findViewById(R.id.navBarIco);
+        roundImageView.setOnClickListener((v) -> {
+            navController.navigate(R.id.action_nav_home_to_nav_user_profile);
+            drawer.closeDrawers();
+        });
+
+
+
     }
 
     @Override
