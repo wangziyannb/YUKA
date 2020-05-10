@@ -5,4 +5,9 @@
     <item name="reset_button" type="id" />
     <item name="exit_button" type="id" />
     <item name="nav_start" type="id" />
+    <item name="right_arrow" type="id" />
+    <item name="right_text" type="id" />
+    <item name="left_text" type="id" />
+    <item name="left_icon" type="id" />
+    <item name="item_bottom" type="id" />
 </resources>
