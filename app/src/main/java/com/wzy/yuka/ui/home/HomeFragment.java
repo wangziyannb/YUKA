@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,13 +61,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.nav_home:
                 if (bottomNavigationView.getSelectedItemId() != R.id.nav_home) {
-                    navController.navigate(R.id.home_main);
+                    navController.navigate(R.id.action_home_boutique_to_home_main);
                     bottomNavigationView.setSelectedItemId(R.id.nav_home);
                 }
                 break;
             case R.id.nav_boutique:
                 if (bottomNavigationView.getSelectedItemId() != R.id.nav_boutique) {
-                    navController.navigate(R.id.home_boutique);
+                    navController.navigate(R.id.action_home_main_to_home_boutique);
                     bottomNavigationView.setSelectedItemId(R.id.nav_boutique);
                 }
                 break;
@@ -101,16 +99,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
             this.data = data;
             FloatWindowManager.initFloatWindow(getActivity(), data);
-        }
-    }
-
-    @Nullable
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter) {
-            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_open_enter);
-        } else {
-            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_close_exit);
         }
     }
 }

@@ -31,6 +31,7 @@ public class AboutOpenSource extends Fragment {
         writeText2TextView(R.raw.vision_web_service, root.findViewById(R.id.os4));
         writeText2TextView(R.raw.text_renderer, root.findViewById(R.id.os5));
         writeText2TextView(R.raw.okhttp, root.findViewById(R.id.os6));
+        writeText2TextView(R.raw.avloadingindicator, root.findViewById(R.id.os7));
         return root;
     }
 

@@ -11,8 +11,14 @@ import androidx.preference.PreferenceManager;
 import com.wzy.yuka.R;
 
 public class GetParams {
+    //不用关注内存泄露，持有的是application的context
+    private static Context context;
 
-    public static int[] Screen(Context context) {
+    public static void init(Context application) {
+        context = application;
+    }
+
+    public static int[] Screen() {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         windowManager.getDefaultDisplay().getSize(point);
@@ -22,7 +28,7 @@ public class GetParams {
         return size;
     }
 
-    public static String[] Yuka(Context context) {
+    public static String[] Yuka() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         //0:mode 1:model 2:translator 3:SBCS
         String[] params = new String[4];
@@ -66,7 +72,7 @@ public class GetParams {
         return params;
     }
 
-    public static boolean[] FloatBall(Context context) {
+    public static boolean[] FloatBall() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean[] params = new boolean[5];
         params[0] = preferences.getBoolean("settings_ball_autoHide", true);
@@ -78,7 +84,7 @@ public class GetParams {
         return params;
     }
 
-    public static boolean[] SelectWindow(Context context) {
+    public static boolean[] SelectWindow() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean[] params = new boolean[3];
         params[0] = preferences.getBoolean("settings_window_textBlackBg", true);
@@ -88,7 +94,7 @@ public class GetParams {
         return params;
     }
 
-    public static int[] AdvanceSettings(Context context) {
+    public static int[] AdvanceSettings() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         int[] params = new int[3];
         if(preferences.getBoolean("settings_fastMode", true)){
@@ -101,7 +107,7 @@ public class GetParams {
         return params;
     }
 
-    public static String[] Account(Context context) {
+    public static String[] Account() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String[] params = new String[4];
         params[0] = preferences.getString("id", "");

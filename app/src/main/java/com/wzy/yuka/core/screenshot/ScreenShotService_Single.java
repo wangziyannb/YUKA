@@ -104,7 +104,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     private void getScreenshot(int index) {
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         //各项设置，包括快速模式、保存照片
-        int[] params = GetParams.AdvanceSettings(this);
+        int[] params = GetParams.AdvanceSettings();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int delay = 800;
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
@@ -154,7 +154,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                     }
                 };
             }
-            HttpRequest.yuka(GetParams.Yuka(this), screenshot.getFileNames(), callbacks);
+            HttpRequest.yuka(GetParams.Yuka(), screenshot.getFileNames(), callbacks);
         });
     }
 

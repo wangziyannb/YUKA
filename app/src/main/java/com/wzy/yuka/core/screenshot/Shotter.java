@@ -250,6 +250,7 @@ public class Shotter {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(Bitmap[] bitmap) {
+            //do nothing
             super.onPostExecute(bitmap);
         }
     }

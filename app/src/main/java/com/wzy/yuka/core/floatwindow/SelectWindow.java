@@ -42,7 +42,7 @@ public class SelectWindow implements View.OnClickListener {
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.select_window, view1 -> {
-                    if (GetParams.AdvanceSettings(activity)[1] == 1) {
+                    if (GetParams.AdvanceSettings()[1] == 1) {
                         view1.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
                         view1.findViewById(R.id.sw_stopContinue).setVisibility(View.VISIBLE);
                     }
@@ -114,7 +114,7 @@ public class SelectWindow implements View.OnClickListener {
                     public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                         setLocation();
-                        if (GetParams.AdvanceSettings(activity)[1] == 1) {
+                        if (GetParams.AdvanceSettings()[1] == 1) {
                             view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
                             view.findViewById(R.id.sw_stopContinue).setVisibility(View.VISIBLE);
                         }
@@ -148,7 +148,7 @@ public class SelectWindow implements View.OnClickListener {
     void showResults(String origin, String translation, double time){
         View view = EasyFloat.getAppFloatView(tag);
         TextView textView=view.findViewById(R.id.translatedText);
-        boolean[] params = GetParams.SelectWindow(activity);
+        boolean[] params = GetParams.SelectWindow();
         if(params[0]){
             textView.setBackgroundResource(R.color.blackBg);
         }else{

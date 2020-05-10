@@ -47,7 +47,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int delay = 800;
-        int[] params = GetParams.AdvanceSettings(this);
+        int[] params = GetParams.AdvanceSettings();
         if (params[0] == 1) {
             //危险，性能不足会导致窗子不再出现（消失动画未完成）
             delay = 200;
@@ -85,7 +85,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                         globalHandler.sendMessage(message);
                     }
                 };
-                HttpRequest.yuka(GetParams.Yuka(this), fileName, callback);
+                HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
             });
         } else {
             FloatWindowManager.showAllFloatWindow(false, 0);
@@ -118,7 +118,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             String result = resultJson.getString("results");
             double time = resultJson.getDouble("time");
             FloatWindowManager.showResultsIndex(origin, result, time, index);
-            int[] params = GetParams.AdvanceSettings(this);
+            int[] params = GetParams.AdvanceSettings();
             if(params[1]==1&&continuous){
                 startScreenshot(params[2]*1000);
             }
