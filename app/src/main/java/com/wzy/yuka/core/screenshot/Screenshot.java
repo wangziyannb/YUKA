@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.screenshot;
+package com.wzy.yuka.core.screenshot;
 
 import android.content.Context;
 import android.content.Intent;

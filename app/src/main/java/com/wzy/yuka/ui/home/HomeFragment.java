@@ -1,4 +1,4 @@
-package com.wzy.yuka.ui;
+package com.wzy.yuka.ui.home;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -14,59 +14,71 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    static final String TAG = "HomeFragment";
-    public static final int REQUEST_MEDIA_PROJECTION = 0x2893;
-    public static Intent data;
-    private MediaProjectionManager mMediaProjectionManager;
-
+    private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
+    private final String TAG = "HomeFragment";
+    private Intent data;
+    private NavController navController;
+    private BottomNavigationView bottomNavigationView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.home, container, false);
-        root.findViewById(R.id.startBtn).setOnClickListener(this);
-        root.findViewById(R.id.closeBtn).setOnClickListener(this);
-        root.findViewById(R.id.exitBtn).setOnClickListener(this);
+        bottomNavigationView = root.findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.findViewById(R.id.nav_start).setOnClickListener(this);
+        bottomNavigationView.findViewById(R.id.nav_home).setOnClickListener(this);
+        bottomNavigationView.findViewById(R.id.nav_boutique).setOnClickListener(this);
+
+        navController = Navigation.findNavController(root.findViewById(R.id.fragment));
         return root;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.startBtn:
+            case R.id.nav_start:
                 if (data == null) {
                     requestScreenShot();
                 }
                 if (data != null) {
-                    FloatWindowManager.initFloatWindow(getActivity());
+                    if (FloatWindowManager.floatBall == null) {
+                        FloatWindowManager.initFloatWindow(getActivity(), data);
+                    } else {
+                        FloatWindowManager.dismissAllFloatWindow(false);
+                    }
                 }
                 break;
-            case R.id.closeBtn:
-                FloatWindowManager.dismissAllFloatWindow(false);
+            case R.id.nav_home:
+                if (bottomNavigationView.getSelectedItemId() != R.id.nav_home) {
+                    navController.navigate(R.id.action_home_boutique_to_home_main);
+                    bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                }
                 break;
-            case R.id.exitBtn:
-                getActivity().finishAffinity();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            default:
+            case R.id.nav_boutique:
+                if (bottomNavigationView.getSelectedItemId() != R.id.nav_boutique) {
+                    navController.navigate(R.id.action_home_main_to_home_boutique);
+                    bottomNavigationView.setSelectedItemId(R.id.nav_boutique);
+                }
                 break;
         }
     }
 
     //unknown wrong
     @SuppressLint("WrongConstant")
-    public void requestScreenShot() {
+    private void requestScreenShot() {
         Log.d(TAG, "requestScreenShot");
-        mMediaProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
+        MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
         Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();
         startActivityForResult(captureIntent, REQUEST_MEDIA_PROJECTION);
     }
@@ -85,18 +97,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Log.e(TAG, "MediaProjection error");
                 return;
             }
-            HomeFragment.data = data;
-            FloatWindowManager.initFloatWindow(getActivity());
-        }
-    }
-
-    @Nullable
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter) {
-            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_open_enter);
-        } else {
-            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_close_exit);
+            this.data = data;
+            FloatWindowManager.initFloatWindow(getActivity(), data);
         }
     }
 }

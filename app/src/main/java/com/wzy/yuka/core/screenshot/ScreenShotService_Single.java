@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.screenshot;
+package com.wzy.yuka.core.screenshot;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -13,19 +13,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -106,19 +104,20 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     private void getScreenshot(int index) {
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         //各项设置，包括快速模式、保存照片
+        int[] params = GetParams.AdvanceSettings();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int delay = 800;
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-        if (sharedPreferences.getBoolean("settings_fastMode", false)) {
+        if (params[0] == 1) {
             //危险，性能不足会导致窗子不再出现（消失动画未完成）
-            delay = 150;
+            delay = 200;
         }
         if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
             //时间足够长，点击退出按钮会导致本过程失效
             globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
         }
 
-        screenshot.getScreenshot(true, delay, HomeFragment.data, () -> {
+        screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
             FloatWindowManager.showAllFloatWindow(true, index);
             Callback[] callbacks = new Callback[FloatWindowManager.getLocation().length];
             String[] fileNames = screenshot.getFileNames();
@@ -155,7 +154,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                     }
                 };
             }
-            HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), screenshot.getFileNames(), callbacks);
+            HttpRequest.yuka(GetParams.Yuka(), screenshot.getFileNames(), callbacks);
         });
     }
 
@@ -168,8 +167,8 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background)).setAutoCancel(true).build();
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius)).setAutoCancel(true).build();
             startForeground(110, notification);
         } else {
             NotificationChannel notificationChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
@@ -179,8 +178,8 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
             manager.createNotificationChannel(notificationChannel);
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background))
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius))
                     .setAutoCancel(true).build();
             startForeground(110, notification);
         }

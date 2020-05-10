@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.screenshot;
+package com.wzy.yuka.core.screenshot;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -19,12 +19,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.ui.HomeFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -42,19 +41,24 @@ import okhttp3.Response;
 public class ScreenShotService_Continue extends Service implements GlobalHandler.HandleMsgListener {
     private final String TAG = "SingleScreenShotService";
     private GlobalHandler globalHandler;
-    private boolean continuous = true;
+    private static boolean continuous = false;
     private Runnable runnable=()->{
         FloatWindowManager.hideAllFloatWindow();
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int delay = 200;
+        int delay = 800;
+        int[] params = GetParams.AdvanceSettings();
+        if (params[0] == 1) {
+            //危险，性能不足会导致窗子不再出现（消失动画未完成）
+            delay = 200;
+        }
         boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
         if (!save) {
             //时间足够长，点击退出按钮会导致本过程失效
             globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
         }
         if(continuous){
-            screenshot.getScreenshot(true, delay, HomeFragment.data, () -> {
+            screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
                 FloatWindowManager.showAllFloatWindow(true, 0);
                 String fileName = screenshot.getFileNames()[0];
                 Callback callback = new Callback() {
@@ -81,8 +85,10 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                         globalHandler.sendMessage(message);
                     }
                 };
-                HttpRequest.requestTowardsYukaServer(GetParams.getParamsForReq(this), fileName, callback);
+                HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
             });
+        } else {
+            FloatWindowManager.showAllFloatWindow(false, 0);
         }
 
     };
@@ -112,7 +118,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             String result = resultJson.getString("results");
             double time = resultJson.getDouble("time");
             FloatWindowManager.showResultsIndex(origin, result, time, index);
-            int[] params=GetParams.getParamsForAdvanceSettings(this);
+            int[] params = GetParams.AdvanceSettings();
             if(params[1]==1&&continuous){
                 startScreenshot(params[2]*1000);
             }
@@ -132,14 +138,8 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         FloatWindowManager.showResultsIndex("yuka error", error, 0, index);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        this.continuous=true;
-        createNotificationChannel();
-        globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
-        startScreenshot(10);
-        return Service.START_NOT_STICKY;
+    public static void stopScreenshot() {
+        continuous = false;
     }
 
     /**
@@ -147,11 +147,18 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
      * 注意一定只有一个取词窗
      */
     private void startScreenshot(int interval) {
+
         globalHandler.postDelayed(runnable, interval);
     }
 
-    public void stopScreenshot(){
-        this.continuous=false;
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        continuous = true;
+        createNotificationChannel();
+        globalHandler = GlobalHandler.getInstance();
+        globalHandler.setHandleMsgListener(this);
+        startScreenshot(50);
+        return Service.START_NOT_STICKY;
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -163,8 +170,8 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background)).setAutoCancel(true).build();
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius)).setAutoCancel(true).build();
             startForeground(110, notification);
         } else {
             NotificationChannel notificationChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
@@ -174,8 +181,8 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             manager.createNotificationChannel(notificationChannel);
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground).setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher_background))
+                    .setSmallIcon(R.mipmap.ic_launcher_radius).setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                            R.mipmap.ic_launcher_radius))
                     .setAutoCancel(true).build();
             startForeground(110, notification);
         }

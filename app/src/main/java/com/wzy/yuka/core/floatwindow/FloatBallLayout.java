@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.floatwindow;
+package com.wzy.yuka.core.floatwindow;
 
 import android.content.Context;
 import android.util.AttributeSet;

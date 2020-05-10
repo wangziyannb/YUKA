@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.screenshot;
+package com.wzy.yuka.core.screenshot;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -250,6 +250,7 @@ public class Shotter {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(Bitmap[] bitmap) {
+            //do nothing
             super.onPostExecute(bitmap);
         }
     }

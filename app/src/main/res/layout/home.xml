@@ -6,39 +6,13 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/input_box"
-        android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:hint="输入文本"
-        android:singleLine="false"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/startBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="启动" />
-
-    <Button
-        android:id="@+id/closeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="关闭" />
-
-    <Button
-        android:id="@+id/exitBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="退出" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#000000"
@@ -47,7 +21,31 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/nav_menu" />
+            app:menu="@menu/nav_menu">
+
+            <Button
+                android:id="@+id/nav_start"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/nav_colse"
+                android:backgroundTint="#F06292"
+                android:gravity="center" />
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+        <fragment
+            android:id="@+id/fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="false"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navGraph="@navigation/navigation_home" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

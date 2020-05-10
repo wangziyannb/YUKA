@@ -1,9 +1,8 @@
-package com.wzy.yuka.tools.floatwindow;
+package com.wzy.yuka.core.floatwindow;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,11 +15,11 @@ import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
-import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.tools.screenshot.ScreenShotService;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,14 +29,11 @@ import org.jetbrains.annotations.Nullable;
  */
 class FloatBall implements View.OnClickListener {
     private String tag;
-    private Intent service;
     private Activity activity;
-
     FloatBall(Activity activity, String tag) {
         this.activity = activity;
         this.tag = tag;
-        service = new Intent(activity, ScreenShotService.class);
-        boolean[] params1 = GetParams.getParamsForFloatBall(activity);
+        boolean[] params1 = GetParams.FloatBall();
         if (!params1[4]) {
             EasyFloat.with(activity)
                     .setTag(tag)
@@ -54,12 +50,11 @@ class FloatBall implements View.OnClickListener {
                         WindowManager windowManager = activity.getWindowManager();
                         Handler handler = new Handler();
                         Runnable runnable = () -> {
-                            Point size = new Point();
-                            windowManager.getDefaultDisplay().getSize(size);
+                            int[] size = GetParams.Screen();
                             View view = EasyFloat.getAppFloatView(tag);
                             WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-                            if (layoutParams.x > size.x / 2) {
+                            if (layoutParams.x > size[0] / 2) {
                                 //右边
                                 layoutParams.x += 70;
                             } else {
@@ -103,25 +98,24 @@ class FloatBall implements View.OnClickListener {
 
                         @Override
                         public void dragEnd(@NotNull View view) {
-                            if (GetParams.getParamsForFloatBall(activity)[0]) {
+                            if (GetParams.FloatBall()[0]) {
                                 handler.postDelayed(runnable, 3000);
                             }
                         }
                     })
                     .setDisplayHeight(context -> {
-                        boolean[] params = GetParams.getParamsForFloatBall(activity);
+                        boolean[] params = GetParams.FloatBall();
                         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                        Point size = new Point();
-                        windowManager.getDefaultDisplay().getSize(size);
+                        int[] size = GetParams.Screen();
                         if (params[3]) {
-                            if (size.x < size.y) {
+                            if (size[0] < size[1]) {
                                 //竖屏
-                                return size.y - SizeUtil.dp2px(context, 52 + 11);
+                                return size[1] - SizeUtil.dp2px(context, 52 + 11);
                             } else {
-                                return size.y - SizeUtil.dp2px(context, 52 + 11);
+                                return size[1] - SizeUtil.dp2px(context, 52 + 11);
                             }
                         } else {
-                            return size.y;
+                            return size[1];
                         }
 
                     })
@@ -141,12 +135,11 @@ class FloatBall implements View.OnClickListener {
                         WindowManager windowManager = activity.getWindowManager();
                         Handler handler = new Handler();
                         Runnable runnable = () -> {
-                            Point size = new Point();
-                            windowManager.getDefaultDisplay().getSize(size);
+                            int[] size = GetParams.Screen();
                             View view = EasyFloat.getAppFloatView(tag);
                             WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                             layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-                            if (layoutParams.x > size.x / 2) {
+                            if (layoutParams.x > size[0] / 2) {
                                 //右边
                                 layoutParams.x += 70;
                             } else {
@@ -190,7 +183,7 @@ class FloatBall implements View.OnClickListener {
 
                         @Override
                         public void dragEnd(@NotNull View view) {
-                            if (GetParams.getParamsForFloatBall(activity)[0]) {
+                            if (GetParams.FloatBall()[0]) {
                                 handler.postDelayed(runnable, 3000);
                             }
                         }
@@ -215,6 +208,8 @@ class FloatBall implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent service_Single = new Intent(activity, ScreenShotService_Single.class);
+        Intent service_Continue = new Intent(activity, ScreenShotService_Continue.class);
         View view = EasyFloat.getAppFloatView("mainFloatBall");
         ImageButton imageButton = view.findViewById(R.id.test1);
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
@@ -224,15 +219,15 @@ class FloatBall implements View.OnClickListener {
         } catch (Exception e) {
             //do nothing. Probably using other version of android
         }
-        boolean[] params = GetParams.getParamsForFloatBall(activity);
+        boolean[] params = GetParams.FloatBall();
         switch (v.getId()) {
             case R.id.test1:
                 FloatBallLayout FloatBallLayout = view.findViewById(R.id.test);
                 WindowManager windowManager = activity.getWindowManager();
-                Point size = new Point();
-                windowManager.getDefaultDisplay().getSize(size);
+                int[] size = GetParams.Screen();
+
                 //判断左右
-                if (layoutParams.x > size.x / 2) {
+                if (layoutParams.x > size[0] / 2) {
                     //右边
                     if (SizeUtil.px2dp(view.getContext(), view.getWidth()) > 45) {
                         //展开则关闭
@@ -352,12 +347,12 @@ class FloatBall implements View.OnClickListener {
                 }
                 break;
             case R.id.settings_button:
-                Intent intent = new Intent(activity, MainActivity.class);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setAction(Intent.ACTION_MAIN);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                activity.finish();
+                Intent intent = new Intent(activity, com.wzy.yuka.ui.setting.SettingsActivity.class);
                 activity.startActivity(intent);
-                MainActivity.navController.navigate(R.id.nav_settings);
+                if (params[1]) {
+                    imageButton.performClick();
+                }
                 break;
             case R.id.detect_button:
                 if (FloatWindowManager.getNumOfFloatWindows() > 0) {
@@ -372,14 +367,16 @@ class FloatBall implements View.OnClickListener {
                 }
                 break;
             case R.id.reset_button:
-                activity.stopService(service);
+                activity.stopService(service_Continue);
+                activity.stopService(service_Single);
                 FloatWindowManager.reset(activity);
                 if (params[1]) {
                     imageButton.performClick();
                 }
                 break;
             case R.id.exit_button:
-                activity.stopService(service);
+                activity.stopService(service_Continue);
+                activity.stopService(service_Single);
                 activity.finishAffinity();
                 System.exit(0);
                 break;

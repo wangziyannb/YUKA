@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.floatwindow;
+package com.wzy.yuka.core.floatwindow;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

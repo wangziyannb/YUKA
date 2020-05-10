@@ -9,9 +9,9 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher_radius"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -26,12 +26,18 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.setting.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.NotFullActivity">
+
+        </activity>
         <service
-            android:name=".tools.screenshot.ScreenShotService_Single"
+            android:name=".core.screenshot.ScreenShotService_Single"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".tools.screenshot.ScreenShotService_Continue"
+            android:name=".core.screenshot.ScreenShotService_Continue"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
     </application>

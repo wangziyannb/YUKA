@@ -1,16 +1,15 @@
-package com.wzy.yuka.tools.floatwindow;
+package com.wzy.yuka.core.floatwindow;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
-import com.wzy.yuka.tools.screenshot.ScreenShotService_Continue;
-import com.wzy.yuka.tools.screenshot.ScreenShotService_Single;
 
 /**
  * The type Float window.
@@ -22,8 +21,10 @@ public class FloatWindowManager {
     private static SelectWindow[] selectWindows;
     public static FloatBall floatBall;
     private static int sum = 0;
+    private static Intent data;
 
-    public static void initFloatWindow(Activity activity) {
+    public static void initFloatWindow(Activity activity, Intent mdata) {
+        data = mdata;
         floatBall = new FloatBall(activity, "mainFloatBall");
     }
 
@@ -34,7 +35,7 @@ public class FloatWindowManager {
      */
     static void addSelectWindow(Activity activity) {
         int limit = 5;
-        if (GetParams.getParamsForAdvanceSettings(activity)[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1) {
             limit = 1;
         }
         if (getNumOfFloatWindows() == limit) {
@@ -57,7 +58,7 @@ public class FloatWindowManager {
     static void startScreenShot(Activity activity) {
         setLocation();
         Intent service = new Intent(activity, ScreenShotService_Single.class);
-        if (GetParams.getParamsForAdvanceSettings(activity)[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1) {
             service = new Intent(activity, ScreenShotService_Continue.class);
         }
         if (getNumOfFloatWindows() != 0) {
@@ -74,6 +75,7 @@ public class FloatWindowManager {
      * 开始截屏
      * 谁要求截屏谁提交自己位于数组中的index
      * 现在由SelectWindow对象调用
+     * 根据设置不同，开始的service不同
      *
      * @param activity intent使用
      * @param index    调用的对象的index
@@ -82,7 +84,7 @@ public class FloatWindowManager {
         location = new int[1][4];
         location[0] = selectWindows[index].location;
         Intent service = new Intent(activity, ScreenShotService_Single.class);
-        if (GetParams.getParamsForAdvanceSettings(activity)[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1) {
             service = new Intent(activity, ScreenShotService_Continue.class);
         }
         service.putExtra("index", index);
@@ -93,10 +95,6 @@ public class FloatWindowManager {
                 activity.startForegroundService(service);
             }
         }
-    }
-
-    static void startScreenShot(Activity activity, boolean yes) {
-
     }
 
     /**
@@ -123,9 +121,8 @@ public class FloatWindowManager {
         }
     }
 
-    @Deprecated
-    public static TextView[] getAllTextViews() {
-        return null;
+    public static Intent getData() {
+        return data;
     }
 
     /**
@@ -138,7 +135,9 @@ public class FloatWindowManager {
      * @param index       the index
      */
     public static void showResultsIndex(String origin, String translation, double time, int index) {
-        selectWindows[index].showResults(origin, translation, time);
+        if (getNumOfFloatWindows() != 0) {
+            selectWindows[index].showResults(origin, translation, time);
+        }
     }
 
     /**
