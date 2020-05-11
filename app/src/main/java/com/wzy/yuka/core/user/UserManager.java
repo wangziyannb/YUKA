@@ -33,6 +33,15 @@ public class UserManager {
         preferences = PreferenceManager.getDefaultSharedPreferences(application);
     }
 
+    public static HashMap<String, String> get() {
+        hashMap = account.get();
+        return hashMap;
+    }
+
+    public static void update(@NotNull HashMap<String, String> hashMap) {
+        account.update(hashMap);
+    }
+
     public static void login() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("isLogin", false);

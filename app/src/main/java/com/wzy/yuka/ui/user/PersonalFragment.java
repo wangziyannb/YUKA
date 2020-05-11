@@ -19,6 +19,4 @@ public class PersonalFragment extends Fragment {
         View root = inflater.inflate(R.layout.personal_page, container, false);
         return root;
     }
-
-
 }

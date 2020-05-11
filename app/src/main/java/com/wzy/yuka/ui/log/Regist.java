@@ -21,7 +21,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.user.Account;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
@@ -103,12 +102,11 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
                     String result = resultJson.getString("results");
                     if (origin.equals("200")) {
                         Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                        Account account = new Account(getContext());
-                        HashMap<String, String> hashMap = account.get();
+                        HashMap<String, String> hashMap = UserManager.get();
                         hashMap.put("id", params[0]);
                         hashMap.put("pwd", params[1]);
                         hashMap.put("u_name", params[3]);
-                        account.update(hashMap);
+                        UserManager.update(hashMap);
                         NavHostFragment.findNavController(this).navigateUp();
                     }
                     if (origin.equals("600")) {

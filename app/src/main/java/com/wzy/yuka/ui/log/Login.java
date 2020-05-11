@@ -76,8 +76,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         View root = inflater.inflate(R.layout.login, container, false);
         TextView id_t = root.findViewById(R.id.id);
         TextView pwd_t = root.findViewById(R.id.password);
-        account = new Account(getContext());
-        hashMap = account.get();
+        hashMap = UserManager.get();
         id_t.setText(hashMap.get("id"));
         pwd_t.setText(hashMap.get("pwd"));
 
@@ -106,10 +105,10 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 Log.d("TAG", "onClick: ");
                 TextView id = view.findViewById(R.id.id);
                 TextView password = view.findViewById(R.id.password);
-                hashMap = account.get();
+                hashMap = UserManager.get();
                 hashMap.put("id", id.getText() + "");
                 hashMap.put("pwd", password.getText() + "");
-                account.update(hashMap);
+                UserManager.update(hashMap);
                 LoadingViewManager
                         .with(getActivity())
                         .setHintText("登录中...")

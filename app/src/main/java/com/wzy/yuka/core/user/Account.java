@@ -36,7 +36,7 @@ public class Account {
         }
     }
 
-    public HashMap<String, String> get() {
+    HashMap<String, String> get() {
         HashMap<String, String> hashMap = new HashMap<>();
         Iterator k = json.keys();
         while (k.hasNext()) {
@@ -50,7 +50,7 @@ public class Account {
         return hashMap;
     }
 
-    public void update(@NotNull HashMap<String, String> hashMap) {
+    void update(@NotNull HashMap<String, String> hashMap) {
         json = new JSONObject(hashMap);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString("account", json.toString());

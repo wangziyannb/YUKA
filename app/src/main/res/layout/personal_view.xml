@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="45dp"
     android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    tools:ignore="MissingDefaultResource">
+    android:layout_marginRight="10dp">
 
     <ImageView
         android:id="@+id/left_icon"
@@ -27,8 +25,7 @@
         android:gravity="center_vertical"
         android:text="用户名"
         android:textColor="#050000"
-        android:textSize="16sp"
-        tools:ignore="RtlCompat" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/right_text"
@@ -41,14 +38,12 @@
         android:gravity="center_vertical"
         android:text="Thomsen"
         android:textColor="@android:color/darker_gray"
-        android:textSize="16sp"
-        tools:ignore="RtlCompat" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@+id/item_bottom"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-
         android:layout_marginTop="50dp"
         android:background="#e9e5e5" />
 

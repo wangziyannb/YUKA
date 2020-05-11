@@ -1,6 +1,5 @@
 package com.wzy.yuka;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -22,22 +21,16 @@ public class PersonalView extends RelativeLayout {
     private boolean isRightArrow;//是否显示右侧小箭头
 
     public PersonalView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public PersonalView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public PersonalView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @SuppressLint("CutPasteId")
-    public PersonalView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         LayoutInflater.from(getContext()).inflate(R.layout.personal_view, this);
-
         TypedArray PersonalViewArray = context.obtainStyledAttributes(attrs, R.styleable.PersonalView);
         isBottomLine = PersonalViewArray.getBoolean(R.styleable.PersonalView_show_bottom_line, true);
         isLeftIcon = PersonalViewArray.getBoolean(R.styleable.PersonalView_show_left_icon, true);
@@ -53,13 +46,14 @@ public class PersonalView extends RelativeLayout {
         leftIcon.setBackground(PersonalViewArray.getDrawable(R.styleable.PersonalView_left_icon));//设置左侧图标
         rightText.setText(PersonalViewArray.getString(R.styleable.PersonalView_right_text));
 
-        leftIcon.setVisibility(isLeftIcon ? View.VISIBLE : View.INVISIBLE);//设置左侧箭头图标是否显示
-        bottomLine.setVisibility(isBottomLine ? View.VISIBLE : View.INVISIBLE);//设置底部图标是否显示
-        rightArrow.setVisibility(isRightArrow ? View.VISIBLE : View.INVISIBLE);//设置右侧箭头图标是否显示
+        leftIcon.setVisibility(isLeftIcon ? View.VISIBLE : View.VISIBLE);//设置左侧箭头图标是否显示
+        bottomLine.setVisibility(isBottomLine ? View.VISIBLE : View.VISIBLE);//设置底部图标是否显示
+        rightArrow.setVisibility(isRightArrow ? View.VISIBLE : View.VISIBLE);//设置右侧箭头图标是否显示
 
         PersonalViewArray.recycle();
         initview();
     }
+
 
     private void initview() {
         if (isBottomLine) {
