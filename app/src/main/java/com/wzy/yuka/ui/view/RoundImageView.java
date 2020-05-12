@@ -1,4 +1,4 @@
-package com.wzy.yuka;
+package com.wzy.yuka.ui.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

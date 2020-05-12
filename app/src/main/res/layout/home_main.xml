@@ -7,6 +7,43 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="#FFFFFF"
+        android:paddingTop="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="输入您想要翻译的句子"
+            android:inputType="text"
+            android:textColorHint="@color/text_color_LightBg" />
+
+        <ImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="-48dp"
+            android:layout_marginRight="12dp"
+            android:background="#00FFFFFF"
+            app:srcCompat="@android:drawable/ic_menu_search" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="275dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/help_ins_before" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="164dp"
