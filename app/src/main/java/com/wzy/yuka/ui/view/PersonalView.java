@@ -1,4 +1,4 @@
-package com.wzy.yuka;
+package com.wzy.yuka.ui.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.wzy.yuka.R;
 
 public class PersonalView extends RelativeLayout {
     private ImageView leftIcon;//设置左侧图标
@@ -36,7 +38,7 @@ public class PersonalView extends RelativeLayout {
         isLeftIcon = PersonalViewArray.getBoolean(R.styleable.PersonalView_show_left_icon, true);
         isRightArrow = PersonalViewArray.getBoolean(R.styleable.PersonalView_show_right_arrow, true);
 
-        bottomLine = findViewById(R.id.item_bottom);
+        bottomLine = findViewById(R.id.bottom_line);
         leftIcon = findViewById(R.id.left_icon);
         leftText = findViewById(R.id.left_text);
         rightText = findViewById(R.id.right_text);
@@ -57,9 +59,9 @@ public class PersonalView extends RelativeLayout {
 
     private void initview() {
         if (isBottomLine) {
-            bottomLine.setVisibility(PersonalView.VISIBLE);
+            bottomLine.setVisibility(View.VISIBLE);
         } else {
-            bottomLine.setVisibility(PersonalView.GONE);
+            bottomLine.setVisibility(View.GONE);
         }
     }
 

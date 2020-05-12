@@ -4,18 +4,21 @@
     android:id="@+id/Personal_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorButtonNormal"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="#FFFFFF">
 
         <ImageView
             android:id="@+id/profile_background"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
-        <com.wzy.yuka.RoundImageView
+        <com.wzy.yuka.ui.view.RoundImageView
             android:id="@+id/user_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -27,15 +30,18 @@
             android:id="@+id/edit_user_profile"
             android:layout_width="80dp"
             android:layout_height="20dp"
+            android:layout_below="@+id/user_profile"
+            android:layout_marginStart="-80dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@id/user_profile"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="166dp"
+            android:foregroundGravity="center"
+            android:gravity="center"
             android:text="点击修改头像"
             android:textSize="12sp" />
 
     </RelativeLayout>
 
-    <com.wzy.yuka.PersonalView
+    <com.wzy.yuka.ui.view.PersonalView
         android:id="@+id/personal_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +51,7 @@
         yuka:show_bottom_line="true"
         yuka:show_left_icon="true" />
 
-    <com.wzy.yuka.PersonalView
+    <com.wzy.yuka.ui.view.PersonalView
         android:id="@+id/personal_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +60,7 @@
         yuka:show_bottom_line="true"
         yuka:show_left_icon="false" />
 
-    <com.wzy.yuka.PersonalView
+    <com.wzy.yuka.ui.view.PersonalView
         android:id="@+id/personal_sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,6 +69,35 @@
         yuka:show_bottom_line="true"
         yuka:show_left_icon="false" />
 
+    <com.wzy.yuka.ui.view.PersonalView
+        android:id="@+id/personal_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        yuka:left_text="年龄"
+        yuka:right_text="97 白羊"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
+
+    <com.wzy.yuka.ui.view.PersonalView
+        android:id="@+id/personal_emile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        yuka:left_text="邮箱"
+        yuka:right_text="17685807928@163.com"
+        yuka:show_bottom_line="true"
+        yuka:show_left_icon="false" />
+
+    <Button
+        android:id="@+id/sign_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="50dp"
+        android:background="@color/colorAccent"
+        android:shadowRadius="?attr/dialogPreferredPadding"
+        android:text="退出登录"
+        android:textSize="18sp" />
 
 </LinearLayout>
 

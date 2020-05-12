@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.navigation.NavigationView;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.ui.view.RoundImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

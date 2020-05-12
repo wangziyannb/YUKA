@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.wzy.yuka.RoundImageView
+            <com.wzy.yuka.ui.view.RoundImageView
                 android:id="@+id/navBarIco"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
