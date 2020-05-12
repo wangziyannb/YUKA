@@ -18,6 +18,15 @@
         android:src="@drawable/close_selectwindow" />
 
     <ImageView
+        android:id="@+id/sw_stopContinue"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="36dp"
+        android:padding="5dp"
+        android:src="@drawable/stop"
+        android:visibility="gone" />
+    <ImageView
         android:id="@+id/sw_addwindows"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -42,7 +51,7 @@
         android:text="选取目标位置后点识别\n右下角可改变框体大小\n每次调整大小后都必须位移选词窗"
         android:textColor="@color/text_color_DarkBg" />
 
-    <com.wzy.yuka.tools.floatwindow.ScaleImageView
+    <com.wzy.yuka.core.floatwindow.ScaleImageView
         android:id="@+id/sw_scale"
         android:layout_width="20dp"
         android:layout_height="20dp"
