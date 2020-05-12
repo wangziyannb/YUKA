@@ -1,6 +1,5 @@
 package com.wzy.yuka.ui.log;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -19,11 +18,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.user.Account;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
@@ -35,7 +32,6 @@ import java.util.HashMap;
 
 public class Login extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private GlobalHandler globalHandler;
-    private Account account;
     private HashMap<String, String> hashMap;
     @Override
     public void handleMsg(Message msg) {
@@ -50,14 +46,13 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                     JSONObject resultJson = new JSONObject(response);
                     String origin = resultJson.getString("origin");
                     String result = resultJson.getString("results");
+                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                     if (origin.equals("200")) {
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean("isLogin", true);
-                        editor.commit();
+                        HashMap<String, String> hashMap = UserManager.get();
+                        hashMap.put("isLogin", "true");
+                        UserManager.update(hashMap);
                         NavHostFragment.findNavController(this).navigateUp();
                     }
-                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -102,7 +97,6 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_login_to_nav_register);
                 break;
             case R.id.login:
-                Log.d("TAG", "onClick: ");
                 TextView id = view.findViewById(R.id.id);
                 TextView password = view.findViewById(R.id.password);
                 hashMap = UserManager.get();

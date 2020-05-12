@@ -1,6 +1,5 @@
 package com.wzy.yuka;
 
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Message;
@@ -17,7 +16,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.preference.PreferenceManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.wzy.yuka.core.user.UserManager;
@@ -26,6 +24,8 @@ import com.wzy.yuka.ui.view.RoundImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements GlobalHandler.HandleMsgListener {
     private AppBarConfiguration mAppBarConfiguration;
@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
         LinearLayout header = navigationView.getHeaderView(0).findViewById(R.id.line_header);
         Button login = header.findViewById(R.id.login_nav_header);
         Button logout = header.findViewById(R.id.logout_nav_header);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         UserManager.login();
         login.setOnClickListener((v) -> {
-            if (preferences.getBoolean("isLogin", false)) {
+            if (UserManager.checkLogin()) {
                 Toast.makeText(this, "您已登陆", Toast.LENGTH_SHORT).show();
             } else {
                 navController.navigate(R.id.action_nav_home_to_nav_login);
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
         });
         logout.setOnClickListener((v) -> {
             globalHandler.setHandleMsgListener(this);
-            if (preferences.getBoolean("isLogin", false)) {
+            if (UserManager.checkLogin()) {
                 UserManager.logout();
                 drawer.closeDrawers();
             } else {
@@ -120,10 +120,9 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
                     String origin = resultJson.getString("origin");
                     if (origin.equals("200")) {
                         Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean("isLogin", true);
-                        editor.commit();
+                        HashMap<String, String> hashMap = UserManager.get();
+                        hashMap.put("isLogin", "true");
+                        UserManager.update(hashMap);
                     }
                     if (origin.equals("601")) {
                         Toast.makeText(this, "请重新登陆", Toast.LENGTH_SHORT).show();

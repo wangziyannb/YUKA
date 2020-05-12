@@ -19,11 +19,11 @@ import java.util.Iterator;
  * include:
  * id,pwd,uuid,u_name,isLogin
  */
-public class Account {
+class Account {
     private SharedPreferences mSharedPreferences;
     private JSONObject json;
 
-    public Account(Context context) {
+    Account(Context context) {
         WeakReference<Context> mContext = new WeakReference<>(context);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.get());
         try {

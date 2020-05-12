@@ -20,18 +20,24 @@ public class MainApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(crashHandler);
         GetParams.init(this);
         UserManager.init(this);
-        checkUUID();
+        check();
     }
 
-    private void checkUUID() {
+    private void check() {
         HashMap<String, String> hashMap = UserManager.get();
         if (!hashMap.containsKey("uuid")) {
             String uuid = UUID.randomUUID().toString();
             Log.d("Init", "初次安装,uuid:" + uuid);
             hashMap.put("uuid", uuid);
-            UserManager.update(hashMap);
         } else {
             Log.d("Init", "已初始化uuid");
         }
+        if (!hashMap.containsKey("isLogin")) {
+            Log.d("Init", "初次安装,无登录状态");
+            hashMap.put("isLogin", "false");
+        } else {
+            Log.d("Init", "有登陆状态");
+        }
+        UserManager.update(hashMap);
     }
 }

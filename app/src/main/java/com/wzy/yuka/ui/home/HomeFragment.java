@@ -39,7 +39,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         bottomNavigationView.findViewById(R.id.nav_start).setOnClickListener(this);
         bottomNavigationView.findViewById(R.id.nav_home).setOnClickListener(this);
         bottomNavigationView.findViewById(R.id.nav_boutique).setOnClickListener(this);
-
         navController = Navigation.findNavController(root.findViewById(R.id.fragment));
         return root;
     }
