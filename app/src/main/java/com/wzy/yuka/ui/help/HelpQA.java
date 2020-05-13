@@ -17,8 +17,7 @@ public class HelpQA extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.help_qa, container, false);
-        return root;
+        return inflater.inflate(R.layout.help_qa, container, false);
 
     }
 
