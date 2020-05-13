@@ -1,6 +1,6 @@
 package com.wzy.yuka.tools.params;
 
-import com.wzy.yuka.tools.floatwindow.SelectWindow;
+import com.wzy.yuka.core.floatwindow.SelectWindow;
 
 /**
  * Created by Ziyan on 2020/4/30.
@@ -12,9 +12,7 @@ public class LengthUtil {
             newObjects = new SelectWindow[1];
         } else {
             newObjects = new SelectWindow[objects.length + 1];
-            for (int i = 0; i < objects.length; i++) {
-                newObjects[i] = objects[i];
-            }
+            System.arraycopy(objects, 0, newObjects, 0, objects.length);
         }
         return newObjects;
     }
@@ -25,9 +23,7 @@ public class LengthUtil {
             newObjects = objects;
         } else {
             newObjects = new SelectWindow[objects.length - 1];
-            for (int i = 0; i < newObjects.length; i++) {
-                newObjects[i] = objects[i];
-            }
+            System.arraycopy(objects, 0, newObjects, 0, newObjects.length);
         }
         return newObjects;
     }
