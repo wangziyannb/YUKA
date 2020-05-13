@@ -33,31 +33,6 @@
                 android:layout_width="72dp"
                 android:layout_height="40dp"
                 android:gravity="center"
-                android:text="账号*" />
-
-            <EditText
-                android:id="@+id/id_regist"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:gravity="center_vertical"
-                android:hint="请输入账号"
-                android:paddingLeft="8dp"
-                android:textColor="#999999"
-                android:textColorHint="#a3a3a3"
-                android:textSize="12sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
-
-            <TextView
-                android:layout_width="72dp"
-                android:layout_height="40dp"
-                android:gravity="center"
                 android:text="用户名*" />
 
             <EditText

@@ -16,7 +16,7 @@ public class Encrypt {
         if (TextUtils.isEmpty(string)) {
             return "";
         }
-        MessageDigest md5 = null;
+        MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
             byte[] bytes = md5.digest(string.getBytes());
@@ -40,7 +40,7 @@ public class Encrypt {
         if (TextUtils.isEmpty(string)) {
             return "";
         }
-        MessageDigest md5 = null;
+        MessageDigest md5;
         try {
             md5 = MessageDigest.getInstance("MD5");
             byte[] bytes = md5.digest((string + slat).getBytes());

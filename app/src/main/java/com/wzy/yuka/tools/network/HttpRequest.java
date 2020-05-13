@@ -33,6 +33,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HttpRequest {
+    private static GlobalHandler globalHandler = GlobalHandler.getInstance();
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
     private static String Tag = HttpRequest.class.getSimpleName();
     private static OkHttpClient client = new OkHttpClient.Builder()
@@ -54,7 +55,7 @@ public class HttpRequest {
             .readTimeout(10 * 1000, TimeUnit.MILLISECONDS)
             .writeTimeout(10 * 1000, TimeUnit.MILLISECONDS)
             .build();
-    private static GlobalHandler globalHandler = GlobalHandler.getInstance();
+
 
     public static void yuka(String[] params, String filePath, okhttp3.Callback callback) {
         File image = new File(filePath);
@@ -64,7 +65,15 @@ public class HttpRequest {
                     .setType(MultipartBody.FORM)
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"mode\""),
-                            RequestBody.create(null, params[0])
+                            RequestBody.create(params[0], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
+                            RequestBody.create(UserManager.getUser()[0], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
+                            RequestBody.create(UserManager.getUser()[2], null)
                     )
                     .build();
         } else if (image.exists()) {
@@ -72,23 +81,31 @@ public class HttpRequest {
                     .setType(MultipartBody.FORM)
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"image\";filename=\"1.jpg\""),
-                            RequestBody.create(MediaType.parse("image/jpeg"), image)
+                            RequestBody.create(image, MediaType.parse("image/jpeg"))
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"mode\""),
-                            RequestBody.create(null, params[0])
+                            RequestBody.create(params[0], null)
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"model\""),
-                            RequestBody.create(null, params[1])
+                            RequestBody.create(params[1], null)
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"translator\""),
-                            RequestBody.create(null, params[2])
+                            RequestBody.create(params[2], null)
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"SBCS\""),
-                            RequestBody.create(null, params[3])
+                            RequestBody.create(params[3], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
+                            RequestBody.create(UserManager.getUser()[0], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
+                            RequestBody.create(UserManager.getUser()[2], null)
                     )
                     .build();
         } else {
@@ -96,7 +113,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka/")
+                .url("https://wangclimxnb.xyz/yuka_test/yuka/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -118,14 +135,15 @@ public class HttpRequest {
 
     public static void yuka(String origin) {
         RequestBody body = new FormBody.Builder()
-                .add("mode", "text_translate")
+                .add("mode", "text")
                 .add("translator", GetParams.Yuka()[2])
+                .add("SBCS", GetParams.Yuka()[3])
                 .add("origin", origin)
-                .add("id", UserManager.get().get("id"))
-                .add("uuid", UserManager.get().get("uuid"))
+                .add("u_name", UserManager.getUser()[0])
+                .add("uuid", UserManager.getUser()[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/")
+                .url("https://wangclimxnb.xyz/yuka_test/yuka/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -143,7 +161,7 @@ public class HttpRequest {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 Bundle bundle = new Bundle();
-                bundle.putString("response", response.body().toString());
+                bundle.putString("response", response.body().string());
                 Message message = Message.obtain();
                 message.what = 200;
                 message.setData(bundle);
@@ -155,11 +173,11 @@ public class HttpRequest {
     /**
      * Login.
      *
-     * @param params   账号、密码、uuid
+     * @param params 账号、密码、uuid
      */
     public static void Login(String[] params, okhttp3.Callback callback) {
         RequestBody body = new FormBody.Builder()
-                .add("id", params[0])
+                .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
                 .add("uuid", params[2])
                 .build();
@@ -171,8 +189,11 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void Logout(okhttp3.Callback callback) {
-        RequestBody body = new FormBody.Builder().build();
+    public static void Logout(String[] params, okhttp3.Callback callback) {
+        RequestBody body = new FormBody.Builder()
+                .add("u_name", params[0])
+                .add("uuid", params[2])
+                .build();
         Request request = new Request.Builder()
                 .url("https://wangclimxnb.xyz/yuka_test/logout/")
                 .post(body)
@@ -181,12 +202,12 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
+
     public static void Register(String[] params, okhttp3.Callback callback) {
         RequestBody requestBody = new FormBody.Builder()
-                .add("id", params[0])
+                .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
                 .add("uuid", params[2])
-                .add("u_name", params[3])
                 .build();
         Request request = new Request.Builder()
                 .url("https://wangclimxnb.xyz/yuka_test/regist/")

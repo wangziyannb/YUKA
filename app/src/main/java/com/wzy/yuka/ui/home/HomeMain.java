@@ -2,6 +2,7 @@ package com.wzy.yuka.ui.home;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +30,14 @@ import org.json.JSONObject;
 public class HomeMain extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private TextInputLayout text_l;
     private LinearLayout translate_panel;
-    private GlobalHandler globalHandler = GlobalHandler.getInstance();
+    private GlobalHandler globalHandler;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.home_main, container, false);
-        globalHandler.setHandleMsgListener(this);
+        globalHandler = GlobalHandler.getInstance();
+
 
         text_l = root.findViewById(R.id.inputLayout);
         text_l.findViewById(R.id.translate_button).setOnClickListener(this);
@@ -47,6 +49,7 @@ public class HomeMain extends Fragment implements View.OnClickListener, GlobalHa
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.translate_button:
+                globalHandler.setHandleMsgListener(this);
                 if (!UserManager.checkLogin()) {
                     Toast.makeText(getContext(), "请登陆", Toast.LENGTH_SHORT).show();
                 } else {
@@ -68,9 +71,10 @@ public class HomeMain extends Fragment implements View.OnClickListener, GlobalHa
                 bundle = msg.getData();
                 response = bundle.getString("response");
                 try {
+                    Log.d("TAG", "handleMsg: " + response);
                     JSONObject resultJson = new JSONObject(response);
                     TextView textView = translate_panel.findViewById(R.id.text_translated);
-                    textView.append(resultJson.getString("result"));
+                    textView.append(resultJson.getString("results"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

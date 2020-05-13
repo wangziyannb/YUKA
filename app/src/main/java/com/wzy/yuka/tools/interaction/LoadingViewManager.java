@@ -353,7 +353,7 @@ public class LoadingViewManager {
             innerRelativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
             loadingTextView.setLayoutParams(textLayoutParams);
             avLoadingIndicatorView.setLayoutParams(animationLayoutParams);
-            /**
+            /*
              *  把子容器加到父容器中
              */
             // 1

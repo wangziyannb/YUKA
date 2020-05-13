@@ -106,14 +106,4 @@ public class GetParams {
         params[2] = preferences.getInt("settings_continuousMode_interval", 6);
         return params;
     }
-
-    public static String[] Account() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String[] params = new String[4];
-        params[0] = preferences.getString("id", "");
-        params[1] = preferences.getString("pwd", "");
-        params[2] = preferences.getString("uuid", "");
-        params[3] = preferences.getString("u_name", "");
-        return params;
-    }
 }

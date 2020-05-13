@@ -165,7 +165,7 @@ class FloatBall implements View.OnClickListener {
 
                         @Override
                         public void dismiss() {
-
+                            handler.removeCallbacks(runnable);
                         }
 
                         @Override

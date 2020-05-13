@@ -17,7 +17,7 @@ import java.util.Iterator;
 /**
  * Created by Ziyan on 2020/5/8.
  * include:
- * id,pwd,uuid,u_name,isLogin
+ * u_name,pwd,uuid,isLogin
  */
 class Account {
     private SharedPreferences mSharedPreferences;

@@ -22,14 +22,10 @@ import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.ui.view.RoundImageView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
 public class MainActivity extends AppCompatActivity implements GlobalHandler.HandleMsgListener {
     private AppBarConfiguration mAppBarConfiguration;
     private GlobalHandler globalHandler;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
         });
 
 
-
     }
 
     @Override
@@ -108,42 +103,18 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
 
     @Override
     public void handleMsg(Message msg) {
-        Bundle bundle;
-        String response;
-        String error;
         switch (msg.what) {
             case 200:
-                bundle = msg.getData();
-                response = bundle.getString("response");
-                try {
-                    JSONObject resultJson = new JSONObject(response);
-                    String origin = resultJson.getString("origin");
-                    if (origin.equals("200")) {
-                        Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
-                        HashMap<String, String> hashMap = UserManager.get();
-                        hashMap.put("isLogin", "true");
-                        UserManager.update(hashMap);
-                    }
-                    if (origin.equals("601")) {
-                        Toast.makeText(this, "请重新登陆", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
                 break;
             case 201:
-                bundle = msg.getData();
-                response = bundle.getString("response");
-                try {
-                    JSONObject resultJson = new JSONObject(response);
-                    String result = resultJson.getString("results");
-                    Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    Toast.makeText(this, "服务器错误", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(this, "已退出登陆", Toast.LENGTH_SHORT).show();
+                break;
+            case 601:
+                Toast.makeText(this, "账户不存在", Toast.LENGTH_SHORT).show();
                 break;
             case 400:
-                Toast.makeText(this, "登陆/登出失败！请检查网络或于开发者选项者检查服务器！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

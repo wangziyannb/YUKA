@@ -2,7 +2,6 @@ package com.wzy.yuka.ui.log;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,42 +24,24 @@ import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class Login extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private GlobalHandler globalHandler;
-    private HashMap<String, String> hashMap;
+
     @Override
     public void handleMsg(Message msg) {
-        Bundle bundle;
         switch (msg.what) {
             case 200:
-                bundle = msg.getData();
-                String response = bundle.getString("response");
-                Log.d("TAG", "handleMsg: " + response);
-                try {
-                    LoadingViewManager.dismiss();
-                    JSONObject resultJson = new JSONObject(response);
-                    String origin = resultJson.getString("origin");
-                    String result = resultJson.getString("results");
-                    Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                    if (origin.equals("200")) {
-                        HashMap<String, String> hashMap = UserManager.get();
-                        hashMap.put("isLogin", "true");
-                        UserManager.update(hashMap);
-                        NavHostFragment.findNavController(this).navigateUp();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                LoadingViewManager.dismiss();
+                Toast.makeText(getContext(), "登陆成功", Toast.LENGTH_SHORT).show();
+                NavHostFragment.findNavController(this).navigateUp();
                 break;
+            case 601:
+                LoadingViewManager.dismiss();
+                Toast.makeText(getContext(), "用户名或密码错误", Toast.LENGTH_SHORT).show();
             case 400:
                 LoadingViewManager.dismiss();
-                bundle = msg.getData();
-                Toast.makeText(getContext(), bundle.getString("error"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -69,17 +50,17 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.login, container, false);
-        TextView id_t = root.findViewById(R.id.id);
+        TextView un_t = root.findViewById(R.id.user_name);
         TextView pwd_t = root.findViewById(R.id.password);
-        hashMap = UserManager.get();
-        id_t.setText(hashMap.get("id"));
-        pwd_t.setText(hashMap.get("pwd"));
+        String[] params = UserManager.getUser();
+        un_t.setText(params[0]);
+        pwd_t.setText(params[1]);
 
         final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-        final MutableLiveData<String> id = (MutableLiveData<String>) mainViewModel.getid();
+        final MutableLiveData<String> user_n = (MutableLiveData<String>) mainViewModel.getuser_n();
         final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
 
-        id.observe(getViewLifecycleOwner(), id_t::setText);
+        user_n.observe(getViewLifecycleOwner(), un_t::setText);
         pwd.observe(getViewLifecycleOwner(), pwd_t::setText);
 
         root.findViewById(R.id.login).setOnClickListener(this);
@@ -97,12 +78,9 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_login_to_nav_register);
                 break;
             case R.id.login:
-                TextView id = view.findViewById(R.id.id);
+                TextView username = view.findViewById(R.id.user_name);
                 TextView password = view.findViewById(R.id.password);
-                hashMap = UserManager.get();
-                hashMap.put("id", id.getText() + "");
-                hashMap.put("pwd", password.getText() + "");
-                UserManager.update(hashMap);
+                UserManager.addUser(username.getText() + "", password.getText() + "");
                 LoadingViewManager
                         .with(getActivity())
                         .setHintText("登录中...")

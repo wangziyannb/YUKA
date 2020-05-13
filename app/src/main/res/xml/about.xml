@@ -17,7 +17,7 @@
             android:title="Yuka版本号" />
         <Preference
             android:key="about_about_server"
-            android:summary="2.3"
+            android:summary="3.1.2"
             android:title="服务器版本" />
         <Preference
             android:key="about_about_repository"

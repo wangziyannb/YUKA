@@ -18,14 +18,14 @@
         android:layout_marginEnd="96dp"
         android:layout_marginBottom="32dp"
         android:contentDescription="@string/avatar"
-        app:layout_constraintBottom_toTopOf="@id/id"
+        app:layout_constraintBottom_toTopOf="@id/user_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/avater" />
 
     <EditText
-        android:id="@+id/id"
+        android:id="@+id/user_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -53,7 +53,7 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id" />
+        app:layout_constraintTop_toBottomOf="@id/user_name" />
 
     <TextView
         android:id="@+id/forget_password"

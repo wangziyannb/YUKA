@@ -67,7 +67,7 @@ public class PersonalView extends RelativeLayout {
 
     //设置左侧图标
     public void setLeftIcon(int value) {
-        Drawable drawable = getResources().getDrawable(value);
+        Drawable drawable = getResources().getDrawable(value, null);
         leftIcon.setBackground(drawable);
     }
 

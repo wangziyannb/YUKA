@@ -8,14 +8,14 @@ import androidx.lifecycle.ViewModel;
  * Created by Ziyan on 2020/5/8.
  */
 public class MainViewModel extends ViewModel {
-    private MutableLiveData<String> id;
+    private MutableLiveData<String> user_n;
     private MutableLiveData<String> pwd;
 
-    public LiveData<String> getid() {
-        if (id == null) {
-            id = new MutableLiveData<>();
+    public LiveData<String> getuser_n() {
+        if (user_n == null) {
+            user_n = new MutableLiveData<>();
         }
-        return id;
+        return user_n;
     }
 
     public LiveData<String> getpwd() {
@@ -28,7 +28,7 @@ public class MainViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        id = null;
+        user_n = null;
         pwd = null;
     }
 
