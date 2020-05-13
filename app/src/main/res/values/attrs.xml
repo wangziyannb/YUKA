@@ -7,5 +7,6 @@
         <attr name="right_text" format="string" />
         <attr name="show_right_arrow" format="boolean" />
         <attr name="show_bottom_line" format="boolean" />
+        <attr name="android:entries" format="string"/>
     </declare-styleable>
 </resources>
