@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/member_card"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/radius_style">
+
+        <com.wzy.yuka.ui.view.RoundImageView
+            android:id="@+id/member_card_profile"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/avater" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="165dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="24dp"
+            app:srcCompat="@drawable/vip" />
+
+        <TextView
+            android:id="@+id/member_id"
+            android:layout_width="117dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="30dp"
+            android:text="Thomsen"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/memer_number"
+            android:layout_width="154dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="70dp"
+            android:gravity="center"
+            android:text="ID:20200513001"
+            android:textSize="18sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/member_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="30dp"
+            android:text="到期剩余时间：25天" />
+
+        <TextView
+            android:id="@+id/member_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="60dp"
+            android:text="超级月卡"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <TextView
+            android:id="@+id/cdkey"
+            android:layout_width="243dp"
+            android:layout_height="48dp"
+            android:layout_weight="2"
+            android:background="@drawable/key_input_button"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:text="请输入激活码" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="132dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/key_button_style"
+            android:layoutDirection="inherit"
+            android:text="获取激活码" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/activate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/radius_style"
+        android:text="立即激活" />
+
+</LinearLayout>
