@@ -31,7 +31,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
 public class HttpRequest {
     private static GlobalHandler globalHandler = GlobalHandler.getInstance();
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
@@ -57,7 +56,7 @@ public class HttpRequest {
             .build();
 
 
-    public static void yuka(String[] params, String filePath, okhttp3.Callback callback) {
+    public static void yuka(String[] params, String filePath, Callback callback) {
         File image = new File(filePath);
         MultipartBody body;
         if (params[0].equals("yuka")) {
@@ -120,7 +119,7 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void yuka(String[] params, String[] filePath, okhttp3.Callback[] callbacks) {
+    public static void yuka(String[] params, String[] filePath, Callback[] callbacks) {
         if (filePath.length == callbacks.length) {
             for (int i = 0; i < filePath.length; i++) {
                 yuka(params, filePath[i], callbacks[i]);
@@ -175,7 +174,7 @@ public class HttpRequest {
      *
      * @param params 账号、密码、uuid
      */
-    public static void Login(String[] params, okhttp3.Callback callback) {
+    public static void Login(String[] params, Callback callback) {
         RequestBody body = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
@@ -189,7 +188,7 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void Logout(String[] params, okhttp3.Callback callback) {
+    public static void Logout(String[] params, Callback callback) {
         RequestBody body = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("uuid", params[2])
@@ -202,8 +201,7 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-
-    public static void Register(String[] params, okhttp3.Callback callback) {
+    public static void Register(String[] params, Callback callback) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
@@ -211,6 +209,31 @@ public class HttpRequest {
                 .build();
         Request request = new Request.Builder()
                 .url("https://wangclimxnb.xyz/yuka_test/regist/")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void activate(String[] params, Callback callback) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("u_name", params[0])
+                .add("CDKEY", params[1])
+                .build();
+        Request request = new Request.Builder()
+                .url("https://wangclimxnb.xyz/yuka_test/activate/")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void check_info(String[] params, Callback callback) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("u_name", params[0])
+                .build();
+        Request request = new Request.Builder()
+                .url("https://wangclimxnb.xyz/yuka_test/account/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);

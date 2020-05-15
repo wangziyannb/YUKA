@@ -29,6 +29,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     private GlobalHandler globalHandler;
     private TableLayout tableLayout;
     private String[] params;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,9 +88,11 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
                 NavHostFragment.findNavController(this).navigateUp();
+                break;
             case 600:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "注册失败，用户名或账号与他人相同", Toast.LENGTH_SHORT).show();
+                break;
             case 400:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();

@@ -59,14 +59,24 @@
             android:textStyle="italic" />
 
         <TextView
-            android:id="@+id/member_day"
+            android:id="@+id/member_expiry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="30dp"
-            android:text="到期剩余时间：25天" />
+            android:layout_marginStart="26dp"
+            android:layout_marginBottom="41dp"
+            android:text="过期时间：" />
+
+        <TextView
+            android:id="@+id/member_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginBottom="12dp"
+            android:text="剩余次数：" />
 
         <TextView
             android:id="@+id/member_type"
@@ -75,7 +85,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="73dp"
             android:text="超级月卡"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -88,22 +98,23 @@
         android:layout_marginTop="60dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
+        android:id="@+id/personal_input"
         android:orientation="horizontal"
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
-        <TextView
-            android:id="@+id/cdkey"
+        <EditText
+            android:id="@+id/personal_cdkey"
             android:layout_width="243dp"
             android:layout_height="48dp"
             android:layout_weight="2"
             android:background="@drawable/key_input_button"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:text="请输入激活码" />
+            android:hint="请输入激活码" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/personal_button1"
             android:layout_width="132dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -113,7 +124,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/activate"
+        android:id="@+id/personal_button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
@@ -199,10 +200,89 @@ public class UserManager {
         });
     }
 
+    public static void activate(String cdkey) {
+        String[] params = new String[2];
+        params[0] = getUser()[0];
+        params[1] = cdkey;
+        HttpRequest.activate(params, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Message message = Message.obtain();
+                message.what = 400;
+                globalHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String res = response.body().string();
+                Message message = Message.obtain();
+                try {
+                    JSONObject resultJson = new JSONObject(res);
+                    String origin = resultJson.getString("origin");
+                    if (origin.equals("200")) {
+                        message.what = 200;
+                        globalHandler.sendMessage(message);
+                    }
+                    if (origin.equals("400")) {
+                        message.what = 400;
+                        globalHandler.sendMessage(message);
+                    }
+                    if (origin.equals("603")) {
+                        message.what = 603;
+                        globalHandler.sendMessage(message);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    onFailure(call, new IOException());
+                }
+            }
+        });
+
+    }
+
+    public static void refreshInfo() {
+        if (checkLogin()) {
+            String[] params = getUser();
+            HttpRequest.check_info(params, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Message message = Message.obtain();
+                    message.what = 400;
+                    globalHandler.sendMessage(message);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String res = response.body().string();
+                    Log.d("TAG", "onResponse: " + res);
+                    Message message = Message.obtain();
+                    try {
+                        JSONObject resultJson = new JSONObject(res);
+                        String origin = resultJson.getString("origin");
+                        String result = resultJson.getString("results");
+                        double time = resultJson.getDouble("time");
+                        if (origin.equals("200")) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("expiry", result);
+                            bundle.putDouble("times", time);
+                            message.what = 201;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        onFailure(call, new IOException());
+                    }
+                }
+            });
+        }
+    }
+
     public static boolean checkLogin() {
         hashMap = get();
         return Boolean.parseBoolean(hashMap.get("isLogin"));
     }
+
 
     public static HashMap<String, String> get() {
         hashMap = account.get();

@@ -36,12 +36,14 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 Toast.makeText(getContext(), "登陆成功", Toast.LENGTH_SHORT).show();
                 NavHostFragment.findNavController(this).navigateUp();
                 break;
+
             case 601:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "用户名或密码错误", Toast.LENGTH_SHORT).show();
+                break;
             case 400:
                 LoadingViewManager.dismiss();
-                Toast.makeText(getContext(), "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "网络似乎出现了点问题1...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
