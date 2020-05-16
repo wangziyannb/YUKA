@@ -1,5 +1,7 @@
 package com.wzy.yuka.ui.user;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -106,7 +109,8 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.personal_button1:
-                //todo: 进入淘宝
+                //todo: 进入商店
+                alert();
                 break;
             case R.id.personal_button2:
                 //todo: 输入cdkey
@@ -125,6 +129,26 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         }
     }
 
+    private void alert() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("关于购买");
+        alert.setMessage("感谢使用Yuka！以下为购买说明：\n" +
+                "1、注册账号后将会附送10次翻译次数，请确保已体验足够再进行购买。即使有月卡，也会优先扣除翻译次数！\n" +
+                "2、购买月卡的价格是每月3元，后续可能只涨不降。\n" +
+                "3、没有网银支付宝微信钱包的学生党可以联系作者或加群781666001，PY获得月卡\n" +
+                "4、月卡商店开在微店上，并不需要下载微店app。\n" +
+                "5、点击成为超级会员会跳转到商店页面，购买后自动发激活码，填于空位即可续期一个月。\n" +
+                "6、请加入qq群781666001，参加Yuka的测试版本");
+        alert.setPositiveButton("成为炒鸡会员！", (dialog, which) -> {
+            Uri uri = Uri.parse("https://weidian.com/item.html?itemID=3625538574");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+        alert.setNegativeButton("别急，等等再说！", (dialog, which) -> {
+
+        });
+        alert.show();
+    }
     @Nullable
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {

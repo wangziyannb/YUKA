@@ -21,7 +21,7 @@
             android:title="服务器版本" />
         <Preference
             android:key="about_about_repository"
-            android:summary="github"
+            android:summary="远古版本，毕设留档可参考"
             android:title="项目地址" />
     </PreferenceCategory>
     <PreferenceCategory

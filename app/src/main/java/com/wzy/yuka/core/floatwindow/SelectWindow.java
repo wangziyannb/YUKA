@@ -170,8 +170,7 @@ public class SelectWindow implements View.OnClickListener {
             textView.append("\n译文： ");
             textView.append(translation);
         }else{
-            textView.setText("译文： ");
-            textView.append(translation);
+            textView.setText(translation);
         }
         if(params[2]){
             DecimalFormat df = new DecimalFormat("#0.000");

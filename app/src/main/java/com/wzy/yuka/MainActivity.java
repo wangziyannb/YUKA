@@ -23,6 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.ui.view.RoundImageView;
 
 public class MainActivity extends AppCompatActivity implements GlobalHandler.HandleMsgListener {
@@ -33,9 +34,10 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
+
+        setContentView(R.layout.main_activity);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
         Button login = header.findViewById(R.id.login_nav_header);
         Button logout = header.findViewById(R.id.logout_nav_header);
 
-        UserManager.login();
         login.setOnClickListener((v) -> {
             if (UserManager.checkLogin()) {
                 Toast.makeText(this, "您已登陆", Toast.LENGTH_SHORT).show();
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
             if (UserManager.checkLogin()) {
                 UserManager.logout();
                 drawer.closeDrawers();
+                load("登出中...");
             } else {
                 Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
             }
@@ -83,9 +85,26 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
             }
         });
 
+        try {
+            Message message = getIntent().getParcelableExtra("msg");
+            globalHandler.sendMessage(message);
+        } catch (Exception e) {
+            UserManager.login();
+            load("登录中...");
+        }
 
     }
 
+    private void load(String text) {
+        LoadingViewManager
+                .with(this)
+                .setHintText(text)
+                .setAnimationStyle("BallScaleIndicator")
+                .setShowInnerRectangle(true)
+                .setOutsideAlpha(0.3f)
+                .setLoadingContentMargins(50, 50, 50, 50)
+                .build();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -130,16 +149,20 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
     public void handleMsg(Message msg) {
         switch (msg.what) {
             case 200:
+                LoadingViewManager.dismiss();
                 Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
                 break;
             case 201:
+                LoadingViewManager.dismiss();
                 Toast.makeText(this, "已退出登陆", Toast.LENGTH_SHORT).show();
                 break;
             case 601:
+                LoadingViewManager.dismiss();
                 Toast.makeText(this, "账户不存在", Toast.LENGTH_SHORT).show();
                 drawer.openDrawer(GravityCompat.START, true);
                 break;
             case 400:
+                LoadingViewManager.dismiss();
                 Toast.makeText(this, "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
                 break;
         }
