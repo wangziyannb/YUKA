@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
 
@@ -34,32 +34,43 @@
             app:srcCompat="@drawable/vip" />
 
         <TextView
-            android:id="@+id/member_id"
-            android:layout_width="117dp"
+            android:id="@+id/member_username"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="110dp"
             android:layout_marginTop="30dp"
-            android:text="Thomsen"
+            android:text=""
             android:textAlignment="center"
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/memer_number"
-            android:layout_width="154dp"
+            android:id="@+id/textView25"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="110dp"
             android:layout_marginTop="70dp"
-            android:gravity="center"
-            android:text="ID:20200513001"
+            android:text="注册ID:"
             android:textSize="18sp"
             android:textStyle="italic" />
 
         <TextView
-            android:id="@+id/member_expiry"
+            android:id="@+id/member_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="70dp"
+            android:layout_toEndOf="@id/textView25"
+            android:text=""
+            android:textSize="18sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/textView23"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -69,7 +80,17 @@
             android:text="过期时间：" />
 
         <TextView
-            android:id="@+id/member_times"
+            android:id="@+id/member_expiry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="41dp"
+            android:layout_toEndOf="@+id/textView23"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textView24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -77,6 +98,16 @@
             android:layout_marginStart="26dp"
             android:layout_marginBottom="12dp"
             android:text="剩余次数：" />
+
+        <TextView
+            android:id="@+id/member_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="12dp"
+            android:layout_toEndOf="@id/textView24"
+            android:text="" />
 
         <TextView
             android:id="@+id/member_type"
@@ -89,6 +120,17 @@
             android:text="超级月卡"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/member_type1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="73dp"
+            android:layout_toEndOf="@id/member_type"
+            android:text="多捞哦"
+            android:textSize="5sp" />
 
     </RelativeLayout>
 
@@ -131,5 +173,16 @@
         android:layout_marginEnd="40dp"
         android:background="@drawable/radius_style"
         android:text="立即激活" />
+
+    <Button
+        android:id="@+id/personal_button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/radius_style"
+        android:text="更多信息"
+        android:visibility="gone" />
 
 </LinearLayout>

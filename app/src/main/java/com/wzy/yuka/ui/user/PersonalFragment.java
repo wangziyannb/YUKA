@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.wzy.yuka.R;
 
@@ -21,7 +20,7 @@ public class PersonalFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.personal_page, container, false);
         root.findViewById(R.id.sign_out).setOnClickListener((v) -> {
-            NavHostFragment.findNavController(this).navigate(R.id.action_nav_user_profile_to_nav_user_service);
+            //NavHostFragment.findNavController(this).navigate(R.id.action_nav_user_profile_to_nav_user_service);
         });
         return root;
     }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -38,7 +39,26 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.register_button).setOnClickListener(this);
+        alert();
+
         return root;
+    }
+
+    private void alert() {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("注册说明");
+        alert.setMessage("感谢使用Yuka！以下为注册说明：\n" +
+                "1、每台设备只能注册一次！重复注册会注册失败（多捞哦）\n" +
+                "2、本注册界面只有账号密码会提交至服务器！\n" +
+                "3、注册账号后将会附送10次翻译次数，后续使用则需要购买月卡（真不是做不出来年卡，是服务器不一定能撑一年），每月3元。\n" +
+                "4、如果已经有账号，请直接登陆。");
+        alert.setPositiveButton("知道惹，我要注册！", (dialog, which) -> {
+
+        });
+        alert.setNegativeButton("已有帐号，我要登陆！", (dialog, which) -> {
+            NavHostFragment.findNavController(this).navigateUp();
+        });
+        alert.show();
     }
 
     @Override

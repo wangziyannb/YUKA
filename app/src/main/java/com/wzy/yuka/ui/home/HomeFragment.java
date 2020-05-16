@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.user.UserManager;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
@@ -47,15 +49,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.nav_start:
-                if (data == null) {
-                    requestScreenShot();
-                }
-                if (data != null) {
-                    if (FloatWindowManager.floatBall == null) {
-                        FloatWindowManager.initFloatWindow(getActivity(), data);
-                    } else {
-                        FloatWindowManager.dismissAllFloatWindow(false);
+                if (UserManager.checkLogin()) {
+                    if (data == null) {
+                        requestScreenShot();
                     }
+                    if (data != null) {
+                        if (FloatWindowManager.floatBall == null) {
+                            FloatWindowManager.initFloatWindow(getActivity(), data);
+                        } else {
+                            FloatWindowManager.dismissAllFloatWindow(false);
+                        }
+                    }
+                } else {
+                    Toast.makeText(getContext(), "没登录呢", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.nav_home:

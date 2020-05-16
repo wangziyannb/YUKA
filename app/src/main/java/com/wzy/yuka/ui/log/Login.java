@@ -82,7 +82,8 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
             case R.id.login:
                 TextView username = view.findViewById(R.id.user_name);
                 TextView password = view.findViewById(R.id.password);
-                UserManager.addUser(username.getText() + "", password.getText() + "");
+                UserManager.addUser(username.getText() + "", password.getText() + "", UserManager.getUser()[3]);
+
                 LoadingViewManager
                         .with(getActivity())
                         .setHintText("登录中...")

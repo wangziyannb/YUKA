@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.user.UserManager;
@@ -39,14 +40,9 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
                 UserManager.refreshInfo();
                 break;
             case 201:
-                Bundle bundle = msg.getData();
-                String expiry = bundle.getString("expiry");
-                int times = (int) bundle.getDouble("times");
+                refresh_info(msg.getData());
                 LoadingViewManager.dismiss();
-                TextView textView = member_card.findViewById(R.id.member_expiry);
-                textView.append(expiry);
-                TextView textView1 = member_card.findViewById(R.id.member_times);
-                textView1.append(times + "次");
+
                 break;
             case 603:
                 LoadingViewManager.dismiss();
@@ -63,7 +59,6 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.personal_service, container, false);
 
-
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
 
@@ -74,7 +69,18 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         linearLayout.findViewById(R.id.personal_button1).setOnClickListener(this);
         root.findViewById(R.id.personal_button2).setOnClickListener(this);
 
+        TextView textView = member_card.findViewById(R.id.member_username);
+        textView.setText(UserManager.getUser()[0]);
+        TextView textView1 = member_card.findViewById(R.id.member_id);
+        textView1.setText(UserManager.getUser()[3]);
+
+//        if(!UserManager.getUser()[3].equals("")){
+//            Button button=root.findViewById(R.id.personal_button3);
+//            button.setVisibility(View.VISIBLE);
+//            button.setOnClickListener(this);
+//        }
         UserManager.refreshInfo();
+
         LoadingViewManager
                 .with(getActivity())
                 .setHintText("刷新中...")
@@ -86,13 +92,21 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         return root;
     }
 
+    private void refresh_info(Bundle bundle) {
+        String expiry = bundle.getString("expiry");
+        int times = (int) bundle.getDouble("times");
+        TextView textView = member_card.findViewById(R.id.member_expiry);
+        textView.setText(expiry);
+        TextView textView1 = member_card.findViewById(R.id.member_times);
+        String last = times + "次";
+        textView1.setText(last);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.personal_button1:
-
                 //todo: 进入淘宝
-
                 break;
             case R.id.personal_button2:
                 //todo: 输入cdkey
@@ -105,9 +119,9 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
                         .setLoadingContentMargins(50, 50, 50, 50)
                         .build();
                 UserManager.activate(cdkey_et.getText() + "");
-
                 break;
-
+            case R.id.personal_button3:
+                NavHostFragment.findNavController(this).navigate(R.id.action_nav_user_service_to_nav_user_profile);
         }
     }
 

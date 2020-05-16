@@ -7,7 +7,7 @@
       "type": "MAIN",
       "splits": [],
       "versionCode": 10,
-      "versionName": "4.1.5",
+      "versionName": "4.1.7",
       "enabled": true,
       "outputFile": "app-release.apk",
       "fullName": "release",

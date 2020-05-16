@@ -31,19 +31,21 @@ public class UserManager {
         account = new Account(application);
     }
 
-    public static void addUser(@NotNull String u_name, @NotNull String pwd) {
+    public static void addUser(@NotNull String u_name, @NotNull String pwd, @NotNull String id) {
         hashMap = account.get();
         hashMap.put("u_name", u_name);
         hashMap.put("pwd", pwd);
+        hashMap.put("id", id);
         account.update(hashMap);
     }
 
     public static String[] getUser() {
         hashMap = account.get();
-        String[] params = new String[3];
+        String[] params = new String[4];
         params[0] = hashMap.get("u_name") != null ? hashMap.get("u_name") : "";
         params[1] = hashMap.get("pwd") != null ? hashMap.get("pwd") : "";
         params[2] = hashMap.get("uuid");
+        params[3] = hashMap.get("id") != null ? hashMap.get("id") : "";
         return params;
     }
 
@@ -183,7 +185,7 @@ public class UserManager {
                     if (origin.equals("200")) {
                         Bundle bundle = new Bundle();
                         bundle.putString("id", result);
-                        addUser(params[0], params[1]);
+                        addUser(params[0], params[1], result);
                         message.what = 202;
                         message.setData(bundle);
                         globalHandler.sendMessage(message);

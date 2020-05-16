@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E5E5E5"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -53,14 +53,6 @@
             app:lineHeight="16sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/help_ins_before" />
 
     <LinearLayout
         android:id="@+id/linearLayout"

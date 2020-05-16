@@ -8,6 +8,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:text="why be, why be.Why be bob?\n这里什么都没有就是美术摸鱼的铁证！" />
 
 </FrameLayout>

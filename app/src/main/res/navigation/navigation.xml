@@ -17,8 +17,8 @@
             android:id="@+id/action_nav_home_to_nav_login"
             app:destination="@id/nav_login" />
         <action
-            android:id="@+id/action_nav_home_to_nav_user_profile"
-            app:destination="@id/nav_user_profile" />
+            android:id="@+id/action_nav_home_to_nav_user_service"
+            app:destination="@id/nav_user_service" />
 
     </fragment>
     <fragment
@@ -73,15 +73,15 @@
     <fragment
         android:id="@+id/nav_user_profile"
         android:name="com.wzy.yuka.ui.user.PersonalFragment"
-        android:label="个人信息">
-        <action
-            android:id="@+id/action_nav_user_profile_to_nav_user_service"
-            app:destination="@id/nav_user_service" />
-    </fragment>
+        android:label="个人信息" />
     <fragment
         android:id="@+id/nav_user_service"
         android:name="com.wzy.yuka.ui.user.PersonalInfo"
-        android:label="激活状态" />
+        android:label="激活状态">
+        <action
+            android:id="@+id/action_nav_user_service_to_nav_user_profile"
+            app:destination="@id/nav_user_profile" />
+    </fragment>
 
 
     <fragment

@@ -10,14 +10,14 @@
             android:title="关于开发者" />
         <Preference
             android:key="about_about_donate"
-            android:summary="毕设产生了经济效益？"
-            android:title="捐献" />
+            android:summary="已经是个成熟的软件啦，可以自己赚钱了"
+            android:title="捐赠" />
         <Preference
             android:key="about_about_version"
-            android:title="Yuka版本号" />
+            android:title="Yuka版本" />
         <Preference
             android:key="about_about_server"
-            android:summary="3.1.2"
+            android:summary="点击查询"
             android:title="服务器版本" />
         <Preference
             android:key="about_about_repository"
@@ -33,6 +33,23 @@
         <Preference
             android:key="about_thanks_reference"
             android:title="参考文献" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="本机信息">
+        <Preference
+            android:key="about_this_1"
+            android:summary="如遗忘账号，请联系管理员qq 1269586767提交本ID"
+            android:title="本机Android_ID" />
+        <Preference
+            android:key="about_this_aid"
+            app:isPreferenceVisible="false" />
+        <Preference
+            android:key="about_this_2"
+            android:summary="如遗忘密码，输入本ID到忘记密码即可。\n仅本次安装有效"
+            android:title="本机注册ID" />
+        <Preference />
+        <Preference
+            android:key="about_this_id"
+            app:isPreferenceVisible="false" />
     </PreferenceCategory>
 </PreferenceScreen>
