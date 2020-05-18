@@ -1,4 +1,4 @@
-package com.wzy.yuka.tools.handler;
+package com.wzy.yuka.tools.message;
 
 import android.os.Handler;
 import android.os.Message;

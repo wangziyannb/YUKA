@@ -20,8 +20,8 @@ import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
-import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
 
@@ -42,7 +42,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
     private final String TAG = "SingleScreenShotService";
     private GlobalHandler globalHandler;
     private static boolean continuous = false;
-    private Runnable runnable=()->{
+    private Runnable runnable = () -> {
         FloatWindowManager.hideAllFloatWindow();
         Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -57,10 +57,11 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             //时间足够长，点击退出按钮会导致本过程失效
             globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
         }
-        if(continuous){
+        if (continuous) {
             screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
                 FloatWindowManager.showAllFloatWindow(true, 0);
-                String fileName = screenshot.getFileNames()[0];
+                String fileName = screenshot.getFullFileNames()[0];
+                String filePath = screenshot.getFilePath();
                 Callback callback = new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -78,6 +79,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                         bundle.putInt("index", 0);
                         bundle.putString("response", response.body().string());
                         bundle.putString("fileName", fileName);
+                        bundle.putString("filePath", filePath);
                         bundle.putBoolean("save", save);
                         Message message = Message.obtain();
                         message.what = 1;
@@ -110,6 +112,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         int index = bundle.getInt("index");
         String response = bundle.getString("response");
         String fileName = bundle.getString("fileName");
+        String filePath = bundle.getString("filePath");
         boolean save = bundle.getBoolean("save");
         Log.d(TAG, response);
         try {
@@ -119,11 +122,11 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             double time = resultJson.getDouble("time");
             FloatWindowManager.showResultsIndex(origin, result, time, index);
             int[] params = GetParams.AdvanceSettings();
-            if(params[1]==1&&continuous){
-                startScreenshot(params[2]*1000);
+            if (params[1] == 1 && continuous) {
+                startScreenshot(params[2] * 1000);
             }
             if (save) {
-                ResultOutput.appendResult(this.getExternalFilesDir("screenshot").getAbsolutePath() + "/imgList.txt", fileName, result);
+                ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);
             }
         } catch (JSONException e) {
             e.printStackTrace();

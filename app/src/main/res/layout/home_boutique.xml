@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.home.HomeBoutique">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/boutique_rec"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="why be, why be.Why be bob?\n这里什么都没有就是美术摸鱼的铁证！" />
-
-</FrameLayout>
+        android:layout_height="wrap_content" />
+</LinearLayout>

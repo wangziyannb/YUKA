@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -26,8 +25,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.core.user.UserManager;
+import com.wzy.yuka.tools.message.BaseFragment;
 
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
     private final String TAG = "HomeFragment";
     private Intent data;
@@ -104,6 +104,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
             this.data = data;
             FloatWindowManager.initFloatWindow(getActivity(), data);
+        }
+    }
+
+    private long exitTime;
+
+    @Override
+    public boolean onBackPressed() {
+        //当onBackPressed返回true时，证明子fragment有人响应事件
+        if (!super.onBackPressed()) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                //大于2000ms则认为是误操作，使用Toast进行提示
+                Toast.makeText(getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                //并记录下本次点击“返回键”的时刻，以便下次进行判断
+                exitTime = System.currentTimeMillis();
+                return true;
+            } else {
+                //小于2000ms则认为是用户确实希望退出程序
+                return false;
+            }
+        } else {
+            //此时return true和return super.onBackPressed()一样
+            return true;
         }
     }
 }

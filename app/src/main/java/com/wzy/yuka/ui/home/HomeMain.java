@@ -12,13 +12,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.user.UserManager;
-import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.message.BaseFragment;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 
 import org.json.JSONException;
@@ -27,7 +27,7 @@ import org.json.JSONObject;
 /**
  * Created by Ziyan on 2020/5/8.
  */
-public class HomeMain extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
+public class HomeMain extends BaseFragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private TextInputLayout text_l;
     private LinearLayout translate_panel;
     private GlobalHandler globalHandler;
@@ -62,6 +62,7 @@ public class HomeMain extends Fragment implements View.OnClickListener, GlobalHa
 
     }
 
+
     @Override
     public void handleMsg(Message msg) {
         Bundle bundle;
@@ -84,4 +85,6 @@ public class HomeMain extends Fragment implements View.OnClickListener, GlobalHa
                 break;
         }
     }
+
+
 }

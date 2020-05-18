@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,15 +21,17 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.wzy.yuka.core.user.UserManager;
-import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
+import com.wzy.yuka.tools.message.BaseActivity;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.ui.view.RoundImageView;
 
-public class MainActivity extends AppCompatActivity implements GlobalHandler.HandleMsgListener {
+public class MainActivity extends BaseActivity implements GlobalHandler.HandleMsgListener {
     private AppBarConfiguration mAppBarConfiguration;
     private GlobalHandler globalHandler;
     private DrawerLayout drawer;
     private NavController navController;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
                 .setLoadingContentMargins(50, 50, 50, 50)
                 .build();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -122,10 +124,32 @@ public class MainActivity extends AppCompatActivity implements GlobalHandler.Han
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+//    private long exitTime;
+//    @Override
+//    public void onBackPressed() {
+//        //todo 调用本方法检查
+//        if (navController.getCurrentDestination().getLabel().equals("主页")) {
+//            if ((System.currentTimeMillis() - exitTime) > 2000) {
+//                //大于2000ms则认为是误操作，使用Toast进行提示
+//                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+//                //并记录下本次点击“返回键”的时刻，以便下次进行判断
+//                exitTime = System.currentTimeMillis();
+//            } else {
+//                //小于2000ms则认为是用户确实希望退出程序
+//                super.onBackPressed();
+//            }
+//        }
+//        else{
+//            super.onBackPressed();
+//        }
+//    }
 
     @Override
     protected void onPause() {

@@ -20,8 +20,8 @@ import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
-import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.io.ResultOutput;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
 
@@ -59,6 +59,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         int index = bundle.getInt("index");
         String response = bundle.getString("response");
         String fileName = bundle.getString("fileName");
+        String filePath = bundle.getString("filePath");
         boolean save = bundle.getBoolean("save");
         Log.d(TAG, response);
         try {
@@ -68,7 +69,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
             double time = resultJson.getDouble("time");
             FloatWindowManager.showResultsIndex(origin,result,time,index);
             if (save) {
-                ResultOutput.appendResult(this.getExternalFilesDir("screenshot").getAbsolutePath() + "/imgList.txt", fileName, result);
+                ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -120,8 +121,8 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
             FloatWindowManager.showAllFloatWindow(true, index);
             Callback[] callbacks = new Callback[FloatWindowManager.getLocation().length];
-            String[] fileNames = screenshot.getFileNames();
-
+            String[] fileNames = screenshot.getFullFileNames();
+            String filePath = screenshot.getFilePath();
             for (int i = 0; i < callbacks.length; i++) {
                 int a = i;
                 String fileName = fileNames[i];
@@ -146,6 +147,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                         }
                         bundle.putString("response", response.body().string());
                         bundle.putString("fileName", fileName);
+                        bundle.putString("filePath", filePath);
                         bundle.putBoolean("save", save);
                         Message message = Message.obtain();
                         message.what = 1;
@@ -154,7 +156,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                     }
                 };
             }
-            HttpRequest.yuka(GetParams.Yuka(), screenshot.getFileNames(), callbacks);
+            HttpRequest.yuka(GetParams.Yuka(), screenshot.getFullFileNames(), callbacks);
         });
     }
 

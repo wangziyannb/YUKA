@@ -4,44 +4,56 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class Screenshot {
-    private String[] fileName;
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private String[] fullFileName;
     private int[][] location;
-    private Context context;
+    private String filePath;
+    private WeakReference<Context> mContext;
 
     Screenshot(Context context, int[][] location) {
         this.location = location;
-        fileName = new String[location.length];
-        this.context = context;
+        fullFileName = new String[location.length];
+
+        mContext = new WeakReference<>(context);
         Date nowTime = new Date();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String time = dateFormat.format(nowTime);
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
+        String time2 = dateFormat2.format(nowTime);
+
+        filePath = context.getExternalFilesDir("screenshot").getAbsoluteFile() + "/" + time;
+        File file = new File(filePath);
+        file.mkdir();
         for (int i = 0; i < location.length; i++) {
-            fileName[i] = context.getExternalFilesDir("screenshot").getAbsoluteFile()
-                    + "/" + time + "_" + "LU" + location[i][0] + "_" + location[i][1] +
+            fullFileName[i] = filePath + "/" + time2 + "_" + "LU" + location[i][0] + "_" + location[i][1] +
                     " " + "RU" + location[i][2] + "_" + location[i][3] + ".jpg";
         }
     }
 
     void getScreenshot(boolean isGrayscale, int delay, Intent data, Shotter.OnShotListener onShotListener) {
-        Shotter shotter = new Shotter(context, -1, data);
-        shotter.startScreenShot(onShotListener, fileName, location, isGrayscale, true, delay);
+        Shotter shotter = new Shotter(mContext.get(), -1, data);
+        shotter.startScreenShot(onShotListener, fullFileName, location, isGrayscale, true, delay);
     }
 
-    String[] getFileNames() {
-        return fileName;
+    String[] getFullFileNames() {
+        return fullFileName;
+    }
+
+    String getFilePath() {
+        return filePath;
     }
 
     void cleanImage() {
-        for (String str : fileName) {
+        for (String str : fullFileName) {
             File image = new File(str);
             image.delete();
         }
     }
-
 
 }
 

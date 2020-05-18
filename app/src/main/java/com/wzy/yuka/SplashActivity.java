@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.wzy.yuka.core.user.UserManager;
-import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.message.GlobalHandler;
 
 /**
  * Created by Ziyan on 2020/5/16.

@@ -22,8 +22,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.user.UserManager;
-import com.wzy.yuka.tools.handler.GlobalHandler;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
+import com.wzy.yuka.tools.message.GlobalHandler;
 
 
 public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {

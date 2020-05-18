@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
-import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 
 import org.jetbrains.annotations.NotNull;
