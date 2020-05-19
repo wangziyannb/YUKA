@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +54,7 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         getPreferenceScreen().findPreference("settings_debug_server").setOnPreferenceClickListener(preference -> {
-            HttpRequest.requestTowardsYukaServer(
+            HttpRequest.yuka(
                     new String[]{getContext().getResources().getStringArray(R.array.mode)[2]},
                     "",
                     new Callback() {
