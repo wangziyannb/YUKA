@@ -6,6 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -88,6 +91,34 @@
 
         <TextView
             android:id="@+id/os6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="AVLoadingIndicatorView: \nhttps://github.com/hanzhanbing/AVLoadingIndicatorView"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="LoadingViewManager-For-Android: \nhttps://blog.csdn.net/HBK_MySummerCT/article/details/88611207"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />

@@ -2,26 +2,54 @@
     <string name="app_name">YUKA</string>
     <string name="True">1</string>
     <string name="False">0</string>
+    <string name="id">账号</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="action_sign_in">登录</string>
+    <string name="agreement">登录即代表阅读并同意服务协议</string>
+    <string name="avatar">用户头像</string>
+
     <string-array name="mode">
         <item>ocr</item>
         <item>translate</item>
         <item>yuka</item>
     </string-array>
+
     <string-array name="model">
         <item>google</item>
     </string-array>
+
     <string-array name="detect_languages">
         <item>自动（Google Cloud Vision）</item>
     </string-array>
+
     <string-array name="translator_name">
         <item>Google</item>
         <item>百度翻译</item>
         <item>有道翻译</item>
     </string-array>
+
     <string-array name="translator">
         <item>google</item>
         <item>baidu</item>
         <item>youdao</item>
     </string-array>
+
+    <string-array name="sex_selecter">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+
+    <string-array name="age_selecter">
+        <item>工作</item>
+        <item>大学</item>
+        <item>高中</item>
+        <item>初中</item>
+        <item>小学</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="register">注册</string>
 
 </resources>
