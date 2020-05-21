@@ -90,7 +90,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_CANCELED) {
             Log.e(TAG, "User cancel");

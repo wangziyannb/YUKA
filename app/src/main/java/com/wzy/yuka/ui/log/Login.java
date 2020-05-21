@@ -51,7 +51,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.login, container, false);
+        View root = inflater.inflate(R.layout.log_login, container, false);
         TextView un_t = root.findViewById(R.id.user_name);
         TextView pwd_t = root.findViewById(R.id.password);
         String[] params = UserManager.getUser();

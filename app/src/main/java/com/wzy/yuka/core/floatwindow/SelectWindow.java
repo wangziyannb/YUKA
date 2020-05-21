@@ -41,7 +41,7 @@ public class SelectWindow implements View.OnClickListener {
         this.index = index;
         EasyFloat.with(activity)
                 .setTag(tag)
-                .setLayout(R.layout.select_window, view1 -> {
+                .setLayout(R.layout.floatwindow_main, view1 -> {
                     if (GetParams.AdvanceSettings()[1] == 1) {
                         view1.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
                         view1.findViewById(R.id.sw_stopContinue).setVisibility(View.VISIBLE);

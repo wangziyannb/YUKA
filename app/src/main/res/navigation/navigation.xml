@@ -25,7 +25,7 @@
         android:id="@+id/nav_login"
         android:name="com.wzy.yuka.ui.log.Login"
         android:label="登陆"
-        tools:layout="@layout/login">
+        tools:layout="@layout/log_login">
 
         <action
             android:id="@+id/action_nav_login_to_nav_register"
@@ -35,7 +35,7 @@
         android:id="@+id/nav_register"
         android:name="com.wzy.yuka.ui.log.Regist"
         android:label="注册"
-        tools:layout="@layout/register">
+        tools:layout="@layout/log_register">
 
     </fragment>
     <fragment

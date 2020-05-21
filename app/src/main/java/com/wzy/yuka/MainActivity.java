@@ -1,5 +1,6 @@
 package com.wzy.yuka;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Message;
@@ -78,16 +79,22 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
         RoundImageView roundImageView = header.findViewById(R.id.user_info).findViewById(R.id.navBarIco);
         roundImageView.setOnClickListener((v) -> {
-            if (UserManager.checkLogin()) {
-                navController.navigate(R.id.action_nav_home_to_nav_user_service);
-                drawer.closeDrawers();
-            } else {
-                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
-            }
+//            if (UserManager.checkLogin()) {
+//                navController.navigate(R.id.action_nav_home_to_nav_user_service);
+//                drawer.closeDrawers();
+//            } else {
+//                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
+//            }
+            startActivity(new Intent(this, com.wzy.yuka.core.audio.test.class));
         });
 
         try {
             Message message = getIntent().getParcelableExtra("msg");
+            if (message.what == 100) {
+                //需要继续尝试登陆
+                UserManager.login();
+                load("登录中...");
+            }
             globalHandler.sendMessage(message);
         } catch (NullPointerException e) {
             UserManager.login();
@@ -132,25 +139,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     public void onBackPressed() {
         super.onBackPressed();
     }
-//    private long exitTime;
-//    @Override
-//    public void onBackPressed() {
-//        //todo 调用本方法检查
-//        if (navController.getCurrentDestination().getLabel().equals("主页")) {
-//            if ((System.currentTimeMillis() - exitTime) > 2000) {
-//                //大于2000ms则认为是误操作，使用Toast进行提示
-//                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-//                //并记录下本次点击“返回键”的时刻，以便下次进行判断
-//                exitTime = System.currentTimeMillis();
-//            } else {
-//                //小于2000ms则认为是用户确实希望退出程序
-//                super.onBackPressed();
-//            }
-//        }
-//        else{
-//            super.onBackPressed();
-//        }
-//    }
+
 
     @Override
     protected void onPause() {

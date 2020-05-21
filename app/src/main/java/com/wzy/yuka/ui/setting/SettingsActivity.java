@@ -19,7 +19,7 @@ public class SettingsActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test2);
+        setContentView(R.layout.floatwindow_settings);
         int[] size = GetParams.Screen();
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
         attributes.gravity = Gravity.CENTER;

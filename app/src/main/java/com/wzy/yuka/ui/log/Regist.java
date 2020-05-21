@@ -34,7 +34,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.register, container, false);
+        View root = inflater.inflate(R.layout.log_register, container, false);
         tableLayout = root.findViewById(R.id.tableLayout);
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
