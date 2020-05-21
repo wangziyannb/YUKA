@@ -89,9 +89,10 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         try {
             Message message = getIntent().getParcelableExtra("msg");
             globalHandler.sendMessage(message);
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             UserManager.login();
             load("登录中...");
+
         }
 
     }

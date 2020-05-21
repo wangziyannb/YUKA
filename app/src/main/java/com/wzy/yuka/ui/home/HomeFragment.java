@@ -65,6 +65,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.nav_home:
+
                 if (bottomNavigationView.getSelectedItemId() != R.id.nav_home) {
                     navController.navigate(R.id.action_home_boutique_to_home_main);
                     bottomNavigationView.setSelectedItemId(R.id.nav_home);

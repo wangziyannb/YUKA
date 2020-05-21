@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,9 +18,11 @@ import com.wzy.yuka.tools.io.ResultSort;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.ui.view.Screenshot;
 import com.wzy.yuka.ui.view.ScreenshotAdapter;
+import com.wzy.yuka.ui.view.SpacesItemDecoration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +58,13 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
         RecyclerView recyclerView = root.findViewById(R.id.boutique_rec);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        HashMap<String, Integer> spacesVelue = new HashMap<>();
+        spacesVelue.put(SpacesItemDecoration.TOP_SPACE, 0);
+        spacesVelue.put(SpacesItemDecoration.BOTTOM_SPACE, 20);
+        spacesVelue.put(SpacesItemDecoration.LEFT_SPACE, 0);
+        spacesVelue.put(SpacesItemDecoration.RIGHT_SPACE, 0);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(spacesVelue));
 
         adapter = new ScreenshotAdapter(screenshots);
 
@@ -74,6 +81,9 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
                 File[] dirs = ResultSort.orderByName(Objects.requireNonNull(path));
                 for (File dir : dirs) {
                     ArrayList<String> arrayList = ResultInput.ReadTxtFile(dir.getAbsolutePath() + "/imgList.txt");
+                    if (arrayList.size() == 0) {
+                        return;
+                    }
                     String[] params = ResultInput.DecodeString(arrayList.get(0));
                     Screenshot screenshot = new Screenshot(params[0], dir.getName());
                     screenshots.add(screenshot);
