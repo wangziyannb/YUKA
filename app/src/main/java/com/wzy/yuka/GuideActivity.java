@@ -3,7 +3,6 @@ package com.wzy.yuka;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +12,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener {
-
+    private SharedPreferencesUtil sharedPreferencesUtil;
     private List<View> mViewList;
     private ImageView[] mDotList;
     private int mLastPosition;
@@ -31,6 +31,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         initView();
         initViewPager();
         initDots();
@@ -77,9 +78,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     @Override
     protected void onPause() {
         if (isFinishing()) {
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            editor.putBoolean("first_open", false);
-            editor.commit();
+            sharedPreferencesUtil.saveParam("first_open", false);
         }
         super.onPause();
 
@@ -103,9 +102,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     private void startHomeActivity() {
         Intent intent = new Intent(GuideActivity.this, MainActivity.class);
         startActivity(intent);
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putBoolean("first_open", false);
-        editor.commit();
+        sharedPreferencesUtil.saveParam("first_open", false);
         finish();
     }
 

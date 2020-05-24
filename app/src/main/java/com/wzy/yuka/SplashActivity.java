@@ -10,10 +10,10 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 /**
  * Created by Ziyan on 2020/5/16.
@@ -58,7 +58,8 @@ public class SplashActivity extends Activity implements GlobalHandler.HandleMsgL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        boolean isFirstOpen = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_open", true);
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam("first_open", true);
         if (isFirstOpen) {
             mHandler.sendEmptyMessageDelayed(GO_GUIDE, ENTER_DURATION);
         } else {

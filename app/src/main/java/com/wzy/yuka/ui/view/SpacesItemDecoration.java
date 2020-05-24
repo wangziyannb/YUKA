@@ -5,6 +5,8 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
@@ -14,12 +16,12 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     public static final String RIGHT_SPACE = "right_space";
     private HashMap<String, Integer> spaceValue;
 
-    public SpacesItemDecoration(HashMap spaceValue) {
+    public SpacesItemDecoration(HashMap<String, Integer> spaceValue) {
         this.spaceValue = spaceValue;
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
         if (spaceValue.get(LEFT_SPACE) != null)
             outRect.left = spaceValue.get(LEFT_SPACE);
         if (spaceValue.get(RIGHT_SPACE) != null)

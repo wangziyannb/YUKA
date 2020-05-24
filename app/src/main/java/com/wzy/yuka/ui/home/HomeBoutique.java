@@ -105,11 +105,13 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
 
     @Override
     public void onItemClick(View v, int position) {
-        TextView textView = v.findViewById(R.id.screenshot_date);
-        int i = adapter.getItemCount();
-        adapter.notifyItemRangeRemoved(0, i);
-        screenshots.clear();
-        initScreenshots(textView.getText() + "");
-        adapter.notifyItemRangeInserted(0, screenshots.size());
+        if (!isDetail) {
+            TextView textView = v.findViewById(R.id.screenshot_date);
+            int i = adapter.getItemCount();
+            adapter.notifyItemRangeRemoved(0, i);
+            screenshots.clear();
+            initScreenshots(textView.getText() + "");
+            adapter.notifyItemRangeInserted(0, screenshots.size());
+        }
     }
 }

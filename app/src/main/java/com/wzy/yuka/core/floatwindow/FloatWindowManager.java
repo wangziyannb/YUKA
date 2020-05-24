@@ -6,19 +6,20 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.wzy.yuka.core.audio.AudioService;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
-/**
- * The type Float window.
- */
+
 public class FloatWindowManager {
     static final String TAG = "FloatWindow";
     //location 0 1 2 3 = lA 0 1 + lB 0 1
     private static int[][] location;
     private static SelectWindow[] selectWindows;
+    private static SubtitleWindow subtitleWindow;
     public static FloatBall floatBall;
     private static int sum = 0;
     private static Intent data;
@@ -34,19 +35,30 @@ public class FloatWindowManager {
      * @param activity the activity
      */
     static void addSelectWindow(Activity activity) {
-        int limit = 5;
-        if (GetParams.AdvanceSettings()[1] == 1) {
-            limit = 1;
-        }
-        if (getNumOfFloatWindows() == limit) {
-            Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+        boolean sync = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_trans_syncMode", false);
+        if (!sync) {
+            int limit = 5;
+            if (GetParams.AdvanceSettings()[1] == 1) {
+                limit = 1;
+            }
+            if (getNumOfFloatWindows() == limit) {
+                Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+            } else {
+                location = LengthUtil.appendIndex(location);
+                selectWindows = LengthUtil.appendIndex(selectWindows);
+                selectWindows[selectWindows.length - 1] = new SelectWindow(activity, "selectWindow" + sum, selectWindows.length - 1);
+                sum += 1;
+            }
         } else {
-            location = LengthUtil.appendIndex(location);
-            selectWindows = LengthUtil.appendIndex(selectWindows);
-            selectWindows[selectWindows.length - 1] = new SelectWindow(activity, "selectWindow" + sum, selectWindows.length - 1);
-            sum += 1;
+            if (getNumOfSubtitleWindows() == 1) {
+                Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+            } else {
+                subtitleWindow = new SubtitleWindow(activity, "subtitleWindow");
+            }
         }
+
     }
+
 
     /**
      * 开始截屏
@@ -97,6 +109,15 @@ public class FloatWindowManager {
         }
     }
 
+    static void startVoiceTrans(Activity activity) {
+        Intent service = new Intent(activity, AudioService.class);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            activity.startService(service);
+        } else {
+            activity.startForegroundService(service);
+        }
+    }
+
     /**
      * 获取location
      *
@@ -138,6 +159,10 @@ public class FloatWindowManager {
         if (getNumOfFloatWindows() != 0) {
             selectWindows[index].showResults(origin, translation, time);
         }
+    }
+
+    public static void showSubtitle(String origin, String translation) {
+        subtitleWindow.showResults(origin, translation);
     }
 
     /**
@@ -188,6 +213,9 @@ public class FloatWindowManager {
                 selectWindow = null;
             }
         }
+        if (getNumOfSubtitleWindows() != 0) {
+            subtitleWindow.dismiss();
+        }
         if (!except) {
             floatBall.dismiss();
             floatBall = null;
@@ -208,6 +236,10 @@ public class FloatWindowManager {
         selectWindows = LengthUtil.discardNull(selectWindows);
     }
 
+    static void dismissSubtitleWindow() {
+        subtitleWindow = null;
+    }
+
     /**
      * 重置功能：
      * 删除所有SelectWindow对象，
@@ -220,6 +252,7 @@ public class FloatWindowManager {
         dismissAllFloatWindow(true);
         location = null;
         selectWindows = null;
+        subtitleWindow = null;
         addSelectWindow(activity);
     }
 
@@ -236,6 +269,13 @@ public class FloatWindowManager {
         }
     }
 
+    public static int getNumOfSubtitleWindows() {
+        if (subtitleWindow != null) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
 
 

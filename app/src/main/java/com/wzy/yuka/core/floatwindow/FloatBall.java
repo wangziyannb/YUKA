@@ -16,6 +16,7 @@ import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.audio.AudioService;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.params.GetParams;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by Ziyan on 2020/4/30.
  */
-class FloatBall implements View.OnClickListener {
+public class FloatBall implements View.OnClickListener {
     private String tag;
     private Activity activity;
     FloatBall(Activity activity, String tag) {
@@ -198,18 +199,11 @@ class FloatBall implements View.OnClickListener {
         EasyFloat.dismissAppFloat(tag);
     }
 
-    void hide() {
-        EasyFloat.hideAppFloat(tag);
-    }
-
-    void show() {
-        EasyFloat.showAppFloat(tag);
-    }
-
     @Override
     public void onClick(View v) {
         Intent service_Single = new Intent(activity, ScreenShotService_Single.class);
         Intent service_Continue = new Intent(activity, ScreenShotService_Continue.class);
+        Intent service_audio = new Intent(activity, AudioService.class);
         View view = EasyFloat.getAppFloatView("mainFloatBall");
         ImageButton imageButton = view.findViewById(R.id.test1);
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
@@ -369,6 +363,7 @@ class FloatBall implements View.OnClickListener {
             case R.id.reset_button:
                 activity.stopService(service_Continue);
                 activity.stopService(service_Single);
+                activity.stopService(service_audio);
                 FloatWindowManager.reset(activity);
                 if (params[1]) {
                     imageButton.performClick();
@@ -377,6 +372,7 @@ class FloatBall implements View.OnClickListener {
             case R.id.exit_button:
                 activity.stopService(service_Continue);
                 activity.stopService(service_Single);
+                activity.stopService(service_audio);
                 activity.finishAffinity();
                 System.exit(0);
                 break;

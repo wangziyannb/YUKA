@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.wzy.yuka.tools.params.SizeUtil;
 
 public class FloatBallLayout extends ViewGroup {
-    //todo 需要判断在左还是在右
     private boolean mIsLeft = true;
 
     public FloatBallLayout(Context context) {

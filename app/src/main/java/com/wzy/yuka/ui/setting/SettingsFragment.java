@@ -21,9 +21,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         setPreferencesFromResource(R.xml.settings, rootKey);
         if (FloatWindowManager.getNumOfFloatWindows() > 1) {
             Toast.makeText(getContext(), "有较多悬浮窗活动中，持续模式设置暂时不可更改", Toast.LENGTH_SHORT).show();
-//            for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
-//                getPreferenceScreen().getPreference(i).setEnabled(false);
-//            }
             getPreferenceScreen().findPreference("settings_continuousMode").setEnabled(false);
             getPreferenceScreen().findPreference("settings_continuousMode_interval").setEnabled(false);
         }

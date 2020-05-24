@@ -27,11 +27,16 @@ public class AboutOpenSource extends Fragment {
         View root = inflater.inflate(R.layout.about_opensource, container, false);
         writeText2TextView(R.raw.easyfloat, root.findViewById(R.id.os1));
         writeText2TextView(R.raw.ss, root.findViewById(R.id.os2));
+
         writeText2TextView(R.raw.chinese_ocr, root.findViewById(R.id.os3));
         writeText2TextView(R.raw.vision_web_service, root.findViewById(R.id.os4));
         writeText2TextView(R.raw.text_renderer, root.findViewById(R.id.os5));
+
         writeText2TextView(R.raw.okhttp, root.findViewById(R.id.os6));
         writeText2TextView(R.raw.avloadingindicator, root.findViewById(R.id.os7));
+
+        writeText2TextView(R.raw.gson, root.findViewById(R.id.os9));
+        writeText2TextView(R.raw.easypermissions, root.findViewById(R.id.os10));
         return root;
     }
 

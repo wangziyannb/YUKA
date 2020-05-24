@@ -58,6 +58,61 @@
         <item>小学</item>
     </string-array>
 
+    <string-array name="sync_provider">
+        <item>有道</item>
+    </string-array>
+    <string-array name="sync_providerset">
+        <item>youdao</item>
+    </string-array>
+
+    <string-array name="sync_o_language">
+        <item>简体中文</item>
+        <item>通用英文</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+    <string-array name="sync_o_languageset">
+        <item>zh-CHS</item>
+        <item>en</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>fr</item>
+        <item>ru</item>
+        <item>de</item>
+    </string-array>
+
+    <string-array name="sync_t_language">
+        <item>简体中文</item>
+        <item>通用英文</item>
+        <item>中英混合</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+    <string-array name="sync_t_languageset">
+        <item>zh-CHS</item>
+        <item>en</item>
+        <item>enzh</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>fr</item>
+        <item>ru</item>
+        <item>de</item>
+    </string-array>
+    <string-array name="sync_mode">
+        <item>整句模式</item>
+        <item>实时模式</item>
+    </string-array>
+
+    <string-array name="sync_modeset">
+        <item>sentence</item>
+        <item>stream</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="register">注册</string>

@@ -29,18 +29,42 @@
             android:summaryOff="翻译英文等"
             android:summaryOn="翻译日韩文等"
             android:title="全半角转换（百度翻译）" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="同传设置">
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_trans_syncMode"
-            android:summary="根据系统内录声音支持同声传译，需要目标app支持"
-            android:title="同传模式" />
+            android:summary="根据系统内录声音同声传译，需要目标app支持"
+            android:title="启用同传" />
         <ListPreference
             android:dependency="settings_trans_syncMode"
-            android:entries="@array/translator_mode"
-            android:entryValues="@array/translator_modeset"
-            android:key="settings_trans_modes"
-            android:summary="默认流式"
-            android:title="同传模式选择" />
+            android:entries="@array/sync_provider"
+            android:entryValues="@array/sync_providerset"
+            android:key="settings_trans_syncProvider"
+            android:title="翻译器选择" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_mode"
+            android:entryValues="@array/sync_modeset"
+            android:key="settings_trans_syncModes"
+            android:summary="默认实时传输"
+            android:title="识别模式" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_o_language"
+            android:entryValues="@array/sync_o_languageset"
+            android:key="settings_trans_sync_o"
+            android:summary="默认中文"
+            android:title="源音频语言" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_t_language"
+            android:entryValues="@array/sync_t_languageset"
+            android:key="settings_trans_sync_t"
+            android:summary="默认英文"
+            android:title="译文语言" />
     </PreferenceCategory>
     <PreferenceCategory android:title="悬浮球设置">
         <SwitchPreference

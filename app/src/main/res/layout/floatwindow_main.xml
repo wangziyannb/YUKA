@@ -26,6 +26,7 @@
         android:padding="5dp"
         android:src="@drawable/floatwindow_stop"
         android:visibility="gone" />
+
     <ImageView
         android:id="@+id/sw_addwindows"
         android:layout_width="32dp"

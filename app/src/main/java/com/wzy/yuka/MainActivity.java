@@ -27,11 +27,13 @@ import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.ui.view.RoundImageView;
 
+
 public class MainActivity extends BaseActivity implements GlobalHandler.HandleMsgListener {
     private AppBarConfiguration mAppBarConfiguration;
     private GlobalHandler globalHandler;
     private DrawerLayout drawer;
     private NavController navController;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,10 +155,6 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         //只有app内能用
         super.onConfigurationChanged(newConfig);
-//        if (FloatWindowManager.floatBall!= null) {
-//            FloatWindowManager.dismissAllFloatWindow(false);
-//            FloatWindowManager.initFloatWindow(this);
-//        }
     }
 
     @Override

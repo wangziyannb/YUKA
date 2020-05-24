@@ -23,11 +23,16 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.floatwindow.FloatWindowManager;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.youdao.ydasr.ASRParams;
+import com.youdao.ydasr.AsrListener;
+import com.youdao.ydasr.AsrManager;
+import com.youdao.ydasr.asrengine.model.AsrResult;
+import com.youdao.ydasr.asrengine.model.AsrResultCode;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Created by Ziyan on 2020/5/21.
@@ -35,22 +40,111 @@ import java.io.IOException;
 public class AudioService extends Service {
     private final String TAG = "AudioService";
     private boolean mWhetherRecord;
-    private File pcmFile;
+    private AsrListener mAsr = new AsrListener() {
+        // 开始识别回调
+        @Override
+        public void onAsrStart() {
+            Log.d(TAG, "onAsrStart: !!!");
+        }
 
+        // 重连后再次连接成功回调
+        @Override
+        public void onAsrRestart() {
+            Log.d(TAG, "onAsrRestart: !!!");
+        }
+
+        // 结束识别回调
+        @Override
+        public void onAsrStop() {
+            Log.d(TAG, "onAsrStop: !!!");
+        }
+
+        // 正在重连提示
+        @Override
+        public void onAsrReconnecting() {
+            Log.d(TAG, "onAsrReconnecting: !!!");
+        }
+
+        // 错误回调
+        @Override
+        public void onAsrError(@NotNull AsrResultCode error) {
+
+            Log.d(TAG, "onAsrError: " + error.toString());
+        }
+
+        // ASR结果回调 识别结果：result.getResult().getContext()
+        // 翻译结果：result.getResult().getTranContent()
+        @Override
+        public void onAsrNext(@NotNull AsrResult result, boolean isPartial) {
+//            Log.d(TAG, "onAsrNext: " + result.getResult().get);
+//            Log.d(TAG, "onAsrNext: " + result.getResult().getTranContent());
+//            Log.d(TAG, "onAsrNext: " + result.getResult().getContext());
+//            Log.d(TAG, "onAsrNext: " + result.getResult().getTranContent());
+//            Log.d(TAG, "onAsrNext: " + result.getResult().getContext());
+//            Log.d(TAG, "onAsrNext: " + result.getResult().getTranContent());
+            FloatWindowManager.showSubtitle(result.getResult().getContext(), result.getResult().getTranContent());
+//            Message message=Message.obtain();
+//            message.what=126;
+//            globalHandler
+//            globalHandler.handleMessage();
+        }
+
+        // 音量变化回调
+        @Override
+        public void onAsrVolumeChange(float volume) {
+        }
+
+        // 后端点静音回调
+        @Override
+        public void onAsrSilentEnd() {
+        }
+
+        // 前端点静音回调
+        @Override
+        public void onAsrSilentStart() {
+        }
+
+        // 连接上蓝牙麦克风提示
+        @Override
+        public void onBluetoothAudioConnected() {
+        }
+
+        // 蓝牙麦克风断开提示
+        @Override
+        public void onBluetoothAudioDisconnected() {
+        }
+    };
+
+    private AsrManager asrManager;
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: aaaaa");
-        int index = intent.getIntExtra("index", 1000);
         createNotificationChannel();
+        ASRParams asrParams = new ASRParams.Builder()
+                .transPattern((String) sharedPreferencesUtil.getParam("translator_modeset", "stream"))
+                .timeoutStart(5000L)
+                .timeoutEnd(10000L)
+                .sentenceTimeout(3000L)
+                .connectTimeout(10000L)
+                .isWaitServerDisconnect(true)
+                .build();
+
+        asrManager = AsrManager.getInstance(this, "5c44137c3b4c2e0f", asrParams, mAsr);
+        asrManager.addWavHead = true;
+        asrManager.setASRLanguage(
+                (String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
+                (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"));
+        asrManager.startConnect();
+
+
         initRecord();
         return Service.START_NOT_STICKY;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void initRecord() {
-        Intent data = test.mData;
         MediaProjectionManager mediaProjectionManager = getSystemService(MediaProjectionManager.class);
-        MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(Activity.RESULT_OK, data);
+        MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(Activity.RESULT_OK, FloatWindowManager.getData());
 
         AudioPlaybackCaptureConfiguration config = new AudioPlaybackCaptureConfiguration.Builder(mediaProjection)
                 .addMatchingUsage(AudioAttributes.USAGE_GAME)
@@ -59,10 +153,10 @@ public class AudioService extends Service {
                 .build();
         AudioFormat audioFormat = new AudioFormat.Builder()
                 .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                .setSampleRate(48000)
+                .setSampleRate(16000)
                 .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
                 .build();
-        int size = AudioRecord.getMinBufferSize(48000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        int size = AudioRecord.getMinBufferSize(16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
 
         AudioRecord record = new AudioRecord.Builder()
                 .setAudioPlaybackCaptureConfig(config)
@@ -70,45 +164,23 @@ public class AudioService extends Service {
                 .setBufferSizeInBytes(size)
                 .build();
         startRecord(record, size);
-        record.startRecording();
 
     }
 
     private void startRecord(AudioRecord record, int bufferSize) {
-
-        pcmFile = new File(getExternalFilesDir("audio"), "audioRecord.pcm");
         mWhetherRecord = true;
         new Thread(() -> {
             record.startRecording();//开始录制
-            FileOutputStream fileOutputStream;
-            try {
-                fileOutputStream = new FileOutputStream(pcmFile);
-                byte[] bytes = new byte[bufferSize];
-                while (mWhetherRecord) {
-                    record.read(bytes, 0, bytes.length);//读取流
-                    fileOutputStream.write(bytes);
-                    fileOutputStream.flush();
-
-                }
-                Log.e("TAG", "run: 暂停录制");
-                record.stop();//停止录制
-                fileOutputStream.flush();
-                fileOutputStream.close();
-                addHeadData();//添加音频头部信息并且转成wav格式
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                record.stop();
-            } catch (IOException e) {
-                e.printStackTrace();
+            byte[] bytes = new byte[bufferSize];
+            while (mWhetherRecord) {
+                record.read(bytes, 0, bytes.length);//读取流
+                asrManager.insertAudioBytes(bytes);
             }
+            Log.e("TAG", "run: 暂停录制");
+            asrManager.stop();
+            asrManager.destroy();
+            record.stop();//停止录制
         }).start();
-    }
-
-    private void addHeadData() {
-        pcmFile = new File(getExternalFilesDir("audio"), "audioRecord.pcm");
-        File handlerWavFile = new File(getExternalFilesDir("audio"), "audioRecord_handler.wav");
-        PcmToWavUtil pcmToWavUtil = new PcmToWavUtil(48000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        pcmToWavUtil.pcmToWav(pcmFile.toString(), handlerWavFile.toString());
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -153,7 +225,11 @@ public class AudioService extends Service {
     @Override
     public void onDestroy() {
         mWhetherRecord = false;
+        asrManager.stop();
+        asrManager.destroy();
         stopForeground(true);
         super.onDestroy();
     }
+
+
 }
