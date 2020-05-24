@@ -88,9 +88,9 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     private void setCurrentDotPosition(int position) {
         for (int i = 0; i < idots.length; i++) {
             if (position == i) {
-                mDotList[i].setImageResource(R.drawable.ic_radio_button_checked);
+                mDotList[i].setImageResource(R.drawable.radio_dots_checked);
             } else {
-                mDotList[i].setImageResource(R.drawable.ic_radio_button_unchecked);
+                mDotList[i].setImageResource(R.drawable.radio_dots_unchecked);
             }
         }
     }

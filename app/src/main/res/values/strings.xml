@@ -29,6 +29,16 @@
         <item>有道翻译</item>
     </string-array>
 
+    <string-array name="translator_mode">
+        <item>经典同传模式</item>
+        <item>流式声传模式</item>
+    </string-array>
+
+    <string-array name="translator_modeset">
+        <item>classic</item>
+        <item>flowtype</item>
+    </string-array>
+
     <string-array name="translator">
         <item>google</item>
         <item>baidu</item>

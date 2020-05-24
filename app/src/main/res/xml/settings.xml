@@ -7,8 +7,8 @@
             android:entries="@array/detect_languages"
             android:entryValues="@array/model"
             android:key="settings_detect_language"
-            android:title="识别语言"
-            android:summary="可无视此选项" />
+            android:summary="可无视此选项"
+            android:title="识别语言" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_trans_switch"
@@ -29,6 +29,18 @@
             android:summaryOff="翻译英文等"
             android:summaryOn="翻译日韩文等"
             android:title="全半角转换（百度翻译）" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_trans_syncMode"
+            android:summary="根据系统内录声音支持同声传译，需要目标app支持"
+            android:title="同传模式" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/translator_mode"
+            android:entryValues="@array/translator_modeset"
+            android:key="settings_trans_modes"
+            android:summary="默认流式"
+            android:title="同传模式选择" />
     </PreferenceCategory>
     <PreferenceCategory android:title="悬浮球设置">
         <SwitchPreference

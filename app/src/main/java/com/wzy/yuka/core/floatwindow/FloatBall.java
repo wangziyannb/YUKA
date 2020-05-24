@@ -253,7 +253,7 @@ class FloatBall implements View.OnClickListener {
                         Handler handler = new Handler();
                         handler.postDelayed(() -> {
                             imageButton.setVisibility(View.VISIBLE);
-                            imageButton.setBackgroundResource(R.drawable.close);
+                            imageButton.setBackgroundResource(R.drawable.floatmenu_close);
                             ImageButton[] imageButtons = new ImageButton[4];
                             for (int i = 0; i < imageButtons.length; i++) {
                                 imageButtons[i] = new ImageButton(activity);
@@ -263,22 +263,22 @@ class FloatBall implements View.OnClickListener {
                                 switch (i) {
                                     case 0:
                                         imageButtons[i].setId(R.id.settings_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.settings);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_settings);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                     case 1:
                                         imageButtons[i].setId(R.id.detect_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.detect);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatwindow_detect);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                     case 2:
                                         imageButtons[i].setId(R.id.reset_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.reset);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_reset);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                     case 3:
                                         imageButtons[i].setId(R.id.exit_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.exit);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_exit);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                 }
@@ -311,7 +311,7 @@ class FloatBall implements View.OnClickListener {
                         Handler handler = new Handler();
                         handler.postDelayed(() -> {
                             imageButton.setVisibility(View.VISIBLE);
-                            imageButton.setBackgroundResource(R.drawable.close);
+                            imageButton.setBackgroundResource(R.drawable.floatmenu_close);
                             ImageButton[] imageButtons = new ImageButton[4];
                             for (int i = 0; i < imageButtons.length; i++) {
                                 imageButtons[i] = new ImageButton(activity);
@@ -321,22 +321,22 @@ class FloatBall implements View.OnClickListener {
                                 switch (i) {
                                     case 0:
                                         imageButtons[i].setId(R.id.settings_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.settings);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_settings);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                     case 1:
                                         imageButtons[i].setId(R.id.detect_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.detect);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatwindow_detect);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                     case 2:
                                         imageButtons[i].setId(R.id.reset_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.reset);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_reset);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                     case 3:
                                         imageButtons[i].setId(R.id.exit_button);
-                                        imageButtons[i].setBackgroundResource(R.drawable.exit);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_exit);
                                         imageButtons[i].setOnClickListener(this);
                                         break;
                                 }

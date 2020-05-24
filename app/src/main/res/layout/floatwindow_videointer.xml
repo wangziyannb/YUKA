@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/select_window_layout"
+    android:layout_width="250dp"
+    android:layout_height="100dp"
+    android:background="@drawable/radius_style_floatwindow"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/floatwindow_menu"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_above="@+id/floatwindow_text"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/sw_close"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="5dp"
+            android:src="@drawable/floatwindow_close" />
+
+        <ImageView
+            android:id="@+id/sw_stopContinue"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="114dp"
+            android:padding="5dp"
+            android:src="@drawable/floatwindow_stop" />
+
+        <ImageView
+            android:id="@+id/sw_change"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:padding="5dp"
+            android:src="@drawable/floatwindow_change" />
+
+        <ImageView
+            android:id="@+id/sw_hide"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"
+            android:src="@drawable/floatwindow_hide" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/floatwindow_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/originalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="4dp"
+            android:text="只显示原文"
+            android:textColor="@color/text_color_DarkBg"
+            app:lineHeight="20sp" />
+
+        <TextView
+            android:id="@+id/translatedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="只显示译文"
+            android:textAlignment="center"
+            android:textColor="@color/text_color_DarkBg"
+            android:textSize="14sp"
+            app:lineHeight="20sp" />
+    </LinearLayout>
+
+</RelativeLayout>
