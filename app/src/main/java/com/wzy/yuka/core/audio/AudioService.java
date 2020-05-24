@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
@@ -45,6 +46,7 @@ public class AudioService extends Service {
         return Service.START_NOT_STICKY;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void initRecord() {
         Intent data = test.mData;
         MediaProjectionManager mediaProjectionManager = getSystemService(MediaProjectionManager.class);

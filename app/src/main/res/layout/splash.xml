@@ -28,20 +28,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:src="@drawable/ic_radio_button_checked" />
+            android:src="@drawable/radio_dots_checked" />
 
         <ImageView
             android:id="@+id/idot2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:src="@drawable/ic_radio_button_unchecked" />
+            android:src="@drawable/radio_dots_unchecked" />
 
         <ImageView
             android:id="@+id/idot3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_radio_button_unchecked" />
+            android:src="@drawable/radio_dots_unchecked" />
 
     </LinearLayout>
 </FrameLayout>

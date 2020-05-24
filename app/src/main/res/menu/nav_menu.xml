@@ -2,14 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/home_no"
+        android:id="@+id/bot_nav_home"
+        android:icon="@drawable/nav_home_checked"
+        android:iconTint="#F06292"
         android:title="主页" />
     <item
         android:enabled="false"
         android:title="" />
     <item
-        android:id="@+id/nav_boutique"
-        android:icon="@drawable/boutique_no"
+        android:id="@+id/bot_nav_history"
+        android:icon="@drawable/nav_history_unchecked"
+        android:iconTint="#F06292"
         android:title="精选" />
 </menu>
