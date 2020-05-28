@@ -43,3 +43,14 @@
 -dontwarn org.junit.**
 
 -keep class com.lzf.easyfloat.** {*;}
+
+#okhttp3
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *;}
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+
+#kotlin
+-dontwarn kotlin.**

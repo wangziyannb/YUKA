@@ -20,6 +20,7 @@ import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
+import com.wzy.yuka.tools.params.GetParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +56,7 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
-                    HttpRequest.yuka(origin);
+                    HttpRequest.yuka(GetParams.Yuka(), origin);
                 }
                 break;
         }

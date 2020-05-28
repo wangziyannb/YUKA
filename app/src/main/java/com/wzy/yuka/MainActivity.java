@@ -1,6 +1,5 @@
 package com.wzy.yuka;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Message;
@@ -81,13 +80,12 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
         RoundImageView roundImageView = header.findViewById(R.id.user_info).findViewById(R.id.navBarIco);
         roundImageView.setOnClickListener((v) -> {
-//            if (UserManager.checkLogin()) {
-//                navController.navigate(R.id.action_nav_home_to_nav_user_service);
-//                drawer.closeDrawers();
-//            } else {
-//                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
-//            }
-            startActivity(new Intent(this, com.wzy.yuka.core.audio.test.class));
+            if (UserManager.checkLogin()) {
+                navController.navigate(R.id.action_nav_home_to_nav_user_service);
+                drawer.closeDrawers();
+            } else {
+                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
+            }
         });
 
         try {

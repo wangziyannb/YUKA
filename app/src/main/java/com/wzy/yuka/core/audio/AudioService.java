@@ -24,122 +24,20 @@ import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
+import com.wzy.yuka.tools.network.WebsocketRequest;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.youdao.ydasr.ASRParams;
-import com.youdao.ydasr.AsrListener;
-import com.youdao.ydasr.AsrManager;
-import com.youdao.ydasr.asrengine.model.AsrResult;
-import com.youdao.ydasr.asrengine.model.AsrResultCode;
 
-import org.jetbrains.annotations.NotNull;
+import java.nio.ByteBuffer;
+import java.util.Timer;
 
 
 /**
- * Created by Ziyan on 2020/5/21.
+ * Created by Ziyan on 2020/5/26.
  */
 public class AudioService extends Service {
-    private final String TAG = "AudioService";
-    private boolean mWhetherRecord;
-    private AsrListener mAsr = new AsrListener() {
-        // 开始识别回调
-        @Override
-        public void onAsrStart() {
-            Log.d(TAG, "onAsrStart: !!!");
-        }
-
-        // 重连后再次连接成功回调
-        @Override
-        public void onAsrRestart() {
-            Log.d(TAG, "onAsrRestart: !!!");
-        }
-
-        // 结束识别回调
-        @Override
-        public void onAsrStop() {
-            Log.d(TAG, "onAsrStop: !!!");
-        }
-
-        // 正在重连提示
-        @Override
-        public void onAsrReconnecting() {
-            Log.d(TAG, "onAsrReconnecting: !!!");
-        }
-
-        // 错误回调
-        @Override
-        public void onAsrError(@NotNull AsrResultCode error) {
-
-            Log.d(TAG, "onAsrError: " + error.toString());
-        }
-
-        // ASR结果回调 识别结果：result.getResult().getContext()
-        // 翻译结果：result.getResult().getTranContent()
-        @Override
-        public void onAsrNext(@NotNull AsrResult result, boolean isPartial) {
-//            Log.d(TAG, "onAsrNext: " + result.getResult().get);
-//            Log.d(TAG, "onAsrNext: " + result.getResult().getTranContent());
-//            Log.d(TAG, "onAsrNext: " + result.getResult().getContext());
-//            Log.d(TAG, "onAsrNext: " + result.getResult().getTranContent());
-//            Log.d(TAG, "onAsrNext: " + result.getResult().getContext());
-//            Log.d(TAG, "onAsrNext: " + result.getResult().getTranContent());
-            FloatWindowManager.showSubtitle(result.getResult().getContext(), result.getResult().getTranContent());
-//            Message message=Message.obtain();
-//            message.what=126;
-//            globalHandler
-//            globalHandler.handleMessage();
-        }
-
-        // 音量变化回调
-        @Override
-        public void onAsrVolumeChange(float volume) {
-        }
-
-        // 后端点静音回调
-        @Override
-        public void onAsrSilentEnd() {
-        }
-
-        // 前端点静音回调
-        @Override
-        public void onAsrSilentStart() {
-        }
-
-        // 连接上蓝牙麦克风提示
-        @Override
-        public void onBluetoothAudioConnected() {
-        }
-
-        // 蓝牙麦克风断开提示
-        @Override
-        public void onBluetoothAudioDisconnected() {
-        }
-    };
-
-    private AsrManager asrManager;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        createNotificationChannel();
-        ASRParams asrParams = new ASRParams.Builder()
-                .transPattern((String) sharedPreferencesUtil.getParam("translator_modeset", "stream"))
-                .timeoutStart(5000L)
-                .timeoutEnd(10000L)
-                .sentenceTimeout(3000L)
-                .connectTimeout(10000L)
-                .isWaitServerDisconnect(true)
-                .build();
-
-        asrManager = AsrManager.getInstance(this, "5c44137c3b4c2e0f", asrParams, mAsr);
-        asrManager.addWavHead = true;
-        asrManager.setASRLanguage(
-                (String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
-                (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"));
-        asrManager.startConnect();
-
-
-        initRecord();
-        return Service.START_NOT_STICKY;
-    }
+    private boolean mWhetherRecord;
+    private byte[] bytes;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void initRecord() {
@@ -167,19 +65,41 @@ public class AudioService extends Service {
 
     }
 
+    private WebsocketRequest websocketRequest;
+    private Timer timer;
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        createNotificationChannel();
+        initRecord();
+        return Service.START_NOT_STICKY;
+    }
+
     private void startRecord(AudioRecord record, int bufferSize) {
         mWhetherRecord = true;
+        websocketRequest = new WebsocketRequest(
+                (String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
+                (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"));
+        websocketRequest.start();
         new Thread(() -> {
             record.startRecording();//开始录制
-            byte[] bytes = new byte[bufferSize];
+            bytes = new byte[bufferSize];
             while (mWhetherRecord) {
-                record.read(bytes, 0, bytes.length);//读取流
-                asrManager.insertAudioBytes(bytes);
+                while (websocketRequest.isClosed()) {
+
+                }
+                if (record.read(bytes, 0, bytes.length) != -1) {
+                    if (websocketRequest.isRunning()) {
+                        websocketRequest.send(ByteBuffer.wrap(bytes));
+                    }
+                }
+                //int i =;//读取流
             }
             Log.e("TAG", "run: 暂停录制");
-            asrManager.stop();
-            asrManager.destroy();
+
             record.stop();//停止录制
+            record.release();
         }).start();
     }
 
@@ -224,12 +144,9 @@ public class AudioService extends Service {
 
     @Override
     public void onDestroy() {
+        websocketRequest.close();
         mWhetherRecord = false;
-        asrManager.stop();
-        asrManager.destroy();
         stopForeground(true);
         super.onDestroy();
     }
-
-
 }

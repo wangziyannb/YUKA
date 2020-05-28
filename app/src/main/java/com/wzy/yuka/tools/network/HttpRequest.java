@@ -7,7 +7,6 @@ import android.util.Log;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.Encrypt;
-import com.wzy.yuka.tools.params.GetParams;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -99,6 +98,18 @@ public class HttpRequest {
                             RequestBody.create(params[3], null)
                     )
                     .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"precise\""),
+                            RequestBody.create(params[4], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"vertical\""),
+                            RequestBody.create(params[5], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
+                            RequestBody.create(params[6], null)
+                    )
+                    .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
                             RequestBody.create(UserManager.getUser()[0], null)
                     )
@@ -112,7 +123,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/yuka/")
+                .url("https://yukacn.xyz/yuka/yuka/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -132,17 +143,20 @@ public class HttpRequest {
 
     }
 
-    public static void yuka(String origin) {
+    public static void yuka(String[] params, String origin) {
         RequestBody body = new FormBody.Builder()
                 .add("mode", "text")
-                .add("translator", GetParams.Yuka()[2])
-                .add("SBCS", GetParams.Yuka()[3])
+                .add("translator", params[2])
+                .add("SBCS", params[3])
+                .add("precise", params[4])
+                .add("vertical", params[5])
+                .add("reverse", params[6])
                 .add("origin", origin)
                 .add("u_name", UserManager.getUser()[0])
                 .add("uuid", UserManager.getUser()[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/yuka/")
+                .url("https://yukacn.xyz/yuka/yuka/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -181,7 +195,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/login/")
+                .url("https://yukacn.xyz/yuka/login/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -194,7 +208,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/logout/")
+                .url("https://yukacn.xyz/yuka/logout/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -208,7 +222,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/regist/")
+                .url("https://yukacn.xyz/yuka/regist/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -221,7 +235,7 @@ public class HttpRequest {
                 .add("CDKEY", params[1])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/activate/")
+                .url("https://yukacn.xyz/yuka/activate/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -233,7 +247,7 @@ public class HttpRequest {
                 .add("u_name", params[0])
                 .build();
         Request request = new Request.Builder()
-                .url("https://wangclimxnb.xyz/yuka_test/account/")
+                .url("https://yukacn.xyz/yuka/account/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);

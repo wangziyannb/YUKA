@@ -15,7 +15,7 @@ import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 
 public class FloatWindowManager {
-    static final String TAG = "FloatWindow";
+    private static final String TAG = "FloatWindow";
     //location 0 1 2 3 = lA 0 1 + lB 0 1
     private static int[][] location;
     private static SelectWindow[] selectWindows;
@@ -50,15 +50,17 @@ public class FloatWindowManager {
                 sum += 1;
             }
         } else {
-            if (getNumOfSubtitleWindows() == 1) {
-                Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+            if (getNumOfFloatWindows() != 0) {
+                Toast.makeText(activity, "屏幕翻译和同传不能同时使用！", Toast.LENGTH_SHORT).show();
             } else {
-                subtitleWindow = new SubtitleWindow(activity, "subtitleWindow");
+                if (getNumOfSubtitleWindows() == 1) {
+                    Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+                } else {
+                    subtitleWindow = new SubtitleWindow(activity, "subtitleWindow");
+                }
             }
         }
-
     }
-
 
     /**
      * 开始截屏

@@ -98,7 +98,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     @AfterPermissionGranted(233)
     @SuppressLint("WrongConstant")
     private void requestPermission() {
-        String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        String[] perms = {Manifest.permission.RECORD_AUDIO};
         if (!EasyPermissions.hasPermissions(getContext(), perms)) {
             EasyPermissions.requestPermissions(this, "将会无法使用", 233, perms);
         } else {

@@ -123,16 +123,16 @@ public class SubtitleWindow implements View.OnClickListener {
         result.setText(translation);
     }
 
-    View getView() {
+    private View getView() {
         return EasyFloat.getAppFloatView(tag);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent(activityWeakReference.get(), AudioService.class);
         switch (v.getId()) {
             case R.id.sbw_close:
-                Intent intent1 = new Intent(activityWeakReference.get(), AudioService.class);
-                activityWeakReference.get().stopService(intent1);
+                activityWeakReference.get().stopService(intent);
                 dismiss();
                 break;
             case R.id.sbw_pap:
@@ -141,7 +141,6 @@ public class SubtitleWindow implements View.OnClickListener {
                     nextPlay = true;
                     ((ImageView) v).setImageResource(R.drawable.floatwindow_stop);
                 } else {
-                    Intent intent = new Intent(activityWeakReference.get(), AudioService.class);
                     activityWeakReference.get().stopService(intent);
                     nextPlay = false;
                     ((ImageView) v).setImageResource(R.drawable.floatwindow_translate);

@@ -30,14 +30,37 @@ public class GetParams {
 
     public static String[] Yuka() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        //0:mode 1:model 2:translator 3:SBCS
-        String[] params = new String[4];
+        //0:mode 1:model 2:translator 3:SBCS 4:precise 5:vertical 6:reverse
+        String[] params = new String[7];
         Resources resources = context.getResources();
-        //默认为 ocr - google -google - 0
+        //默认为 ocr - google -google - 0 - 0 - 0 - 0
         params[0] = resources.getStringArray(R.array.mode)[0];
-        params[1] = resources.getStringArray(R.array.model)[0];
+        params[1] = resources.getStringArray(R.array.detect_modelset)[0];
         params[2] = resources.getStringArray(R.array.translator)[0];
         params[3] = resources.getString(R.string.False);
+        params[4] = resources.getString(R.string.False);
+        params[5] = resources.getString(R.string.False);
+        params[6] = resources.getString(R.string.False);
+
+        switch (preferences.getString("settings_detect_model", resources.getStringArray(R.array.detect_modelset)[0])) {
+            case "google":
+                break;
+            case "baidu":
+                params[1] = resources.getStringArray(R.array.detect_modelset)[1];
+                if (preferences.getBoolean("settings_baidu_precise", false)) {
+                    //高精度模式
+                    params[4] = resources.getString(R.string.True);
+                }
+                if (preferences.getBoolean("settings_baidu_vertical", false)) {
+                    //竖排标点优化
+                    params[5] = resources.getString(R.string.True);
+                }
+                if (preferences.getBoolean("settings_baidu_reverse", false)) {
+                    //阅读顺序逆转
+                    params[6] = resources.getString(R.string.True);
+                }
+                break;
+        }
 
         if (preferences.getBoolean("settings_trans_switch", true)) {
             //启用翻译
@@ -54,18 +77,6 @@ public class GetParams {
                     break;
                 case "youdao":
                     params[2] = resources.getStringArray(R.array.translator)[2];
-                    break;
-            }
-        } else {
-            //未启用翻译
-            switch (preferences.getString("settings_detect_language", resources.getStringArray(R.array.model)[0])) {
-                case "google":
-                    break;
-                case "chn":
-                    params[1] = resources.getStringArray(R.array.model)[1];
-                    break;
-                case "eng":
-                    params[1] = resources.getStringArray(R.array.model)[2];
                     break;
             }
         }

@@ -74,6 +74,7 @@ public class UserManager {
         HttpRequest.Login(params, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("TAG", "onFailure: " + e.toString());
                 Message message = Message.obtain();
                 message.what = 400;
                 globalHandler.sendMessage(message);
