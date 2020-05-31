@@ -15,8 +15,11 @@ import android.media.AudioRecord;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -24,20 +27,62 @@ import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
+import com.wzy.yuka.core.user.UserManager;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.WebsocketRequest;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.resolver.YoudaoAsrResolver;
 
 import java.nio.ByteBuffer;
-import java.util.Timer;
+
 
 
 /**
  * Created by Ziyan on 2020/5/26.
  */
-public class AudioService extends Service {
+public class AudioService extends Service implements GlobalHandler.HandleMsgListener {
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private GlobalHandler globalHandler = GlobalHandler.getInstance();
+    private YoudaoAsrResolver resolver;
     private boolean mWhetherRecord;
     private byte[] bytes;
+
+    @Override
+    public void handleMsg(Message msg) {
+        Bundle bundle;
+        String json;
+        switch (msg.what) {
+            case 250:
+                bundle = msg.getData();
+                json = bundle.getString("syncMessage");
+                resolver = new YoudaoAsrResolver(json);
+                FloatWindowManager.showSubtitle(resolver.getContext(), resolver.getTranContent());
+                break;
+            case 251:
+                Toast.makeText(this, "成功连接！现在开始语音同传", Toast.LENGTH_SHORT).show();
+                break;
+            case 252:
+                bundle = msg.getData();
+                json = bundle.getString("syncMessage");
+                resolver = new YoudaoAsrResolver(json);
+                Toast.makeText(this, "使用时间：" + resolver.getTotal_time(), Toast.LENGTH_SHORT).show();
+                break;
+            case 253:
+                bundle = msg.getData();
+                json = bundle.getString("syncMessage");
+                resolver = new YoudaoAsrResolver(json);
+                switch (resolver.getErrorCode()) {
+                    case "601":
+                        FloatWindowManager.showSubtitle("用户名或密码错误", "用户名或密码错误");
+                        break;
+                    case "602":
+                        FloatWindowManager.showSubtitle("本机未登录", "本机未登录");
+                        break;
+                }
+                break;
+
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void initRecord() {
@@ -66,7 +111,6 @@ public class AudioService extends Service {
     }
 
     private WebsocketRequest websocketRequest;
-    private Timer timer;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -77,11 +121,12 @@ public class AudioService extends Service {
     }
 
     private void startRecord(AudioRecord record, int bufferSize) {
+        globalHandler.setHandleMsgListener(this);
         mWhetherRecord = true;
-        websocketRequest = new WebsocketRequest(
-                (String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
-                (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"));
-        websocketRequest.start();
+        websocketRequest = new WebsocketRequest(UserManager.getUser());
+        websocketRequest.start((String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
+                (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"),
+                (String) sharedPreferencesUtil.getParam("settings_trans_syncModes", "stream"));
         new Thread(() -> {
             record.startRecording();//开始录制
             bytes = new byte[bufferSize];
@@ -146,7 +191,10 @@ public class AudioService extends Service {
     public void onDestroy() {
         websocketRequest.close();
         mWhetherRecord = false;
+        resolver = null;
         stopForeground(true);
         super.onDestroy();
     }
+
+
 }

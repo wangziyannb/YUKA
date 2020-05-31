@@ -1,15 +1,15 @@
 package com.wzy.yuka.tools.network;
 
-import android.os.Handler;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
+
+import com.wzy.yuka.tools.message.GlobalHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -24,54 +24,30 @@ import okio.ByteString;
  */
 public class WebsocketRequest {
     private final String TAG = "WebsocketRequest";
-    private String salt = UUID.randomUUID().toString();
-    private String curtime = String.valueOf(System.currentTimeMillis() / 1000);
-    private String from;
-    private String to;
-    private String sign = encrypt("2eede86073d15f36" + salt + curtime + "ksQVVUKaGf0tExTE64bMEvroNMKGiprM");
 
-    private Handler handler = new Handler();
+    private String u_name;
+    private String uuid;
+
     private WebSocket mSocket;
+    private GlobalHandler globalHandler = GlobalHandler.getInstance();
 
-    public WebsocketRequest(String from, String to) {
-        this.from = from;
-        this.to = to;
-    }
-
-    private static String encrypt(String strSrc) {
-        byte[] bt = strSrc.getBytes();
-        String encName = "SHA-256";
-        try {
-            MessageDigest md = MessageDigest.getInstance(encName);
-            md.update(bt);
-            return bytes2Hex(md.digest());
-        } catch (NoSuchAlgorithmException ignored) {
-            return strSrc;
-        }
-        // to HexString
-    }
-
-    private static String bytes2Hex(byte[] bts) {
-        String des = "";
-        String tmp;
-        for (int i = 0; i < bts.length; i++) {
-            tmp = (Integer.toHexString(bts[i] & 0xFF));
-            if (tmp.length() == 1) {
-                des += "0";
-            }
-            des += tmp;
-        }
-        return des;
+    public WebsocketRequest(@NotNull String[] user) {
+        this.u_name = user[0];
+        this.uuid = user[2];
     }
 
     public void send(ByteBuffer buffer) {
-        mSocket.send(ByteString.of(buffer));
+        if (mSocket != null) {
+            mSocket.send(ByteString.of(buffer));
+        }
     }
 
     public void close() {
-        byte[] closebytes = "{\"end\": \"true\"}".getBytes();
-        mSocket.send(ByteString.of(closebytes));
-        mSocket = null;
+        byte[] closebytes = "fin".getBytes();
+        if (mSocket != null) {
+            mSocket.send(ByteString.of(closebytes));
+            mSocket = null;
+        }
     }
 
     public boolean isClosed() {
@@ -82,13 +58,10 @@ public class WebsocketRequest {
         return mSocket != null;
     }
 
-    public void start() {
-        String url = "wss://openapi.youdao.com/stream_speech_trans?appKey=2eede86073d15f36&salt=" + salt
-                + "&curtime=" + curtime
-                + "&sign=" + sign
-                + "&version=v1&channel=1&format=wav&signType=v4&rate=16000&from=" + from
-                + "&to=" + to
-                + "&transPattern=stream";
+    public void start(@NotNull String from, @NotNull String to, @NotNull String pattern) {
+        String url = "ws://49.233.38.181:37103/youdaoAsr"
+                + "/" + u_name + "&" + uuid
+                + "/from=" + from + "&to=" + to + "&p=" + pattern;
 
         OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
                 .readTimeout(3, TimeUnit.SECONDS)
@@ -113,9 +86,25 @@ public class WebsocketRequest {
         public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
             super.onMessage(webSocket, text);
             Log.d(TAG, "onMessage: " + text);
-            if (text.contains("\"errorCode\":\"304\"")) {
-                onClosed(webSocket, 304, "会话闲置太久被切断");
+            Message message = Message.obtain();
+            Bundle bundle = new Bundle();
+
+            if (text.contains("\"errorCode\":\"602\"") || text.contains("\"errorCode\":\"601\"")) {
+                onClosed(webSocket, 600, "");
+                bundle.putString("syncMessage", text);
+                message.what = 253;
+            } else if (text.contains("\"total_time\"")) {
+                message.what = 252;
+                bundle.putString("syncMessage", text);
+            } else if (text.equals("ready") || (text.contains("{}"))) {
+                message.what = 251;
+            } else {
+                message.what = 250;
+                bundle.putString("syncMessage", text);
             }
+
+            message.setData(bundle);
+            globalHandler.sendMessage(message);
         }
 
         @Override

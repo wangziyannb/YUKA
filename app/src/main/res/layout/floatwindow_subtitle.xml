@@ -2,8 +2,9 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:SubtitleFlowView="http://schemas.android.com/apk/res-auto"
     android:id="@+id/floatwindow_subtitle"
-    android:layout_width="250dp"
+    android:layout_width="300dp"
     android:layout_height="100dp"
     android:background="@drawable/radius_style_floatwindow"
     android:orientation="vertical">
@@ -53,7 +54,9 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="4dp"
-        android:text="只显示原文"
+        android:text="显示原文"
+        android:textAlignment="center"
+        android:textSize="12sp"
         android:textColor="@color/text_color_DarkBg"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,18 +67,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lineHeight="20sp" />
 
-    <TextView
+    <com.wzy.yuka.core.floatwindow.SubtitleFlowView
         android:id="@+id/sbw_translatedText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="只显示译文"
-        android:textAlignment="center"
-        android:textColor="@color/text_color_DarkBg"
-        android:textSize="14sp"
+        SubtitleFlowView:firstText="显示译文"
+        SubtitleFlowView:textAlignment="center"
+        SubtitleFlowView:textColor="@color/text_color_DarkBg"
+        SubtitleFlowView:textSize="12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lineHeight="20sp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -111,11 +111,12 @@ public class SubtitleWindow implements View.OnClickListener {
         View view = EasyFloat.getAppFloatView(tag);
 
         TextView ori = view.findViewById(R.id.sbw_originalText);
-        TextView result = view.findViewById(R.id.sbw_translatedText);
+        SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
 
         if (GetParams.SelectWindow()[0]) {
-            ori.setBackgroundResource(R.color.blackBg);
+
         } else {
+            ori.setBackgroundResource(0);
             result.setBackgroundResource(0);
         }
 
