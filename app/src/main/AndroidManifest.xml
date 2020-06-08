@@ -51,6 +51,10 @@
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
+            android:name=".core.screenshot.ScreenShotService_Auto"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+        <service
             android:name=".core.audio.AudioService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />

@@ -120,7 +120,8 @@ public class FloatBall implements View.OnClickListener {
                         }
 
                     })
-                    .setLocation(100, 100).show();
+                    .setLocation(100, 100)
+                    .show();
         } else {
             EasyFloat.with(activity)
                     .setTag(tag)

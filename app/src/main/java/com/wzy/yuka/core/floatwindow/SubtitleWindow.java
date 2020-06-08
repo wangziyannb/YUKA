@@ -24,20 +24,15 @@ import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by Ziyan on 2020/5/23.
  */
-public class SubtitleWindow implements View.OnClickListener {
-    private WeakReference<Activity> activityWeakReference;
-    private String tag;
+public class SubtitleWindow extends FloatWindows implements View.OnClickListener {
     private int mode = 1;
     private boolean nextPlay = false;
 
     SubtitleWindow(Activity activity, String tag) {
-        activityWeakReference = new WeakReference<>(activity);
-        this.tag = tag;
+        super(activity, tag, 0);
         EasyFloat.with(activityWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
@@ -102,6 +97,7 @@ public class SubtitleWindow implements View.OnClickListener {
 
     }
 
+    @Override
     void dismiss() {
         FloatWindowManager.dismissSubtitleWindow();
         EasyFloat.dismissAppFloat(tag);
@@ -114,7 +110,8 @@ public class SubtitleWindow implements View.OnClickListener {
         SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
 
         if (GetParams.SelectWindow()[0]) {
-
+            ori.setBackgroundResource(R.color.blackBg);
+            result.setBackgroundResource(R.color.blackBg);
         } else {
             ori.setBackgroundResource(0);
             result.setBackgroundResource(0);

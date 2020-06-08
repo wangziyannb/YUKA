@@ -96,13 +96,21 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
     }
 
     private void refresh_info(Bundle bundle) {
-        String expiry = bundle.getString("expiry");
-        int times = (int) bundle.getDouble("times");
+        String expiry = bundle.getString("time");
+        int remain = (int) bundle.getDouble("remain");
+        int remain_advancetimes = (int) bundle.getDouble("remain_advancetimes");
+        int sync_time = (int) bundle.getDouble("sync_time");
         TextView textView = member_card.findViewById(R.id.member_expiry);
         textView.setText(expiry);
         TextView textView1 = member_card.findViewById(R.id.member_times);
-        String last = times + "次";
+        String last = remain + "次";
         textView1.setText(last);
+        TextView textView2 = member_card.findViewById(R.id.member_times_auto);
+        last = remain_advancetimes + "次";
+        textView2.setText(last);
+        TextView textView3 = member_card.findViewById(R.id.member_times_sync);
+        last = sync_time + "秒";
+        textView3.setText(last);
     }
 
     @Override
@@ -133,13 +141,11 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("关于购买");
         alert.setMessage("感谢使用Yuka！以下为购买说明：\n" +
-                "1、注册账号后将会附送10次翻译次数，请确保已体验足够再进行购买。即使有月卡，也会优先扣除翻译次数！\n" +
-                "2、购买月卡的价格是每月3元，后续可能只涨不降。\n" +
-                "3、没有网银支付宝微信钱包的学生党可以联系作者或加群781666001，PY获得月卡\n" +
-                "4、月卡商店开在微店上，并不需要下载微店app。\n" +
-                "5、点击成为超级会员会跳转到商店页面，购买后自动发激活码，填于空位即可续期一个月。\n" +
-                "6、请加入qq群781666001，参加Yuka的测试版本");
-        alert.setPositiveButton("成为炒鸡会员！", (dialog, which) -> {
+                "1、注册账号后将会分别附送20次普通翻译和自动翻译次数，请确保已体验足够再进行购买。即使有月卡，也会优先扣除普通翻译次数！\n" +
+                "2、购买月卡的价格是每月3元，后续可能改变价格，购买后将本月内无限使用普通翻译。自动翻译的价格为5元100次，独立计费（一次完整屏幕自动取词翻译将使用一次）。系统内录视频或游戏同传单次最多1小时，一小时收费13元\n" +
+                "3、点击起飞会跳转到商店页面，购买后自动发激活码，填于空位即可根据购买的类型获得充值。购买并不需要下载微店app！\n" +
+                "4、没有网银支付宝微信钱包的学生党可以联系作者或加群781666001，PY获得月卡。加群参与测试版本将不定期发放各种福利（不包括女装）\n");
+        alert.setPositiveButton("起飞！", (dialog, which) -> {
             Uri uri = Uri.parse("https://weidian.com/item.html?itemID=3625538574");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);

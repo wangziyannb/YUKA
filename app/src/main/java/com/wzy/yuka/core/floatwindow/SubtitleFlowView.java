@@ -98,6 +98,11 @@ public class SubtitleFlowView extends TextSwitcher implements
         return t;
     }
 
+    @Override
+    public void setBackgroundResource(int resid) {
+        mtextColor = resid;
+    }
+
     public void setText(CharSequence text, boolean next) {
         TextView textView = (TextView) getCurrentView();
         TextPaint textPaint = textView.getPaint();

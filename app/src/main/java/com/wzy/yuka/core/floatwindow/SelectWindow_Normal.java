@@ -28,17 +28,10 @@ import java.text.DecimalFormat;
 /**
  * Created by Ziyan on 2020/4/29.
  */
-public class SelectWindow implements View.OnClickListener {
-    int[] location;
-    private int index;
-    private String tag;
-    private Activity activity;
+public class SelectWindow_Normal extends FloatWindows {
 
-    SelectWindow(Activity activity, String tag, int index) {
-        location = new int[4];
-        this.activity = activity;
-        this.tag = tag;
-        this.index = index;
+    SelectWindow_Normal(Activity activity, String tag, int index) {
+        super(activity, tag, index);
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
@@ -134,17 +127,7 @@ public class SelectWindow implements View.OnClickListener {
                 .show();
     }
 
-    private void setLocation() {
-        View view = EasyFloat.getAppFloatView(tag);
-        view.getLocationOnScreen(location);
-        location[2] = location[0] + view.getRight();
-        location[3] = location[1] + view.getBottom();
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
+    @Override
     void showResults(String origin, String translation, double time){
         View view = EasyFloat.getAppFloatView(tag);
         TextView textView=view.findViewById(R.id.translatedText);
@@ -156,12 +139,12 @@ public class SelectWindow implements View.OnClickListener {
         }
         if(origin.equals("yuka error")){
             textView.setText(translation);
-            textView.setTextColor(activity.getResources().getColor(R.color.colorError,null));
+            textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.colorError, null));
             return;
         }
         if(origin.equals("before response")){
             textView.setText(translation);
-            textView.setTextColor(activity.getResources().getColor(R.color.text_color_DarkBg,null));
+            textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
             return;
         }
         if(params[1]){
@@ -174,21 +157,8 @@ public class SelectWindow implements View.OnClickListener {
         }
         if(params[2]){
             DecimalFormat df = new DecimalFormat("#0.000");
-            Toast.makeText(activity,"耗时"+df.format(time)+"秒",Toast.LENGTH_SHORT).show();
+            Toast.makeText(activityWeakReference.get(), "耗时" + df.format(time) + "秒", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    void dismiss() {
-        FloatWindowManager.dismissFloatWindow(index);
-        EasyFloat.dismissAppFloat(tag);
-    }
-
-    void hide() {
-        EasyFloat.hideAppFloat(tag);
-    }
-
-    void show() {
-        EasyFloat.showAppFloat(tag);
     }
 
     @Override
@@ -199,10 +169,10 @@ public class SelectWindow implements View.OnClickListener {
                 break;
             case R.id.sw_translate:
                 hide();
-                FloatWindowManager.startScreenShot(activity, index);
+                FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
                 break;
             case R.id.sw_addwindows:
-                FloatWindowManager.addSelectWindow(activity);
+                FloatWindowManager.addSelectWindow(activityWeakReference.get());
                 break;
             case R.id.sw_stopContinue:
                 ScreenShotService_Continue.stopScreenshot();

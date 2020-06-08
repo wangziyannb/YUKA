@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="自动识别翻译">
+        <SwitchPreference
+            android:key="settings_auto_switch"
+            android:summary="需要选取欲翻译位置。将自动将所有检测到文字的区域识别并翻译，且在相应位置使用悬浮窗显示结果。仅翻译设置会被应用。"
+            android:title="整页识别翻译" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="额外设置">
+        <SwitchPreference
+            android:key="settings_fastMode"
+            android:summary="高性能要求，出现取词框消失请禁用"
+            android:title="快速识别" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_reverse"
+            android:summary="默认从左到右"
+            android:title="阅读顺序逆转" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_vertical"
+            android:summary="影响原文，如无标点可使用"
+            android:title="竖排标点优化" />
+    </PreferenceCategory>
+</PreferenceScreen>

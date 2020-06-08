@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wzy.yuka.core.audio.AudioService;
+import com.wzy.yuka.core.screenshot.ScreenShotService_Auto;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.params.GetParams;
@@ -18,7 +19,7 @@ public class FloatWindowManager {
     private static final String TAG = "FloatWindow";
     //location 0 1 2 3 = lA 0 1 + lB 0 1
     private static int[][] location;
-    private static SelectWindow[] selectWindows;
+    private static FloatWindows[] FloatWindows;
     private static SubtitleWindow subtitleWindow;
     public static FloatBall floatBall;
     private static int sum = 0;
@@ -36,20 +37,8 @@ public class FloatWindowManager {
      */
     static void addSelectWindow(Activity activity) {
         boolean sync = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_trans_syncMode", false);
-        if (!sync) {
-            int limit = 5;
-            if (GetParams.AdvanceSettings()[1] == 1) {
-                limit = 1;
-            }
-            if (getNumOfFloatWindows() == limit) {
-                Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
-            } else {
-                location = LengthUtil.appendIndex(location);
-                selectWindows = LengthUtil.appendIndex(selectWindows);
-                selectWindows[selectWindows.length - 1] = new SelectWindow(activity, "selectWindow" + sum, selectWindows.length - 1);
-                sum += 1;
-            }
-        } else {
+        boolean auto = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_switch", false);
+        if (sync) {
             if (getNumOfFloatWindows() != 0) {
                 Toast.makeText(activity, "屏幕翻译和同传不能同时使用！", Toast.LENGTH_SHORT).show();
             } else {
@@ -58,6 +47,32 @@ public class FloatWindowManager {
                 } else {
                     subtitleWindow = new SubtitleWindow(activity, "subtitleWindow");
                 }
+            }
+        } else if (auto) {
+            if (getNumOfFloatWindows() != 0) {
+                Toast.makeText(activity, "普通翻译和自动翻译不能同时使用！", Toast.LENGTH_SHORT).show();
+            } else {
+                if (getNumOfSubtitleWindows() == 1) {
+                    Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+                } else {
+                    location = LengthUtil.appendIndex(location);
+                    FloatWindows = LengthUtil.appendIndex(FloatWindows);
+                    FloatWindows[FloatWindows.length - 1] = new SelectWindow_Auto(activity, "selectWindow" + sum, FloatWindows.length - 1);
+                    sum += 1;
+                }
+            }
+        } else {
+            int limit = 5;
+            if (GetParams.AdvanceSettings()[1] == 1) {
+                limit = 1;
+            }
+            if (getNumOfFloatWindows() == limit) {
+                Toast.makeText(activity, "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+            } else {
+                location = LengthUtil.appendIndex(location);
+                FloatWindows = LengthUtil.appendIndex(FloatWindows);
+                FloatWindows[FloatWindows.length - 1] = new SelectWindow_Normal(activity, "selectWindow" + sum, FloatWindows.length - 1);
+                sum += 1;
             }
         }
     }
@@ -74,6 +89,8 @@ public class FloatWindowManager {
         Intent service = new Intent(activity, ScreenShotService_Single.class);
         if (GetParams.AdvanceSettings()[1] == 1) {
             service = new Intent(activity, ScreenShotService_Continue.class);
+        } else if ((boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_switch", false)) {
+            service = new Intent(activity, ScreenShotService_Auto.class);
         }
         if (getNumOfFloatWindows() != 0) {
             hideAllFloatWindow();
@@ -96,10 +113,12 @@ public class FloatWindowManager {
      */
     static void startScreenShot(Activity activity, int index) {
         location = new int[1][4];
-        location[0] = selectWindows[index].location;
+        location[0] = FloatWindows[index].location;
         Intent service = new Intent(activity, ScreenShotService_Single.class);
-        if (GetParams.AdvanceSettings()[1] == 1) {
+        if (GetParams.AdvanceSettings()[1] == 1 && !(boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_switch", false)) {
             service = new Intent(activity, ScreenShotService_Continue.class);
+        } else if ((boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_switch", false)) {
+            service = new Intent(activity, ScreenShotService_Auto.class);
         }
         service.putExtra("index", index);
         if (getNumOfFloatWindows() != 0) {
@@ -135,9 +154,9 @@ public class FloatWindowManager {
      */
     private static void setLocation() {
         if (getNumOfFloatWindows() != 0) {
-            location = new int[selectWindows.length][4];
-            for (int i = 0; i < selectWindows.length; i++) {
-                location[i] = selectWindows[i].location;
+            location = new int[FloatWindows.length][4];
+            for (int i = 0; i < FloatWindows.length; i++) {
+                location[i] = FloatWindows[i].location;
             }
         } else {
             Log.e(TAG, "error in getLocation:selectWindows is not initialized");
@@ -159,7 +178,7 @@ public class FloatWindowManager {
      */
     public static void showResultsIndex(String origin, String translation, double time, int index) {
         if (getNumOfFloatWindows() != 0) {
-            selectWindows[index].showResults(origin, translation, time);
+            FloatWindows[index].showResults(origin, translation, time);
         }
     }
 
@@ -172,8 +191,8 @@ public class FloatWindowManager {
      */
     public static void hideAllFloatWindow() {
         if (getNumOfFloatWindows() != 0) {
-            for (SelectWindow selectWindow : selectWindows) {
-                selectWindow.hide();
+            for (FloatWindows floatWindows : FloatWindows) {
+                floatWindows.hide();
             }
         } else {
             Log.e(TAG, "error in hideAllFloatWindow:selectWindows is not initialized");
@@ -189,13 +208,13 @@ public class FloatWindowManager {
     public static void showAllFloatWindow(boolean after, int index) {
         if (getNumOfFloatWindows() != 0) {
             if (index != 1000 && after) {
-                selectWindows[index].show();
-                selectWindows[index].showResults("before response", "目标图片已发送，请等待...", 0);
+                FloatWindows[index].show();
+                FloatWindows[index].showResults("before response", "目标图片已发送，请等待...", 0);
             } else {
-                for (SelectWindow selectWindow : selectWindows) {
-                    selectWindow.show();
+                for (FloatWindows floatWindow : FloatWindows) {
+                    floatWindow.show();
                     if (after) {
-                        selectWindow.showResults("before response", "目标图片已发送，请等待...", 0);
+                        floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
                     }
                 }
 
@@ -210,9 +229,9 @@ public class FloatWindowManager {
      */
     public static void dismissAllFloatWindow(boolean except) {
         if (getNumOfFloatWindows() != 0) {
-            for (SelectWindow selectWindow : selectWindows) {
-                selectWindow.dismiss();
-                selectWindow = null;
+            for (FloatWindows floatWindow : FloatWindows) {
+                floatWindow.dismiss();
+                floatWindow = null;
             }
         }
         if (getNumOfSubtitleWindows() != 0) {
@@ -233,9 +252,9 @@ public class FloatWindowManager {
     static void dismissFloatWindow(int index) {
 
         if (getNumOfFloatWindows() != 0) {
-            selectWindows[index] = null;
+            FloatWindows[index] = null;
         }
-        selectWindows = LengthUtil.discardNull(selectWindows);
+        FloatWindows = LengthUtil.discardNull(FloatWindows);
     }
 
     static void dismissSubtitleWindow() {
@@ -251,9 +270,17 @@ public class FloatWindowManager {
      * @param activity the activity
      */
     static void reset(Activity activity) {
+        if (getNumOfFloatWindows() == 1) {
+            if (FloatWindows[0].getClass().equals(SelectWindow_Auto.class)) {
+                ((SelectWindow_Auto) FloatWindows[0]).removeLittleWindows();
+                ((SelectWindow_Auto) FloatWindows[0]).showMain();
+                return;
+            }
+        }
+
         dismissAllFloatWindow(true);
         location = null;
-        selectWindows = null;
+        FloatWindows = null;
         subtitleWindow = null;
         addSelectWindow(activity);
     }
@@ -264,8 +291,8 @@ public class FloatWindowManager {
      * @return the int
      */
     public static int getNumOfFloatWindows() {
-        if (selectWindows != null) {
-            return selectWindows.length;
+        if (FloatWindows != null) {
+            return FloatWindows.length;
         } else {
             return 0;
         }

@@ -28,7 +28,6 @@ class Account {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.get());
         try {
             json = new JSONObject(mSharedPreferences.getString("account", ""));
-            Log.d("Account", json.toString());
         } catch (JSONException e) {
             json = new JSONObject();
             e.printStackTrace();

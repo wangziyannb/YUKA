@@ -26,10 +26,8 @@
                 android:id="@+id/navBarIco"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_centerInParent="true"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="4dp"
-                android:contentDescription="Navigation header"
                 android:paddingTop="32dp"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/avater" />

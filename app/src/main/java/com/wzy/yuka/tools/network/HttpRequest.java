@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -30,6 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
 public class HttpRequest {
     private static GlobalHandler globalHandler = GlobalHandler.getInstance();
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
@@ -49,9 +51,9 @@ public class HttpRequest {
                     return cookies != null ? cookies : new ArrayList<Cookie>();
                 }
             })
-            .connectTimeout(10 * 1000, TimeUnit.MILLISECONDS)
-            .readTimeout(10 * 1000, TimeUnit.MILLISECONDS)
-            .writeTimeout(10 * 1000, TimeUnit.MILLISECONDS)
+            .connectTimeout(30 * 1000, TimeUnit.MILLISECONDS)
+            .readTimeout(30 * 1000, TimeUnit.MILLISECONDS)
+            .writeTimeout(30 * 1000, TimeUnit.MILLISECONDS)
             .build();
 
 
@@ -181,6 +183,57 @@ public class HttpRequest {
                 globalHandler.sendMessage(message);
             }
         });
+    }
+
+    public static void yuka_advance(HashMap<String, String> params, String filePath, Callback callback) {
+        File image = new File(filePath);
+        MultipartBody body;
+        if (image.exists()) {
+            body = new MultipartBody.Builder("Yuka2016203023^")
+                    .setType(MultipartBody.FORM)
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"image\";filename=\"1.jpg\""),
+                            RequestBody.create(image, MediaType.parse("image/jpeg"))
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"mode\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("mode")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"translator\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("translator")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"SBCS\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("SBCS")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"vertical\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("vertical")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
+                            RequestBody.create(UserManager.getUser()[0], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
+                            RequestBody.create(UserManager.getUser()[2], null)
+                    )
+                    .build();
+        } else {
+            Log.e(Tag, "filePath invalid");
+            return;
+        }
+        Request request = new Request.Builder()
+                .url("http://49.233.38.181:37103/yuka_advance/")
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
     }
 
     /**

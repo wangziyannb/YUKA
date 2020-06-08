@@ -13,6 +13,7 @@
         <item>ocr</item>
         <item>translate</item>
         <item>yuka</item>
+        <item>auto</item>
     </string-array>
 
     <string-array name="detect_modelset">

@@ -70,7 +70,6 @@ public class UserManager {
 
         String[] params = getUser();
 
-        Log.d("TAG", "login: " + params[0] + params[1] + params[2]);
         HttpRequest.Login(params, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -262,12 +261,16 @@ public class UserManager {
                     try {
                         JSONObject resultJson = new JSONObject(res);
                         String origin = resultJson.getString("origin");
-                        String result = resultJson.getString("results");
-                        double time = resultJson.getDouble("time");
                         if (origin.equals("200")) {
                             Bundle bundle = new Bundle();
-                            bundle.putString("expiry", result);
-                            bundle.putDouble("times", time);
+                            String results = resultJson.getString("results");
+                            resultJson = new JSONObject(results);
+                            bundle.putString("time", resultJson.getString("time"));
+
+                            bundle.putDouble("remain", resultJson.getDouble("remain"));
+                            bundle.putDouble("remain_advancetimes", resultJson.getDouble("remain_advancetimes"));
+                            bundle.putDouble("sync_time", resultJson.getDouble("sync_time"));
+
                             message.what = 201;
                             message.setData(bundle);
                             globalHandler.sendMessage(message);
@@ -285,7 +288,6 @@ public class UserManager {
         hashMap = get();
         return Boolean.parseBoolean(hashMap.get("isLogin"));
     }
-
 
     public static HashMap<String, String> get() {
         hashMap = account.get();

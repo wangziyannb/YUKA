@@ -1,35 +1,35 @@
 package com.wzy.yuka.tools.params;
 
-import com.wzy.yuka.core.floatwindow.SelectWindow;
+import com.wzy.yuka.core.floatwindow.FloatWindows;
 
 /**
  * Created by Ziyan on 2020/4/30.
  */
 public class LengthUtil {
-    public static SelectWindow[] appendIndex(SelectWindow[] objects) {
-        SelectWindow[] newObjects;
+    public static FloatWindows[] appendIndex(FloatWindows[] objects) {
+        FloatWindows[] newObjects;
         if (objects == null) {
-            newObjects = new SelectWindow[1];
+            newObjects = new FloatWindows[1];
         } else {
-            newObjects = new SelectWindow[objects.length + 1];
+            newObjects = new FloatWindows[objects.length + 1];
             System.arraycopy(objects, 0, newObjects, 0, objects.length);
         }
         return newObjects;
     }
 
-    public static SelectWindow[] decreaseIndex(SelectWindow[] objects) {
-        SelectWindow[] newObjects;
+    public static FloatWindows[] decreaseIndex(FloatWindows[] objects) {
+        FloatWindows[] newObjects;
         if (objects == null) {
             newObjects = objects;
         } else {
-            newObjects = new SelectWindow[objects.length - 1];
+            newObjects = new FloatWindows[objects.length - 1];
             System.arraycopy(objects, 0, newObjects, 0, newObjects.length);
         }
         return newObjects;
     }
 
-    public static SelectWindow[] discardNull(SelectWindow[] objects) {
-        SelectWindow[] newObjects = null;
+    public static FloatWindows[] discardNull(FloatWindows[] objects) {
+        FloatWindows[] newObjects = null;
         if (objects == null) {
             return newObjects;
         } else {

@@ -29,7 +29,7 @@
             android:layout_height="80dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             app:srcCompat="@drawable/vip" />
 
@@ -76,7 +76,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="26dp"
-            android:layout_marginBottom="41dp"
+            android:layout_marginBottom="85dp"
             android:text="过期时间：" />
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="0dp"
-            android:layout_marginBottom="41dp"
+            android:layout_marginBottom="85dp"
             android:layout_toEndOf="@+id/textView23"
             android:text="" />
 
@@ -96,8 +96,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="26dp"
-            android:layout_marginBottom="12dp"
-            android:text="剩余次数：" />
+            android:layout_marginBottom="65dp"
+            android:text="剩余普通翻译次数：" />
 
         <TextView
             android:id="@+id/member_times"
@@ -105,8 +105,48 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="0dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="65dp"
             android:layout_toEndOf="@id/textView24"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginBottom="45dp"
+            android:text="剩余自动识别翻译次数：" />
+
+        <TextView
+            android:id="@+id/member_times_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="45dp"
+            android:layout_toEndOf="@id/textView26"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textView27"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginBottom="25dp"
+            android:text="剩余同传时间：" />
+
+        <TextView
+            android:id="@+id/member_times_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="25dp"
+            android:layout_toEndOf="@id/textView27"
             android:text="" />
 
         <TextView
@@ -116,7 +156,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="73dp"
+            android:layout_marginBottom="105dp"
             android:text="超级月卡"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -127,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="0dp"
-            android:layout_marginBottom="73dp"
+            android:layout_marginBottom="105dp"
             android:layout_toEndOf="@id/member_type"
             android:text="多捞哦"
             android:textSize="5sp" />

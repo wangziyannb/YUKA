@@ -10,7 +10,42 @@
         <action
             android:id="@+id/action_nav_settings_to_nav_settings_developer"
             app:destination="@id/nav_settings_developer" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_appearance"
+            app:destination="@id/nav_settings_appearance" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_detect"
+            app:destination="@id/nav_settings_detect" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_translator"
+            app:destination="@id/nav_settings_translator" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_auto"
+            app:destination="@id/nav_settings_auto" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_sync"
+            app:destination="@id/nav_settings_sync" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_settings_appearance"
+        android:name="com.wzy.yuka.ui.setting.SettingsAppearance"
+        android:label="外观选项" />
+    <fragment
+        android:id="@+id/nav_settings_detect"
+        android:name="com.wzy.yuka.ui.setting.SettingsDetect"
+        android:label="识别选项" />
+    <fragment
+        android:id="@+id/nav_settings_translator"
+        android:name="com.wzy.yuka.ui.setting.SettingsTranslator"
+        android:label="翻译选项" />
+    <fragment
+        android:id="@+id/nav_settings_auto"
+        android:name="com.wzy.yuka.ui.setting.SettingsAuto"
+        android:label="自动识别翻译选项" />
+    <fragment
+        android:id="@+id/nav_settings_sync"
+        android:name="com.wzy.yuka.ui.setting.SettingsSync"
+        android:label="同传选项" />
     <fragment
         android:id="@+id/nav_settings_developer"
         android:name="com.wzy.yuka.ui.setting.SettingsDeveloper"
