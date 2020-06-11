@@ -40,6 +40,6 @@
             android:defaultValue="false"
             android:key="settings_baidu_vertical"
             android:summary="影响原文，如无标点可使用"
-            android:title="竖排标点优化" />
+            android:title="标点优化" />
     </PreferenceCategory>
 </PreferenceScreen>

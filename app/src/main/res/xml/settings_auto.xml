@@ -6,7 +6,7 @@
             android:summary="需要选取欲翻译位置。将自动将所有检测到文字的区域识别并翻译，且在相应位置使用悬浮窗显示结果。仅翻译设置会被应用。"
             android:title="整页识别翻译" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="额外设置">
+    <PreferenceCategory android:title="识别设置">
         <SwitchPreference
             android:key="settings_fastMode"
             android:summary="高性能要求，出现取词框消失请禁用"
@@ -16,10 +16,25 @@
             android:key="settings_baidu_reverse"
             android:summary="默认从左到右"
             android:title="阅读顺序逆转" />
-        <SwitchPreference
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="settings_baidu_vertical"
             android:summary="影响原文，如无标点可使用"
-            android:title="竖排标点优化" />
+            android:title="标点优化" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="额外设置">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="settings_auto_orientation"
+            android:summary="目前仅支持竖排"
+            android:title="文字反向" />
+        <SwitchPreference
+            android:key="settings_auto_offset"
+            android:defaultValue="false"
+            android:summaryOff="需要识别的应用全屏，不计算任务栏高度"
+            android:summaryOn="计算任务栏"
+            android:title="现词窗位置偏移" />
+
     </PreferenceCategory>
 </PreferenceScreen>

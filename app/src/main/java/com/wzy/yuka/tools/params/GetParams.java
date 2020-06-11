@@ -24,9 +24,12 @@ public class GetParams {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         windowManager.getDefaultDisplay().getSize(point);
-        int[] size = new int[2];
+        int[] size = new int[3];
         size[0] = point.x;
         size[1] = point.y;
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        size[2] = resources.getDimensionPixelSize(resourceId);
         return size;
     }
 

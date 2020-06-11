@@ -23,6 +23,7 @@ import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -154,25 +155,31 @@ public class SelectWindow_Auto extends FloatWindows {
                     location_json[j] = location.getInt(j);
                 }
                 initLittleWindows(translationx, location_json, index);
-                Toast.makeText(activityWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
             }
-
+            Toast.makeText(activityWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+
     private void initLittleWindows(String translation, int[] locations, int index) {
+        boolean statusBar_offset = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_offset", false);
+        int statusBar = 0;
+        if (statusBar_offset) {
+            statusBar = GetParams.Screen()[2];
+        }
         int offset_L = location[0];
         int offset_T = location[1];
         locations[0] += offset_L;
-        locations[1] += offset_T;
+        locations[1] += offset_T - statusBar;
         locations[2] += offset_L;
-        locations[3] += offset_T;
+        locations[3] += offset_T - statusBar;
         String thisTag = "little" + index;
         Tags[index] = thisTag;
         EasyFloat.with(activityWeakReference.get())
                 .setTag(thisTag)
+                .setDragEnable(false)
                 .setLayout(R.layout.floatwindow_auto, view -> {
                     ConstraintLayout constraintlayoutview = view.findViewById(R.id.floatwindow_auto);
                     ViewGroup.LayoutParams layoutParams1 = constraintlayoutview.getLayoutParams();

@@ -26,6 +26,8 @@ import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.ui.view.RoundImageView;
 
+import java.util.Objects;
+
 
 public class MainActivity extends BaseActivity implements GlobalHandler.HandleMsgListener {
     private AppBarConfiguration mAppBarConfiguration;
@@ -121,7 +123,9 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         MenuItem menuItem = menu.getItem(0);
         menuItem.setOnMenuItemClickListener(item -> {
             if (UserManager.checkLogin()) {
-                navController.navigate(R.id.action_nav_home_to_nav_user_service);
+                if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_user_service) {
+                    navController.navigate(R.id.action_nav_home_to_nav_user_service);
+                }
             } else {
                 Toast.makeText(this, "没登录呢", Toast.LENGTH_SHORT).show();
             }
