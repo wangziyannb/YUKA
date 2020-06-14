@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -98,31 +99,30 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_about_to_nav_about_reference);
                 break;
             case "about_about_server":
-                HttpRequest.yuka(
-                        new String[]{getContext().getResources().getStringArray(R.array.mode)[2]},
-                        "",
-                        new Callback() {
-                            @Override
-                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                Log.e("AboutFragment", "服务器检查失败");
-                                Bundle bundle = new Bundle();
-                                bundle.putString("error", e.toString());
-                                Message message = Message.obtain();
-                                message.what = 900;
-                                message.setData(bundle);
-                                globalHandler.sendMessage(message);
-                            }
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("mode", "yuka");
+                HttpRequest.yuka(hashMap, "", new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("settingsFragment", "服务器检查失败");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("error", e.toString());
+                        Message message = Message.obtain();
+                        message.what = 900;
+                        message.setData(bundle);
+                        globalHandler.sendMessage(message);
+                    }
 
-                            @Override
-                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("response", response.body().string());
-                                Message message = Message.obtain();
-                                message.what = 901;
-                                message.setData(bundle);
-                                globalHandler.sendMessage(message);
-                            }
-                        });
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("response", response.body().string());
+                        Message message = Message.obtain();
+                        message.what = 901;
+                        message.setData(bundle);
+                        globalHandler.sendMessage(message);
+                    }
+                });
             default:
                 break;
         }

@@ -120,7 +120,7 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
                     globalHandler.sendMessage(message);
                 }
             };
-            HttpRequest.yuka_advance(GetParams.Yuka_new(), fileName, callback);
+            HttpRequest.yuka_advance(GetParams.Yuka(), fileName, callback);
         });
     }
 

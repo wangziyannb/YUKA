@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,10 +55,9 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         getPreferenceScreen().findPreference("settings_debug_server").setOnPreferenceClickListener(preference -> {
-            HttpRequest.yuka(
-                    new String[]{getContext().getResources().getStringArray(R.array.mode)[2]},
-                    "",
-                    new Callback() {
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("mode", "yuka");
+            HttpRequest.yuka(hashMap, "", new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             Log.e("settingsFragment", "服务器检查失败");

@@ -3,8 +3,8 @@
     <PreferenceCategory android:title="自动识别翻译">
         <SwitchPreference
             android:key="settings_auto_switch"
-            android:summary="需要选取欲翻译位置。将自动将所有检测到文字的区域识别并翻译，且在相应位置使用悬浮窗显示结果。仅翻译设置会被应用。"
-            android:title="整页识别翻译" />
+            android:summary="选取欲翻译位置，将自动将所有检测到文字的区域识别并翻译，且在相应位置使用悬浮窗显示结果。"
+            android:title="自动识别翻译" />
     </PreferenceCategory>
     <PreferenceCategory android:title="识别设置">
         <SwitchPreference
@@ -46,7 +46,7 @@
             android:key="settings_auto_offset"
             android:defaultValue="false"
             android:summaryOff="需要识别的应用全屏，不计算任务栏高度"
-            android:summaryOn="计算任务栏"
+            android:summaryOn="需要识别的应用非全屏，计算任务栏高度"
             android:title="现词窗位置偏移" />
     </PreferenceCategory>
 </PreferenceScreen>

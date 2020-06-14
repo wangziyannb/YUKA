@@ -25,6 +25,8 @@ import com.wzy.yuka.tools.params.GetParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 /**
  * Created by Ziyan on 2020/5/8.
  */
@@ -56,7 +58,9 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
-                    HttpRequest.yuka(GetParams.Yuka(), origin);
+                    HashMap<String, String> params = GetParams.Yuka();
+                    params.put("mode", "text");
+                    HttpRequest.yuka(params, origin);
                 }
                 break;
         }

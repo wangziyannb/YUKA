@@ -56,103 +56,14 @@ public class HttpRequest {
             .writeTimeout(30 * 1000, TimeUnit.MILLISECONDS)
             .build();
 
-
-    public static void yuka(String[] params, String filePath, Callback callback) {
-        File image = new File(filePath);
-        MultipartBody body;
-        if (params[0].equals("yuka")) {
-            body = new MultipartBody.Builder("Yuka2016203023^")
-                    .setType(MultipartBody.FORM)
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"mode\""),
-                            RequestBody.create(params[0], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
-                            RequestBody.create(UserManager.getUser()[0], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
-                            RequestBody.create(UserManager.getUser()[2], null)
-                    )
-                    .build();
-        } else if (image.exists()) {
-            body = new MultipartBody.Builder("Yuka2016203023^")
-                    .setType(MultipartBody.FORM)
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"image\";filename=\"1.jpg\""),
-                            RequestBody.create(image, MediaType.parse("image/jpeg"))
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"mode\""),
-                            RequestBody.create(params[0], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"model\""),
-                            RequestBody.create(params[1], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"translator\""),
-                            RequestBody.create(params[2], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"SBCS\""),
-                            RequestBody.create(params[3], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"precise\""),
-                            RequestBody.create(params[4], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"vertical\""),
-                            RequestBody.create(params[5], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
-                            RequestBody.create(params[6], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
-                            RequestBody.create(UserManager.getUser()[0], null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
-                            RequestBody.create(UserManager.getUser()[2], null)
-                    )
-                    .build();
-        } else {
-            Log.e(Tag, "filePath invalid");
-            return;
-        }
-        Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/yuka/")
-                .post(body)
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(callback);
-    }
-
-    public static void yuka(String[] params, String[] filePath, Callback[] callbacks) {
-        if (filePath.length == callbacks.length) {
-            for (int i = 0; i < filePath.length; i++) {
-                yuka(params, filePath[i], callbacks[i]);
-            }
-        } else {
-            Log.e(Tag, filePath.length + "");
-            Log.e(Tag, callbacks.length + "");
-            Log.e(Tag, "Number not match");
-        }
-
-    }
-
-    public static void yuka(String[] params, String origin) {
+    public static void yuka(HashMap<String, String> params, String origin) {
         RequestBody body = new FormBody.Builder()
-                .add("mode", "text")
-                .add("translator", params[2])
-                .add("SBCS", params[3])
-                .add("precise", params[4])
-                .add("vertical", params[5])
-                .add("reverse", params[6])
+                .add("mode", Objects.requireNonNull(params.get("mode")))
+                .add("translator", Objects.requireNonNull(params.get("translator")))
+                .add("SBCS", Objects.requireNonNull(params.get("SBCS")))
+                .add("precise", Objects.requireNonNull(params.get("precise")))
+                .add("vertical", Objects.requireNonNull(params.get("vertical")))
+                .add("reverse", Objects.requireNonNull(params.get("reverse")))
                 .add("origin", origin)
                 .add("u_name", UserManager.getUser()[0])
                 .add("uuid", UserManager.getUser()[2])
@@ -183,6 +94,85 @@ public class HttpRequest {
                 globalHandler.sendMessage(message);
             }
         });
+    }
+
+    public static void yuka(HashMap<String, String> params, String filePath, Callback callback) {
+        File image = new File(filePath);
+        MultipartBody body;
+        if (Objects.equals(params.get("mode"), "yuka")) {
+            body = new MultipartBody.Builder("Yuka2016203023^")
+                    .setType(MultipartBody.FORM)
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"mode\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("mode")), null)
+                    )
+                    .build();
+        } else if (image.exists()) {
+            body = new MultipartBody.Builder("Yuka2016203023^")
+                    .setType(MultipartBody.FORM)
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"image\";filename=\"1.jpg\""),
+                            RequestBody.create(image, MediaType.parse("image/jpeg"))
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"mode\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("mode")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"model\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("model")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"translator\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("translator")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"SBCS\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("SBCS")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"precise\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("precise")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"punctuation\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("punctuation")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
+                            RequestBody.create(UserManager.getUser()[0], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
+                            RequestBody.create(UserManager.getUser()[2], null)
+                    )
+                    .build();
+        } else {
+            Log.e(Tag, "filePath invalid");
+            return;
+        }
+        Request request = new Request.Builder()
+                .url("http://49.233.38.181:37103/yuka/")
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void yuka(HashMap<String, String> params, String[] filePath, Callback[] callbacks) {
+        if (filePath.length == callbacks.length) {
+            for (int i = 0; i < filePath.length; i++) {
+                yuka(params, filePath[i], callbacks[i]);
+            }
+        } else {
+            Log.e(Tag, filePath.length + "");
+            Log.e(Tag, callbacks.length + "");
+            Log.e(Tag, "Number not match");
+        }
     }
 
     public static void yuka_advance(HashMap<String, String> params, String filePath, Callback callback) {
