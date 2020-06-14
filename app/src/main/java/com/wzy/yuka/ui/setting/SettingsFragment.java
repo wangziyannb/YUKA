@@ -18,7 +18,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
         getPreferenceScreen().findPreference("settings_detect").setOnPreferenceClickListener(this);
-        getPreferenceScreen().findPreference("settings_translator").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("settings_auto").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("settings_sync").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("settings_appearance").setOnPreferenceClickListener(this);
@@ -44,9 +43,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 break;
             case "settings_developer":
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_settings_to_nav_settings_developer);
-                break;
-            case "settings_translator":
-                Navigation.findNavController(getView()).navigate(R.id.action_nav_settings_to_nav_settings_translator);
                 break;
             case "settings_auto":
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_settings_to_nav_settings_auto);

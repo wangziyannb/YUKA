@@ -26,20 +26,36 @@
             app:min="2"
             app:seekBarIncrement="1" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="额外设置(仅百度)">
+    <PreferenceCategory android:title="翻译设置">
+        <ListPreference
+            android:entries="@array/translator_name"
+            android:entryValues="@array/translator"
+            android:key="settings_trans_translator"
+            android:title="翻译器选择" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换（仅百度）" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="额外设置">
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_baidu_precise"
             android:title="使用百度高精度识别" />
         <SwitchPreference
+            android:dependency="settings_baidu_precise"
             android:defaultValue="false"
             android:key="settings_baidu_reverse"
             android:summary="默认从左到右"
             android:title="阅读顺序逆转" />
         <SwitchPreference
+            android:dependency="settings_baidu_precise"
             android:defaultValue="false"
-            android:key="settings_baidu_vertical"
+            android:key="settings_baidu_punctuation"
             android:summary="影响原文，如无标点可使用"
             android:title="标点优化" />
     </PreferenceCategory>
+
 </PreferenceScreen>

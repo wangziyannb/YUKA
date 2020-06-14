@@ -49,10 +49,5 @@
             android:summaryOff="只显示翻译"
             android:summaryOn="原文将同框显示"
             android:title="显示原文" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="settings_window_showTime"
-            android:summary="不包括网络用时"
-            android:title="显示翻译所用时间" />
     </PreferenceCategory>
 </PreferenceScreen>

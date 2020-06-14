@@ -100,7 +100,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private void requestPermission() {
         String[] perms = {Manifest.permission.RECORD_AUDIO};
         if (!EasyPermissions.hasPermissions(getContext(), perms)) {
-            EasyPermissions.requestPermissions(this, "将会无法使用", 233, perms);
+            EasyPermissions.requestPermissions(this, "拒绝了录音权限，内录同传将会无法使用", 233, perms);
         } else {
             MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
             Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();

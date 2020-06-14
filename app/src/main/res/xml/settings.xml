@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="基本功能">
-        <Preference
-            android:key="settings_detect"
-            android:title="识别选项" />
-        <Preference
-            android:key="settings_translator"
-            android:title="翻译选项" />
+    <PreferenceCategory android:title="外观设置">
         <Preference
             android:key="settings_appearance"
-            android:title="外观选项" />
+            android:title="悬浮球与悬浮窗" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="高级功能">
+    <PreferenceCategory android:title="功能设置">
+        <Preference
+            android:key="settings_detect"
+            android:title="基本识别翻译" />
         <Preference
             android:key="settings_auto"
-            android:title="自动识别翻译选项" />
+            android:title="自动识别翻译" />
         <Preference
             android:key="settings_sync"
-            android:title="同传选项" />
+            android:title="系统内录同传" />
     </PreferenceCategory>
     <PreferenceCategory android:title="开发者选项">
         <Preference

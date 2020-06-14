@@ -212,6 +212,10 @@ public class HttpRequest {
                             RequestBody.create(Objects.requireNonNull(params.get("vertical")), null)
                     )
                     .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"punctuation\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("punctuation")), null)
+                    )
+                    .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
                             RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
                     )

@@ -13,5 +13,5 @@
         android:id="@+id/bot_nav_history"
         android:icon="@drawable/nav_history_unchecked"
         android:iconTint="#F06292"
-        android:title="精选" />
+        android:title="历史" />
 </menu>

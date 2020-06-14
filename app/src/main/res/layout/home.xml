@@ -29,7 +29,6 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/nav_start_unchecked"
-                android:backgroundTint="#F06292"
                 android:gravity="center" />
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 

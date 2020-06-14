@@ -14,27 +14,39 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_baidu_reverse"
-            android:summary="默认从左到右"
+            android:summary="默认从左到右（竖排），从上到下（横排）"
             android:title="阅读顺序逆转" />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="settings_baidu_vertical"
+            android:key="settings_baidu_punctuation"
             android:summary="影响原文，如无标点可使用"
             android:title="标点优化" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_auto_vertical"
+            android:summaryOff="横排"
+            android:summaryOn="竖排"
+            android:title="文字方向" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="翻译设置">
+        <ListPreference
+            android:entries="@array/translator_name"
+            android:entryValues="@array/translator"
+            android:key="settings_trans_translator"
+            android:title="翻译器选择" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换（仅百度）" />
     </PreferenceCategory>
     <PreferenceCategory android:title="额外设置">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:enabled="false"
-            android:key="settings_auto_orientation"
-            android:summary="目前仅支持竖排"
-            android:title="文字反向" />
         <SwitchPreference
             android:key="settings_auto_offset"
             android:defaultValue="false"
             android:summaryOff="需要识别的应用全屏，不计算任务栏高度"
             android:summaryOn="计算任务栏"
             android:title="现词窗位置偏移" />
-
     </PreferenceCategory>
 </PreferenceScreen>

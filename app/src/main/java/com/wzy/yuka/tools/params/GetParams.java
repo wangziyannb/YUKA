@@ -95,18 +95,19 @@ public class GetParams {
         params.put("model", resources.getStringArray(R.array.detect_modelset)[0]);
         params.put("precise", resources.getString(R.string.False));
         params.put("vertical", resources.getString(R.string.False));
+        params.put("punctuation", resources.getString(R.string.False));
         params.put("reverse", resources.getString(R.string.False));
         params.put("translator", resources.getStringArray(R.array.translator)[0]);
         params.put("SBCS", resources.getString(R.string.False));
 
         if (preferences.getBoolean("settings_auto_switch", false)) {
             params.put("mode", resources.getStringArray(R.array.mode)[3]);
-            if (preferences.getBoolean("settings_baidu_precise", false)) {
-                //高精度模式
-                params.put("precise", resources.getString(R.string.True));
+            if (preferences.getBoolean("settings_baidu_punctuation", false)) {
+                //标点优化
+                params.put("punctuation", resources.getString(R.string.True));
             }
-            if (preferences.getBoolean("settings_baidu_vertical", false)) {
-                //竖排标点优化
+            if (preferences.getBoolean("settings_auto_vertical", false)) {
+                //横竖排文字
                 params.put("vertical", resources.getString(R.string.True));
             }
             if (preferences.getBoolean("settings_baidu_reverse", false)) {
@@ -123,9 +124,9 @@ public class GetParams {
                         //高精度模式
                         params.put("precise", resources.getString(R.string.True));
                     }
-                    if (preferences.getBoolean("settings_baidu_vertical", false)) {
+                    if (preferences.getBoolean("settings_baidu_punctuation", false)) {
                         //竖排标点优化
-                        params.put("vertical", resources.getString(R.string.True));
+                        params.put("punctuation", resources.getString(R.string.True));
                     }
                     if (preferences.getBoolean("settings_baidu_reverse", false)) {
                         //阅读顺序逆转

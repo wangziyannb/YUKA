@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         menuItem.setOnMenuItemClickListener(item -> {
             if (UserManager.checkLogin()) {
                 if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_user_service) {
-                    navController.navigate(R.id.action_nav_home_to_nav_user_service);
+                    navController.navigate(R.id.nav_user_service);
                 }
             } else {
                 Toast.makeText(this, "没登录呢", Toast.LENGTH_SHORT).show();
