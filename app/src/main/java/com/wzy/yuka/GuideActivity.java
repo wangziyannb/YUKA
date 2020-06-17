@@ -102,7 +102,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     private void startHomeActivity() {
         Intent intent = new Intent(GuideActivity.this, MainActivity.class);
         startActivity(intent);
-        sharedPreferencesUtil.saveParam("first_open", false);
+        sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, false);
         finish();
     }
 

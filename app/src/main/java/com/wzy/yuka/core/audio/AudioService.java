@@ -31,7 +31,6 @@ import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.WebsocketRequest;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.tools.resolver.YoudaoAsrResolver;
 
 import java.nio.ByteBuffer;
 

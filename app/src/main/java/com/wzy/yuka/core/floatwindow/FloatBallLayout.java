@@ -9,6 +9,9 @@ import com.wzy.yuka.tools.params.SizeUtil;
 
 public class FloatBallLayout extends ViewGroup {
     private boolean mIsLeft = true;
+    public boolean isDeployed = false;
+
+    private FloatBallLayoutListener mListener;
 
     public FloatBallLayout(Context context) {
         super(context);
@@ -42,15 +45,22 @@ public class FloatBallLayout extends ViewGroup {
         LayoutParams layoutParams = getLayoutParams();
         layoutParams.height = SizeUtil.dp2px(getContext(), 52 * 2 + 44);
         layoutParams.width = SizeUtil.dp2px(getContext(), (float) (52 / 2 * Math.sqrt(3) + 44));
-
         setLayoutParams(layoutParams);
     }
 
-    @Override
-    public void removeViewAt(int index) {
-        super.removeViewAt(index);
+    public void fold() {
+        do {
+            removeViewAt(getChildCount() - 1);
+        } while (getChildCount() != 1);
+        isDeployed = false;
+        if (mListener != null) {
+            mListener.folded();
+        }
     }
 
+    public void setFloatBallLayoutListener(FloatBallLayoutListener floatBallLayoutListener) {
+        this.mListener = floatBallLayoutListener;
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -87,6 +97,13 @@ public class FloatBallLayout extends ViewGroup {
             }
             //确定子控件的位置，四个参数分别代表（左上右下）点的坐标值
         }
+        if (getChildCount() == 5) {
+            isDeployed = true;
+            if (mListener != null) {
+                mListener.deployed();
+            }
+
+        }
     }
 
     private int[] calculate(int[] center, int radius, int index) {
@@ -100,4 +117,9 @@ public class FloatBallLayout extends ViewGroup {
         return newCoordinate;
     }
 
+    public interface FloatBallLayoutListener {
+        void deployed();
+
+        void folded();
+    }
 }

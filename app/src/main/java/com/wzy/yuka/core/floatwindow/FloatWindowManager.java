@@ -6,6 +6,8 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.wzy.yuka.core.audio.AudioService;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Auto;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
@@ -25,7 +27,7 @@ public class FloatWindowManager {
     private static int sum = 0;
     private static Intent data;
 
-    public static void initFloatWindow(Activity activity, Intent mdata) {
+    public static void initFloatWindow(FragmentActivity activity, Intent mdata) {
         data = mdata;
         floatBall = new FloatBall(activity, "mainFloatBall");
     }

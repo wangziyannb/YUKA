@@ -14,32 +14,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.qw.curtain.lib.Curtain;
+import com.qw.curtain.lib.CurtainFlow;
+import com.qw.curtain.lib.IGuide;
+import com.qw.curtain.lib.flow.CurtainFlowInterface;
+import com.qw.curtain.lib.shape.CircleShape;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.core.user.UserManager;
+import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.message.BaseFragment;
-
-import java.util.List;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class HomeFragment extends BaseFragment implements View.OnClickListener, EasyPermissions.PermissionCallbacks {
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
     private final String TAG = "HomeFragment";
     private Intent data;
     private NavController navController;
     private BottomNavigationView bottomNavigationView;
     private Button button;
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private ImageButton NavButton;
 
     @Nullable
     @Override
@@ -49,11 +59,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
 
         button = bottomNavigationView.findViewById(R.id.bot_nav_start);
         button.setOnClickListener(this);
-        bottomNavigationView.findViewById(R.id.bot_nav_home).setOnClickListener(this);
-        bottomNavigationView.findViewById(R.id.bot_nav_history).setOnClickListener(this);
+        View nav_home = bottomNavigationView.findViewById(R.id.bot_nav_home);
+        nav_home.setOnClickListener(this);
+        View nav_history = bottomNavigationView.findViewById(R.id.bot_nav_history);
+        nav_history.setOnClickListener(this);
+
         navController = Navigation.findNavController(root.findViewById(R.id.fragment));
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
+            showInitGuide();
+        }
         return root;
     }
+
 
     @Override
     public void onClick(View v) {
@@ -100,7 +117,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     private void requestPermission() {
         String[] perms = {Manifest.permission.RECORD_AUDIO};
         if (!EasyPermissions.hasPermissions(getContext(), perms)) {
-            EasyPermissions.requestPermissions(this, "拒绝了录音权限，内录同传将会无法使用", 233, perms);
+            EasyPermissions.requestPermissions(this, "拒绝了录音权限，内录同步字幕将会无法使用", 233, perms);
         } else {
             MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
             Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();
@@ -133,6 +150,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private long exitTime;
+
     @Override
     public boolean onBackPressed() {
         //当onBackPressed返回true时，证明子fragment有人响应事件
@@ -153,13 +171,52 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+    private void showGuide() {
+        GuideManager guideManager = new GuideManager(this);
+        guideManager.showCurtain(button, new CircleShape(), 60, R.layout.guide, new Curtain.CallBack() {
+            @Override
+            public void onShow(IGuide iGuide) {
+                iGuide.findViewByIdInTopView(R.id.test_guide1).setOnClickListener(v -> {
+                    iGuide.dismissGuide();
+                });
+            }
 
+            @Override
+            public void onDismiss(IGuide iGuide) {
+                Toast.makeText(getContext(), "演示2完成", Toast.LENGTH_SHORT).show();
+            }
+        }).show();
     }
 
-    @Override
-    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+    private void showInitGuide() {
+        GuideManager guideManager = new GuideManager(this);
+        ActionMenuView amv = requireActivity().findViewById(R.id.toolbar_menu);
+        ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
+        new CurtainFlow.Builder()
+                .with(4, guideManager.showCurtain(button, new CircleShape(), 60, R.layout.guide))
+                .with(5, guideManager.showCurtain(amiv, new CircleShape(), 32, R.layout.guide))
+                .create()
+                .start(new CurtainFlow.CallBack() {
+                    @Override
+                    public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                        switch (currentId) {
+                            case 4:
+                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                    curtainFlow.push();
+                                });
+                                break;
+                            case 5:
+                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                    curtainFlow.finish();
+                                });
+                                break;
+                        }
+                    }
 
+                    @Override
+                    public void onFinish() {
+
+                    }
+                });
     }
 }

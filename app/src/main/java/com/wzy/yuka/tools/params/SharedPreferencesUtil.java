@@ -18,11 +18,16 @@ import java.io.Serializable;
  * Created by Ziyan on 2020/5/22.
  */
 public class SharedPreferencesUtil {
-    public static SharedPreferencesUtil preferencesUtil;
+    public static final String FIRST_OPEN_GuideActivity = "first_open_guideActivity";
     private static SharedPreferences preferences = null;
     private SharedPreferences.Editor editor = null;
-    private Object object;
-
+    public static final String FIRST_OPEN_MainActivity = "first_open_mainActivity";
+    public static final String FIRST_LOGIN = "first_Login";
+    public static final String FIRST_INVOKE_FloatBall = "first_FloatBall";
+    public static final String FIRST_INVOKE_SubtitleWindow = "first_SubtitleWindow";
+    public static final String FIRST_INVOKE_SelectWindow_N = "first_SWN";
+    public static final String FIRST_INVOKE_SelectWindow_A = "first_SWA";
+    private static SharedPreferencesUtil preferencesUtil;
     private SharedPreferencesUtil() {
 
     }
@@ -142,7 +147,7 @@ public class SharedPreferencesUtil {
         ByteArrayInputStream bais = new ByteArrayInputStream(base64);
         try {
             ObjectInputStream bis = new ObjectInputStream(bais);
-            object = bis.readObject();
+            Object object = bis.readObject();
             Log.d(this.getClass().getSimpleName(), "Get object success");
             return object;
         } catch (Exception e) {

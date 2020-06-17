@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="同传设置">
+    <PreferenceCategory android:title="同步字幕设置">
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_trans_syncMode"
-            android:summary="根据系统内录声音同声传译，需要目标app支持，需要安卓Q(10)"
+            android:summary="根据系统内录声音生成同步字幕，需要目标app支持，需要安卓Q(10)"
             android:title="启用同传" />
         <ListPreference
             android:dependency="settings_trans_syncMode"

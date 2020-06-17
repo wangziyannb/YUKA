@@ -23,6 +23,7 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 
 public class Login extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
@@ -32,11 +33,12 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
     public void handleMsg(Message msg) {
         switch (msg.what) {
             case 200:
+                SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "登陆成功", Toast.LENGTH_SHORT).show();
+                sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, true);
                 NavHostFragment.findNavController(this).navigateUp();
                 break;
-
             case 601:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "用户名或密码错误", Toast.LENGTH_SHORT).show();

@@ -14,7 +14,7 @@
             android:title="自动识别翻译" />
         <Preference
             android:key="settings_sync"
-            android:title="系统内录同传" />
+            android:title="系统内录同步字幕" />
     </PreferenceCategory>
     <PreferenceCategory android:title="开发者选项">
         <Preference
