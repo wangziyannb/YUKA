@@ -18,6 +18,7 @@
             android:title="持续模式" />
         <SeekBarPreference
             android:dependency="settings_continuousMode"
+            app:showSeekBarValue="true"
             android:key="settings_continuousMode_interval"
             android:max="30"
             android:title="识别间隔（秒）"

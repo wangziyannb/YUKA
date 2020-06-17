@@ -24,14 +24,14 @@ public class GuideManager {
         weakReferenceActivity = new WeakReference<>(fragment.getActivity());
     }
 
-    public Curtain showCurtain(View view, Shape shape, int padding, int layout) {
+    public Curtain weaveCurtain(View view, Shape shape, int padding, int layout) {
         return new Curtain(weakReferenceActivity.get()).with(view)
                 .withPadding(view, padding)
                 .withShape(view, shape)
                 .setTopView(layout);
     }
 
-    public Curtain showCurtain(View view, Shape shape, int padding, int layout, Curtain.CallBack callBack) {
+    public Curtain weaveCurtain(View view, Shape shape, int padding, int layout, Curtain.CallBack callBack) {
         return new Curtain(weakReferenceActivity.get()).with(view)
                 .withPadding(view, padding)
                 .withShape(view, shape)

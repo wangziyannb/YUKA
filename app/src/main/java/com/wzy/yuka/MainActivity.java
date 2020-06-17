@@ -215,8 +215,8 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
     private void showInitGuide_First() {
         new CurtainFlow.Builder()
-                .with(1, guideManager.showCurtain(NavButton, new CircleShape(), 32, R.layout.guide))
-                .with(2, guideManager.showCurtain(login, new RoundShape(12), 32, R.layout.guide))
+                .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 32, R.layout.guide))
+                .with(2, guideManager.weaveCurtain(login, new RoundShape(12), 32, R.layout.guide))
                 .create()
                 .start(new CurtainFlow.CallBack() {
                     @Override
@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
         View view = navigationMenuView.getChildAt(2);
         new CurtainFlow.Builder()
-                .with(3, guideManager.showCurtain(view, new RoundShape(12), 0, R.layout.guide))
+                .with(3, guideManager.weaveCurtain(view, new RoundShape(12), 0, R.layout.guide))
                 .create()
                 .start(new CurtainFlow.CallBack() {
                     @Override

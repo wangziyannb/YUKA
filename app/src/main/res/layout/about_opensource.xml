@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="web"
-            android:text="GSON: \nhttps://github.com/google/gson/"
+            android:text="EasyPermissions: \nhttps://github.com/googlesamples/easypermissions"
             android:textColor="@color/colorAccent"
             android:textSize="15sp" />
 
@@ -141,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="web"
-            android:text="EasyPermissions: \nhttps://github.com/googlesamples/easypermissions"
+            android:text="Curtain: \nhttps://github.com/soulqw/Curtain"
             android:textColor="@color/colorAccent"
             android:textSize="15sp" />
 

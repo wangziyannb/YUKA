@@ -35,12 +35,12 @@ public class AboutOpenSource extends Fragment {
         writeText2TextView(R.raw.okhttp, root.findViewById(R.id.os6));
         writeText2TextView(R.raw.avloadingindicator, root.findViewById(R.id.os7));
 
-        writeText2TextView(R.raw.gson, root.findViewById(R.id.os9));
-        writeText2TextView(R.raw.easypermissions, root.findViewById(R.id.os10));
+        writeText2TextView(R.raw.easypermissions, root.findViewById(R.id.os9));
+        writeText2TextView(R.raw.curtain, root.findViewById(R.id.os10));
         return root;
     }
 
-    public void writeText2TextView(int id, TextView textView) {
+    private void writeText2TextView(int id, TextView textView) {
         try {
             InputStream inputStream = getResources().openRawResource(id);
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

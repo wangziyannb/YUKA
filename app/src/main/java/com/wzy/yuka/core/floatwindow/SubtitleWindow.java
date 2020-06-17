@@ -11,13 +11,19 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.fragment.app.FragmentActivity;
 import androidx.transition.TransitionManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
+import com.qw.curtain.lib.CurtainFlow;
+import com.qw.curtain.lib.flow.CurtainFlowInterface;
+import com.qw.curtain.lib.shape.CircleShape;
+import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.audio.AudioService;
+import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
@@ -36,6 +42,7 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
         EasyFloat.with(activityWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
+                    setView(view1);
                     ConstraintLayout rl = view1.findViewById(R.id.floatwindow_subtitle);
                     //改变悬浮框透明度
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
@@ -58,6 +65,9 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
                     public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
+                        if (b) {
+                            showInitGuide();
+                        }
                     }
 
                     @Override
@@ -104,7 +114,6 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
     }
 
     void showResults(String origin, String translation) {
-        View view = EasyFloat.getAppFloatView(tag);
 
         TextView ori = view.findViewById(R.id.sbw_originalText);
         SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
@@ -182,6 +191,57 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
                 view1.findViewById(R.id.sbw_change).setVisibility(View.GONE);
                 view1.findViewById(R.id.sbw_hide).setVisibility(View.GONE);
                 break;
+        }
+    }
+
+    private void showInitGuide() {
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true)) {
+            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
+            new CurtainFlow.Builder()
+                    .with(41, guideManager.weaveCurtain(view, new RoundShape(12), 32, R.layout.guide))
+                    .with(42, guideManager.weaveCurtain(view.findViewById(R.id.sbw_close), new CircleShape(), 32, R.layout.guide))
+                    .with(43, guideManager.weaveCurtain(view.findViewById(R.id.sbw_change), new CircleShape(), 32, R.layout.guide))
+                    .with(44, guideManager.weaveCurtain(view.findViewById(R.id.sbw_hide), new CircleShape(), 32, R.layout.guide))
+                    .with(45, guideManager.weaveCurtain(view.findViewById(R.id.sbw_pap), new CircleShape(), 32, R.layout.guide))
+                    .create()
+                    .start(new CurtainFlow.CallBack() {
+                        @Override
+                        public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                            switch (currentId) {
+                                case 41:
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                        curtainFlow.push();
+                                    });
+                                    break;
+                                case 42:
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                        curtainFlow.push();
+                                    });
+                                    break;
+                                case 43:
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                        curtainFlow.push();
+                                    });
+                                    break;
+                                case 44:
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                        curtainFlow.push();
+                                    });
+                                    break;
+                                case 45:
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                        curtainFlow.finish();
+                                    });
+                                    break;
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    });
         }
     }
 }

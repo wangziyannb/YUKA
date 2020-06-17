@@ -13,6 +13,7 @@ import java.lang.ref.WeakReference;
 public class FloatWindows implements View.OnClickListener {
     protected String tag;
     protected WeakReference<Activity> activityWeakReference;
+    protected View view;
     int[] location;
     int index;
 
@@ -23,8 +24,11 @@ public class FloatWindows implements View.OnClickListener {
         location = new int[4];
     }
 
+    void setView(View view) {
+        this.view = view;
+    }
+
     void setLocation() {
-        View view = EasyFloat.getAppFloatView(tag);
         view.getLocationOnScreen(location);
         location[2] = location[0] + view.getRight();
         location[3] = location[1] + view.getBottom();
@@ -54,4 +58,5 @@ public class FloatWindows implements View.OnClickListener {
     public void onClick(View v) {
 
     }
+
 }

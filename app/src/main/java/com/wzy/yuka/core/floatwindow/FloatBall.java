@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 public class FloatBall implements View.OnClickListener {
     private String tag;
     private Activity activity;
+    private View FloatBallView;
 
     FloatBall(Activity activity, String tag) {
         this.activity = activity;
@@ -48,6 +49,7 @@ public class FloatBall implements View.OnClickListener {
         EasyFloat.Builder fb = EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.float_ball, v -> {
+                    FloatBallView = v;
                     ImageButton imageButton = v.findViewById(R.id.test1);
                     imageButton.getBackground().setAlpha(50);
                     v.findViewById(R.id.test1).setOnClickListener(this);
@@ -144,62 +146,13 @@ public class FloatBall implements View.OnClickListener {
         EasyFloat.dismissAppFloat(tag);
     }
 
-    private void showInitGuide() {
-        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true)) {
-            View view = EasyFloat.getAppFloatView(tag);
-            GuideManager guideManager = new GuideManager((FragmentActivity) activity);
-            CurtainFlow cf = new CurtainFlow.Builder()
-                    .with(11, guideManager.showCurtain(view, new CircleShape(), 32, R.layout.guide))
-                    .create();
-            cf.start(new CurtainFlow.CallBack() {
-                @Override
-                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                    switch (currentId) {
-                        case 11:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                FloatBallLayout fbl = view.findViewById(R.id.test);
-                                fbl.findViewById(R.id.test1).performClick();
-                                fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
-                                    @Override
-                                    public void deployed() {
-                                        Log.e("TAG", "deployed: ");
-                                        cf.addCurtain(12, guideManager.showCurtain(view, new RoundShape(12), 32, R.layout.guide));
-                                        curtainFlow.push();
-                                    }
-
-                                    @Override
-                                    public void folded() {
-                                        Log.e("TAG", "folded: ");
-                                    }
-                                });
-                            });
-                            break;
-                        case 12:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                curtainFlow.finish();
-                            });
-                            break;
-                    }
-                }
-
-                @Override
-                public void onFinish() {
-                    Toast.makeText(activity, "演示3完成", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-    }
-
     @Override
     public void onClick(View v) {
         Intent service_Single = new Intent(activity, ScreenShotService_Single.class);
         Intent service_Continue = new Intent(activity, ScreenShotService_Continue.class);
         Intent service_audio = new Intent(activity, AudioService.class);
-        View view = EasyFloat.getAppFloatView("mainFloatBall");
-        ImageButton imageButton = view.findViewById(R.id.test1);
-        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+        ImageButton imageButton = FloatBallView.findViewById(R.id.test1);
+        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) FloatBallView.getLayoutParams();
         try {
             int currentFlags = (Integer) layoutParams.getClass().getField("privateFlags").get(layoutParams);
             layoutParams.getClass().getField("privateFlags").set(layoutParams, currentFlags | 0x00000040);
@@ -209,7 +162,7 @@ public class FloatBall implements View.OnClickListener {
         boolean[] params = GetParams.FloatBall();
         switch (v.getId()) {
             case R.id.test1:
-                FloatBallLayout FloatBallLayout = view.findViewById(R.id.test);
+                FloatBallLayout FloatBallLayout = FloatBallView.findViewById(R.id.test);
 
                 WindowManager windowManager = activity.getWindowManager();
                 int[] size = GetParams.Screen();
@@ -219,11 +172,11 @@ public class FloatBall implements View.OnClickListener {
                     EasyFloat.appFloatDragEnable(true, "mainFloatBall");
                     FloatBallLayout.fold();
                     imageButton.setBackgroundResource(R.drawable.main);
-                    layoutParams.y = layoutParams.y + SizeUtil.dp2px(view.getContext(), 52);
+                    layoutParams.y = layoutParams.y + SizeUtil.dp2px(FloatBallView.getContext(), 52);
                     if (layoutParams.x > size[0] / 2) {
-                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(view.getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
                     }
-                    windowManager.updateViewLayout(view, layoutParams);
+                    windowManager.updateViewLayout(FloatBallView, layoutParams);
                 } else {
                     if (params[2]) {
                         EasyFloat.appFloatDragEnable(false, "mainFloatBall");
@@ -232,12 +185,12 @@ public class FloatBall implements View.OnClickListener {
                     }
                     if (layoutParams.x > size[0] / 2) {
                         FloatBallLayout.setIsLeft(false);
-                        layoutParams.x = layoutParams.x - SizeUtil.dp2px(view.getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                        layoutParams.x = layoutParams.x - SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
                     } else {
                         FloatBallLayout.setIsLeft(true);
                     }
-                    layoutParams.y = layoutParams.y - SizeUtil.dp2px(view.getContext(), 52);
-                    windowManager.updateViewLayout(view, layoutParams);
+                    layoutParams.y = layoutParams.y - SizeUtil.dp2px(FloatBallView.getContext(), 52);
+                    windowManager.updateViewLayout(FloatBallView, layoutParams);
                     imageButton.setVisibility(View.INVISIBLE);
                     Handler handler = new Handler();
                     handler.postDelayed(() -> {
@@ -314,4 +267,53 @@ public class FloatBall implements View.OnClickListener {
                 break;
         }
     }
+
+    private void showInitGuide() {
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true)) {
+            GuideManager guideManager = new GuideManager((FragmentActivity) activity);
+            CurtainFlow cf = new CurtainFlow.Builder()
+                    .with(11, guideManager.weaveCurtain(FloatBallView, new CircleShape(), 32, R.layout.guide))
+                    .create();
+            cf.start(new CurtainFlow.CallBack() {
+                @Override
+                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                    FloatBallLayout fbl = FloatBallView.findViewById(R.id.test);
+                    switch (currentId) {
+                        case 11:
+                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                fbl.findViewById(R.id.test1).performClick();
+                                fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
+                                    @Override
+                                    public void deployed() {
+                                        Log.e("TAG", "deployed: ");
+                                        cf.addCurtain(12, guideManager.weaveCurtain(FloatBallView, new RoundShape(12), 32, R.layout.guide));
+                                        curtainFlow.push();
+                                    }
+
+                                    @Override
+                                    public void folded() {
+                                        Log.e("TAG", "folded: ");
+                                    }
+                                });
+                            });
+                            break;
+                        case 12:
+                            fbl.removeFloatBallLayoutListener();
+                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                curtainFlow.finish();
+                            });
+                            break;
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    Toast.makeText(activity, "演示3完成", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
 }
+

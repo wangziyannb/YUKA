@@ -42,6 +42,7 @@ public class SelectWindow_Auto extends FloatWindows {
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
+                    setView(view1);
                     view1.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
                     view1.findViewById(R.id.sw_stopContinue).setVisibility(View.GONE);
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
@@ -59,8 +60,7 @@ public class SelectWindow_Auto extends FloatWindows {
                     si.setOnScaledListener((x, y, event) -> {
                         TextView textView = view1.findViewById(R.id.translatedText);
                         if (textView.getText().equals("选取目标位置后点识别" +
-                                "\n右下角可改变框体大小" +
-                                "\n每次调整大小后都必须位移选词窗")) {
+                                "\n右下角可改变框体大小")) {
                             textView.setText("等待选取...");
                         }
                         params.width += (int) x;
@@ -241,5 +241,9 @@ public class SelectWindow_Auto extends FloatWindows {
                 FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
                 break;
         }
+    }
+
+    private void showInitGuide() {
+
     }
 }

@@ -173,7 +173,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void showGuide() {
         GuideManager guideManager = new GuideManager(this);
-        guideManager.showCurtain(button, new CircleShape(), 60, R.layout.guide, new Curtain.CallBack() {
+        guideManager.weaveCurtain(button, new CircleShape(), 60, R.layout.guide, new Curtain.CallBack() {
             @Override
             public void onShow(IGuide iGuide) {
                 iGuide.findViewByIdInTopView(R.id.test_guide1).setOnClickListener(v -> {
@@ -193,8 +193,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         ActionMenuView amv = requireActivity().findViewById(R.id.toolbar_menu);
         ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
         new CurtainFlow.Builder()
-                .with(4, guideManager.showCurtain(button, new CircleShape(), 60, R.layout.guide))
-                .with(5, guideManager.showCurtain(amiv, new CircleShape(), 32, R.layout.guide))
+                .with(4, guideManager.weaveCurtain(button, new CircleShape(), 60, R.layout.guide))
+                .with(5, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide))
                 .create()
                 .start(new CurtainFlow.CallBack() {
                     @Override

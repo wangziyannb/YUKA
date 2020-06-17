@@ -22,7 +22,6 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="36dp"
         android:padding="5dp"
         android:src="@drawable/floatwindow_stop"
         android:visibility="gone" />
@@ -49,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="选取目标位置后点识别\n右下角可改变框体大小\n每次调整大小后都必须位移选词窗"
+        android:text="选取目标位置后点识别\n右下角可改变框体大小"
         android:textColor="@color/text_color_DarkBg" />
 
     <com.wzy.yuka.core.floatwindow.ScaleImageView

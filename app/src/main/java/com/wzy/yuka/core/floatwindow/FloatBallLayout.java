@@ -62,6 +62,9 @@ public class FloatBallLayout extends ViewGroup {
         this.mListener = floatBallLayoutListener;
     }
 
+    public void removeFloatBallLayoutListener() {
+        this.mListener = null;
+    }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     }
