@@ -7,25 +7,26 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
-import com.qw.curtain.lib.CurtainFlow;
-import com.qw.curtain.lib.flow.CurtainFlowInterface;
-import com.qw.curtain.lib.shape.CircleShape;
-import com.qw.curtain.lib.shape.RoundShape;
+import com.qw.curtain.lib.Curtain;
+import com.qw.curtain.lib.IGuide;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,7 +82,8 @@ public class SelectWindow_Normal extends FloatWindows {
                     view1.findViewById(R.id.sw_stopContinue).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(100, 100)
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2,
+                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2))
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
@@ -196,53 +198,88 @@ public class SelectWindow_Normal extends FloatWindows {
     private void showInitGuide() {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true)) {
-
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            CurtainFlow cf = new CurtainFlow.Builder()
-                    .with(21, guideManager.weaveCurtain(view, new RoundShape(12), 32, R.layout.guide))
-                    .with(22, guideManager.weaveCurtain(view.findViewById(R.id.sw_close), new CircleShape(), 32, R.layout.guide))
-                    .with(23, guideManager.weaveCurtain(view.findViewById(R.id.sw_addwindows), new CircleShape(), 32, R.layout.guide))
-                    .with(24, guideManager.weaveCurtain(view.findViewById(R.id.sw_translate), new CircleShape(), 32, R.layout.guide))
-                    .create();
-            cf.start(new CurtainFlow.CallBack() {
-                @Override
-                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                    switch (currentId) {
-                        case 21:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                curtainFlow.push();
-                            });
-                            break;
-                        case 22:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+            guideManager.weaveCurtain((canvas, paint, info) -> {
+                    }, 0, R.layout.guide_interpret,
+                    view.findViewById(R.id.sw_close), view.findViewById(R.id.sw_scale),
+                    view.findViewById(R.id.sw_addwindows), view.findViewById(R.id.sw_translate))
+                    .setCallBack(new Curtain.CallBack() {
+                        @Override
+                        public void onShow(IGuide iGuide) {
+                            ConstraintLayout layout = iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
+                            ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                            img.setImageResource(R.drawable.guide_floatwindow_normal);
+                            ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
-                                if (view.findViewById(R.id.sw_addwindows).getVisibility() == View.GONE) {
-                                    curtainFlow.toCurtainById(24);
-                                } else {
-                                    curtainFlow.push();
-                                }
-                            });
-                            break;
-                        case 23:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                curtainFlow.push();
-                            });
-                            break;
-                        case 24:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                curtainFlow.finish();
-                            });
-                            break;
+                            params_img.width = SizeUtil.dp2px(activityWeakReference.get(), 335);
+                            params_img.height = SizeUtil.dp2px(activityWeakReference.get(), 242);
 
-                    }
-                }
+                            params_img.topMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
+                            params_img.rightMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
+                            img.setLayoutParams(params_img);
+                        }
 
-                @Override
-                public void onFinish() {
-                    Toast.makeText(activityWeakReference.get(), "演示4完成", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        @Override
+                        public void onDismiss(IGuide iGuide) {
 
+                        }
+                    })
+                    .show();
         }
     }
 }
+
+//    private void showInitGuide() {
+//        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+//        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true)) {
+//
+//            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
+//            CurtainFlow cf = new CurtainFlow.Builder()
+//                    .with(21, guideManager.weaveCurtain(view, new RoundShape(12), 32, R.layout.guide))
+//                    .with(22, guideManager.weaveCurtain(view.findViewById(R.id.sw_close), new CircleShape(), 32, R.layout.guide))
+//                    .with(23, guideManager.weaveCurtain(view.findViewById(R.id.sw_addwindows), new CircleShape(), 32, R.layout.guide))
+//                    .with(24, guideManager.weaveCurtain(view.findViewById(R.id.sw_translate), new CircleShape(), 32, R.layout.guide))
+//                    .create();
+//            cf.start(new CurtainFlow.CallBack() {
+//                @Override
+//                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+//                    switch (currentId) {
+//                        case 21:
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                curtainFlow.push();
+//                            });
+//                            break;
+//                        case 22:
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//
+//                                if (view.findViewById(R.id.sw_addwindows).getVisibility() == View.GONE) {
+//                                    curtainFlow.toCurtainById(24);
+//                                } else {
+//                                    curtainFlow.push();
+//                                }
+//                            });
+//                            break;
+//                        case 23:
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                curtainFlow.push();
+//                            });
+//                            break;
+//                        case 24:
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                curtainFlow.finish();
+//                            });
+//                            break;
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//                    Toast.makeText(activityWeakReference.get(), "普通悬浮窗引导完成", Toast.LENGTH_SHORT).show();
+//                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, false);
+//                }
+//            });
+//
+//        }
+//    }
+//}

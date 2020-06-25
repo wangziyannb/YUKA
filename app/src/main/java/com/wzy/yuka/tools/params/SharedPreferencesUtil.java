@@ -18,9 +18,9 @@ import java.io.Serializable;
  * Created by Ziyan on 2020/5/22.
  */
 public class SharedPreferencesUtil {
-    public static final String FIRST_OPEN_GuideActivity = "first_open_guideActivity";
     private static SharedPreferences preferences = null;
     private SharedPreferences.Editor editor = null;
+    public static final String FIRST_OPEN_GuideActivity = "first_open_guideActivity";
     public static final String FIRST_OPEN_MainActivity = "first_open_mainActivity";
     public static final String FIRST_LOGIN = "first_Login";
     public static final String FIRST_INVOKE_FloatBall = "first_FloatBall";

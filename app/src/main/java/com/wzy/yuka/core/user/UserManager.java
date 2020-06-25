@@ -39,6 +39,14 @@ public class UserManager {
         account.update(hashMap);
     }
 
+    public static void removeUser() {
+        hashMap = account.get();
+        hashMap.remove("u_name");
+        hashMap.remove("pwd");
+        hashMap.remove("id");
+        account.update(hashMap);
+    }
+
     public static String[] getUser() {
         hashMap = account.get();
         String[] params = new String[4];
@@ -61,7 +69,7 @@ public class UserManager {
         hashMap.put("isLogin", "false");
         account.update(hashMap);
 
-        if (!hashMap.containsKey("u_name")) {
+        if ((!hashMap.containsKey("u_name")) || getUser()[0].equals("")) {
             Message message = Message.obtain();
             message.what = 601;
             globalHandler.sendMessage(message);

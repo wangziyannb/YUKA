@@ -78,7 +78,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     @Override
     protected void onPause() {
         if (isFinishing()) {
-            sharedPreferencesUtil.saveParam("first_open", false);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, false);
         }
         super.onPause();
 

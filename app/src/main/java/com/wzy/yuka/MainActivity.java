@@ -21,7 +21,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.internal.NavigationMenuView;
 import com.google.android.material.navigation.NavigationView;
 import com.qw.curtain.lib.CurtainFlow;
 import com.qw.curtain.lib.flow.CurtainFlowInterface;
@@ -42,12 +41,12 @@ import java.util.Objects;
 public class MainActivity extends BaseActivity implements GlobalHandler.HandleMsgListener {
     private AppBarConfiguration mAppBarConfiguration;
     private GlobalHandler globalHandler;
-    private DrawerLayout drawer;
+    public DrawerLayout drawer;
     private NavController navController;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     private Button login;
     private ImageButton NavButton;
-    private NavigationView navigationView;
+    public NavigationView navigationView;
     private GuideManager guideManager = new GuideManager(this);
 
     @Override
@@ -213,6 +212,14 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         }
     }
 
+    private CurtainFlowInterface curtainFlowInterface;
+    private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            curtainFlowInterface.push();
+        }
+    };
+
     private void showInitGuide_First() {
         new CurtainFlow.Builder()
                 .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 32, R.layout.guide))
@@ -221,19 +228,13 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                 .start(new CurtainFlow.CallBack() {
                     @Override
                     public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                        DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
-                            @Override
-                            public void onDrawerOpened(View drawerView) {
-                                if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, true)) {
-                                    curtainFlow.push();
-                                }
-                            }
-                        };
+                        curtainFlowInterface = curtainFlow;
                         switch (currentId) {
                             case 1:
+                                drawer.addDrawerListener(listener);
                                 curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                    drawer.addDrawerListener(listener);
                                     drawer.openDrawer(GravityCompat.START, true);
+                                    v.setOnClickListener(null);
                                 });
                                 break;
                             case 2:
@@ -247,35 +248,12 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
                     @Override
                     public void onFinish() {
-                        showInitGuide_Second();
+                        Toast.makeText(MainActivity.this, "主界面初次进入app注册登陆引导完成", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void showInitGuide_Second() {
-        NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
-        View view = navigationMenuView.getChildAt(2);
-        new CurtainFlow.Builder()
-                .with(3, guideManager.weaveCurtain(view, new RoundShape(12), 0, R.layout.guide))
-                .create()
-                .start(new CurtainFlow.CallBack() {
-                    @Override
-                    public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                        if (currentId == 3) {
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                drawer.closeDrawers();
-                                curtainFlow.finish();
-                            });
-                        }
-                    }
 
-                    @Override
-                    public void onFinish() {
-                        Toast.makeText(MainActivity.this, "演示完毕", Toast.LENGTH_SHORT).show();
-                        sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, false);
-                    }
-                });
-    }
 }
 
 

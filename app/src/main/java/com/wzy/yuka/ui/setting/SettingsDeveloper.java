@@ -11,8 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
+import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -80,6 +82,20 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
                         }
                     });
             return false;
+        });
+        getPreferenceScreen().findPreference("settings_debug_reset").setOnPreferenceClickListener(preference -> {
+            SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true);
+            UserManager.logout();
+            UserManager.removeUser();
+            Toast.makeText(getContext(), "已经重置所有用户引导并退出账号", Toast.LENGTH_SHORT).show();
+            return true;
         });
     }
 

@@ -19,17 +19,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.appcompat.widget.ActionMenuView;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.internal.NavigationMenuView;
 import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.CurtainFlow;
 import com.qw.curtain.lib.IGuide;
-import com.qw.curtain.lib.flow.CurtainFlowInterface;
-import com.qw.curtain.lib.shape.CircleShape;
+import com.qw.curtain.lib.shape.RoundShape;
+import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.core.user.UserManager;
@@ -43,34 +43,17 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
-    private final String TAG = "HomeFragment";
     private Intent data;
     private NavController navController;
     private BottomNavigationView bottomNavigationView;
     private Button button;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private GuideManager guideManager;
+
     private ImageButton NavButton;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.home, container, false);
-        bottomNavigationView = root.findViewById(R.id.bottomNavigationView);
-
-        button = bottomNavigationView.findViewById(R.id.bot_nav_start);
-        button.setOnClickListener(this);
-        View nav_home = bottomNavigationView.findViewById(R.id.bot_nav_home);
-        nav_home.setOnClickListener(this);
-        View nav_history = bottomNavigationView.findViewById(R.id.bot_nav_history);
-        nav_history.setOnClickListener(this);
-
-        navController = Navigation.findNavController(root.findViewById(R.id.fragment));
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
-            showInitGuide();
-        }
-        return root;
-    }
-
+    private MainActivity mainActivity;
+    private DrawerLayout drawer;
+    private CurtainFlow guide2;
 
     @Override
     public void onClick(View v) {
@@ -131,23 +114,21 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_CANCELED) {
-            Log.e(TAG, "User cancel");
-        } else {
-            try {
-                WindowManager mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-                DisplayMetrics metrics = new DisplayMetrics();
-                mWindowManager.getDefaultDisplay().getMetrics(metrics);
-            } catch (Exception e) {
-                Log.e(TAG, "MediaProjection error");
-                return;
-            }
-            this.data = data;
-            button.setBackgroundResource(R.drawable.nav_start_checked);
-            FloatWindowManager.initFloatWindow(getActivity(), data);
+    private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            NavigationMenuView navigationMenuView = (NavigationMenuView) mainActivity.navigationView.getChildAt(0);
+            View setting = navigationMenuView.getChildAt(2);
+            View guidance = navigationMenuView.getChildAt(3);
+            guide2.addCurtain(4, guideManager.weaveCurtain(new RoundShape(12), 0, R.layout.guide, setting, guidance));
+            guide2.push();
         }
-    }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+            drawer.removeDrawerListener(listener);
+        }
+    };
 
     private long exitTime;
 
@@ -171,52 +152,122 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private void showGuide() {
-        GuideManager guideManager = new GuideManager(this);
-        guideManager.weaveCurtain(button, new CircleShape(), 60, R.layout.guide, new Curtain.CallBack() {
-            @Override
-            public void onShow(IGuide iGuide) {
-                iGuide.findViewByIdInTopView(R.id.test_guide1).setOnClickListener(v -> {
-                    iGuide.dismissGuide();
-                });
-            }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.home, container, false);
+        bottomNavigationView = root.findViewById(R.id.bottomNavigationView);
 
-            @Override
-            public void onDismiss(IGuide iGuide) {
-                Toast.makeText(getContext(), "演示2完成", Toast.LENGTH_SHORT).show();
+        mainActivity = (MainActivity) getActivity();
+        drawer = mainActivity.drawer;
+        guideManager = new GuideManager(this);
+        button = bottomNavigationView.findViewById(R.id.bot_nav_start);
+        button.setOnClickListener(this);
+        View nav_home = bottomNavigationView.findViewById(R.id.bot_nav_home);
+        nav_home.setOnClickListener(this);
+        View nav_history = bottomNavigationView.findViewById(R.id.bot_nav_history);
+        nav_history.setOnClickListener(this);
+
+        navController = Navigation.findNavController(root.findViewById(R.id.fragment));
+        showInitGuide();
+
+        return root;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String TAG = "HomeFragment";
+        if (resultCode == Activity.RESULT_CANCELED) {
+            Log.e(TAG, "User cancel");
+        } else {
+            try {
+                WindowManager mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+                DisplayMetrics metrics = new DisplayMetrics();
+                mWindowManager.getDefaultDisplay().getMetrics(metrics);
+            } catch (Exception e) {
+                Log.e(TAG, "MediaProjection error");
+                return;
             }
-        }).show();
+            this.data = data;
+            button.setBackgroundResource(R.drawable.nav_start_checked);
+            FloatWindowManager.initFloatWindow(getActivity(), data);
+        }
     }
 
     private void showInitGuide() {
-        GuideManager guideManager = new GuideManager(this);
-        ActionMenuView amv = requireActivity().findViewById(R.id.toolbar_menu);
-        ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
-        new CurtainFlow.Builder()
-                .with(4, guideManager.weaveCurtain(button, new CircleShape(), 60, R.layout.guide))
-                .with(5, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide))
-                .create()
-                .start(new CurtainFlow.CallBack() {
-                    @Override
-                    public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                        switch (currentId) {
-                            case 4:
-                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                    curtainFlow.push();
-                                });
-                                break;
-                            case 5:
-                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                    curtainFlow.finish();
-                                });
-                                break;
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
+            guideManager.weaveCurtain(button, (canvas, paint, info) -> {
+                    },
+                    32, R.layout.guide_interpret, new Curtain.CallBack() {
+                        @Override
+                        public void onShow(IGuide iGuide) {
+//                    int [] location=new int[2];
+//                    bottomNavigationView.getLocationOnScreen(location);
+//                    Log.e("TAG", "showInitGuide on screen: "+location[0]+" "+location[1]);
+//                    ConstraintLayout layout=iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
+//                    ImageView img=layout.findViewById(R.id.guide_interpret_img);
+//                    img.setImageResource(R.drawable.guide_afterlogin_main);
+//                    ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+//
+//                    params_img.width=button.getRight()-button.getLeft()+20;
+//                    params_img.height=button.getBottom()-button.getTop()+20;
+//
+//                    img.setLayoutParams(params_img);
+
+
+//                    ConstraintSet constraintSet = new ConstraintSet();
+//                    constraintSet.clone(layout);
+//                    constraintSet.
+//                    constraintSet.applyTo(layout);
                         }
-                    }
 
-                    @Override
-                    public void onFinish() {
+                        @Override
+                        public void onDismiss(IGuide iGuide) {
 
-                    }
-                });
+                        }
+                    }).show();
+        }
     }
+//    private void showInitGuide() {
+//        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
+//            ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
+//            ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
+//
+//            guide2 = new CurtainFlow.Builder()
+//                    .with(3, guideManager.weaveCurtain(button, new CircleShape(), 60, R.layout.guide))
+//                    .with(5, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide))
+//                    .create();
+//            guide2.start(new CurtainFlow.CallBack() {
+//                @Override
+//                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+//                    switch (currentId) {
+//                        case 3:
+//                            drawer.addDrawerListener(listener);
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                drawer.openDrawer(GravityCompat.START, true);
+//                                v.setOnClickListener(null);
+//                            });
+//                            break;
+//                        case 4:
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                guide2.push();
+//                                drawer.closeDrawers();
+//                                v.setOnClickListener(null);
+//                            });
+//                            break;
+//                        case 5:
+//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                curtainFlow.finish();
+//                            });
+//                    }
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//                    Toast.makeText(getContext(), "主界面初次登陆引导完成", Toast.LENGTH_SHORT).show();
+//                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
+//                }
+//            });
+//        }
+//}
+
 }

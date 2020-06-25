@@ -59,7 +59,7 @@ public class SplashActivity extends Activity implements GlobalHandler.HandleMsgL
         setContentView(R.layout.welcome);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam("first_open", true);
+        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, true);
         if (isFirstOpen) {
             mHandler.sendEmptyMessageDelayed(GO_GUIDE, ENTER_DURATION);
         } else {

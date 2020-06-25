@@ -32,10 +32,16 @@ public class GuideManager {
     }
 
     public Curtain weaveCurtain(View view, Shape shape, int padding, int layout, Curtain.CallBack callBack) {
-        return new Curtain(weakReferenceActivity.get()).with(view)
-                .withPadding(view, padding)
-                .withShape(view, shape)
-                .setTopView(layout)
-                .setCallBack(callBack);
+        return weaveCurtain(view, shape, padding, layout).setCallBack(callBack);
+    }
+
+    public Curtain weaveCurtain(Shape shape, int padding, int layout, View... views) {
+        Curtain curtain = new Curtain(weakReferenceActivity.get()).setTopView(layout);
+        for (View view : views) {
+            if (view != null) {
+                curtain.with(view).withPadding(view, padding).withShape(view, shape);
+            }
+        }
+        return curtain;
     }
 }

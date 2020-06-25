@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -17,15 +18,14 @@ import androidx.transition.TransitionManager;
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
-import com.qw.curtain.lib.CurtainFlow;
-import com.qw.curtain.lib.flow.CurtainFlowInterface;
-import com.qw.curtain.lib.shape.CircleShape;
-import com.qw.curtain.lib.shape.RoundShape;
+import com.qw.curtain.lib.Curtain;
+import com.qw.curtain.lib.IGuide;
 import com.wzy.yuka.R;
 import com.wzy.yuka.core.audio.AudioService;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +60,7 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
                     view1.findViewById(R.id.sbw_hide).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(100, 100)
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 300) / 2, GetParams.Screen()[1] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 100) / 2)
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
@@ -198,50 +198,76 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true)) {
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            new CurtainFlow.Builder()
-                    .with(41, guideManager.weaveCurtain(view, new RoundShape(12), 32, R.layout.guide))
-                    .with(42, guideManager.weaveCurtain(view.findViewById(R.id.sbw_close), new CircleShape(), 32, R.layout.guide))
-                    .with(43, guideManager.weaveCurtain(view.findViewById(R.id.sbw_change), new CircleShape(), 32, R.layout.guide))
-                    .with(44, guideManager.weaveCurtain(view.findViewById(R.id.sbw_hide), new CircleShape(), 32, R.layout.guide))
-                    .with(45, guideManager.weaveCurtain(view.findViewById(R.id.sbw_pap), new CircleShape(), 32, R.layout.guide))
-                    .create()
-                    .start(new CurtainFlow.CallBack() {
-                        @Override
-                        public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                            switch (currentId) {
-                                case 41:
-                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                        curtainFlow.push();
-                                    });
-                                    break;
-                                case 42:
-                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                        curtainFlow.push();
-                                    });
-                                    break;
-                                case 43:
-                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                        curtainFlow.push();
-                                    });
-                                    break;
-                                case 44:
-                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                        curtainFlow.push();
-                                    });
-                                    break;
-                                case 45:
-                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                        curtainFlow.finish();
-                                    });
-                                    break;
-                            }
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-                        }
+            guideManager.weaveCurtain((canvas, paint, info) -> {
+                    }, 32, R.layout.guide,
+                    view.findViewById(R.id.sbw_close),
+                    view.findViewById(R.id.sbw_change),
+                    view.findViewById(R.id.sbw_hide),
+                    view.findViewById(R.id.sbw_pap)
+            ).setCallBack(new Curtain.CallBack() {
+                @Override
+                public void onShow(IGuide iGuide) {
+                    iGuide.findViewByIdInTopView(R.id.test_guide1).setOnClickListener(v -> {
+                        iGuide.dismissGuide();
                     });
+                }
+
+                @Override
+                public void onDismiss(IGuide iGuide) {
+                    Toast.makeText(activityWeakReference.get(), "同步字幕窗引导完成", Toast.LENGTH_SHORT).show();
+                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, false);
+                }
+            }).show();
         }
     }
+//    private void showInitGuide() {
+//        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+//        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true)) {
+//            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
+//            new CurtainFlow.Builder()
+//                    .with(41, guideManager.weaveCurtain(view, new RoundShape(12), 32, R.layout.guide))
+//                    .with(42, guideManager.weaveCurtain(view.findViewById(R.id.sbw_close), new CircleShape(), 32, R.layout.guide))
+//                    .with(43, guideManager.weaveCurtain(view.findViewById(R.id.sbw_change), new CircleShape(), 32, R.layout.guide))
+//                    .with(44, guideManager.weaveCurtain(view.findViewById(R.id.sbw_hide), new CircleShape(), 32, R.layout.guide))
+//                    .with(45, guideManager.weaveCurtain(view.findViewById(R.id.sbw_pap), new CircleShape(), 32, R.layout.guide))
+//                    .create()
+//                    .start(new CurtainFlow.CallBack() {
+//                        @Override
+//                        public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+//                            switch (currentId) {
+//                                case 41:
+//                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                        curtainFlow.push();
+//                                    });
+//                                    break;
+//                                case 42:
+//                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                        curtainFlow.push();
+//                                    });
+//                                    break;
+//                                case 43:
+//                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                        curtainFlow.push();
+//                                    });
+//                                    break;
+//                                case 44:
+//                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                        curtainFlow.push();
+//                                    });
+//                                    break;
+//                                case 45:
+//                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+//                                        curtainFlow.finish();
+//                                    });
+//                                    break;
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFinish() {
+//                            Toast.makeText(activityWeakReference.get(), "演示5完成", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//        }
+//    }
 }

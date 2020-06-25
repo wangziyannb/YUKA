@@ -15,15 +15,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
+import com.qw.curtain.lib.Curtain;
+import com.qw.curtain.lib.IGuide;
+import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.R;
+import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +41,7 @@ import org.json.JSONObject;
  * Created by Ziyan on 2020/6/6.
  */
 public class SelectWindow_Auto extends FloatWindows {
-    String[] Tags = new String[1];
+    private String[] Tags = new String[1];
 
     SelectWindow_Auto(Activity activity, String tag, int index) {
         super(activity, tag, index);
@@ -79,13 +85,14 @@ public class SelectWindow_Auto extends FloatWindows {
                     view1.findViewById(R.id.sw_translate).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(100, 100)
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2, GetParams.Screen()[1] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2)
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
                     public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
                         if (b) {
                             setLocation();
+                            showInitGuide();
                         }
                     }
 
@@ -179,7 +186,7 @@ public class SelectWindow_Auto extends FloatWindows {
         Tags[index] = thisTag;
         EasyFloat.with(activityWeakReference.get())
                 .setTag(thisTag)
-                .setDragEnable(false)
+                .setDragEnable(true)
                 .setLayout(R.layout.floatwindow_auto, view -> {
                     ConstraintLayout constraintlayoutview = view.findViewById(R.id.floatwindow_auto);
                     ViewGroup.LayoutParams layoutParams1 = constraintlayoutview.getLayoutParams();
@@ -244,6 +251,27 @@ public class SelectWindow_Auto extends FloatWindows {
     }
 
     private void showInitGuide() {
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true)) {
+            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
+            guideManager.weaveCurtain(new RoundShape(16), 32, R.layout.guide,
+                    view.requireViewById(R.id.sw_close),
+                    view.requireViewById(R.id.sw_translate),
+                    view.requireViewById(R.id.sw_scale))
+                    .setCallBack(new Curtain.CallBack() {
+                        @Override
+                        public void onShow(IGuide iGuide) {
+                            iGuide.findViewByIdInTopView(R.id.test_guide1).setOnClickListener(v -> {
+                                iGuide.dismissGuide();
+                            });
+                        }
 
+                        @Override
+                        public void onDismiss(IGuide iGuide) {
+                            Toast.makeText(activityWeakReference.get(), "自动悬浮窗引导完成", Toast.LENGTH_SHORT).show();
+                            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, false);
+                        }
+                    }).show();
+        }
     }
 }

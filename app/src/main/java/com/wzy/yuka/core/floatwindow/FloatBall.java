@@ -309,7 +309,8 @@ public class FloatBall implements View.OnClickListener {
 
                 @Override
                 public void onFinish() {
-                    Toast.makeText(activity, "演示3完成", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "悬浮球控制面板引导完成", Toast.LENGTH_SHORT).show();
+                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, false);
                 }
             });
 
