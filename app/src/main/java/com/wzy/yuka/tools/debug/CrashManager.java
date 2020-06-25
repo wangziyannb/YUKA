@@ -99,7 +99,7 @@ public class CrashManager implements Thread.UncaughtExceptionHandler {
         for (Map.Entry<String, String> entry : infos.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            sb.append(key + "=" + value + "\r\n");
+            sb.append(key).append("=").append(value).append("\r\n");
         }
         Writer writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);

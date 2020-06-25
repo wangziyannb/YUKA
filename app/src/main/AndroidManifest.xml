@@ -5,19 +5,21 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".MainApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher_radius"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="false"
+        android:networkSecurityConfig="@xml/network"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,12 +28,34 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GuideActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.setting.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.NotFullActivity" />
+
         <service
-            android:name=".tools.screenshot.ScreenShotService_Single"
+            android:name=".core.screenshot.ScreenShotService_Single"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".tools.screenshot.ScreenShotService_Continue"
+            android:name=".core.screenshot.ScreenShotService_Continue"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+        <service
+            android:name=".core.screenshot.ScreenShotService_Auto"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+        <service
+            android:name=".core.audio.AudioService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
     </application>
