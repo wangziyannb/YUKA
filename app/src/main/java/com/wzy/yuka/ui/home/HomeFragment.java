@@ -15,19 +15,24 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.internal.NavigationMenuView;
-import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.CurtainFlow;
-import com.qw.curtain.lib.IGuide;
+import com.qw.curtain.lib.flow.CurtainFlowInterface;
+import com.qw.curtain.lib.shape.CircleShape;
 import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
@@ -36,6 +41,7 @@ import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -195,38 +201,70 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private void showInitGuide() {
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
-            guideManager.weaveCurtain(button, (canvas, paint, info) -> {
-                    },
-                    32, R.layout.guide_interpret, new Curtain.CallBack() {
-                        @Override
-                        public void onShow(IGuide iGuide) {
-//                    int [] location=new int[2];
-//                    bottomNavigationView.getLocationOnScreen(location);
-//                    Log.e("TAG", "showInitGuide on screen: "+location[0]+" "+location[1]);
-//                    ConstraintLayout layout=iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
-//                    ImageView img=layout.findViewById(R.id.guide_interpret_img);
-//                    img.setImageResource(R.drawable.guide_afterlogin_main);
-//                    ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-//
-//                    params_img.width=button.getRight()-button.getLeft()+20;
-//                    params_img.height=button.getBottom()-button.getTop()+20;
-//
-//                    img.setLayoutParams(params_img);
+            ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
+            ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
+            guide2 = new CurtainFlow.Builder()
+                    .with(3, guideManager.weaveCurtain(button, new CircleShape(), 32, R.layout.guide_interpret))
+                    .with(4, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide_interpret))
+                    .create();
+            guide2.start(new CurtainFlow.CallBack() {
+                @Override
+                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                    ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
+                    ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                    ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+                    ConstraintSet set = new ConstraintSet();
+                    switch (currentId) {
+                        case 3:
+                            layout.setOnClickListener(v -> {
+                                curtainFlow.push();
+                                layout.setOnClickListener(null);
+                            });
+
+                            img.setImageResource(R.drawable.guide_afterlogin_main);
+                            img.setScaleType(ImageView.ScaleType.FIT_END);
+
+                            params_img.width = SizeUtil.dp2px(requireContext(), 180);
+                            params_img.height = SizeUtil.dp2px(requireContext(), 180);
+                            params_img.leftMargin = SizeUtil.dp2px(requireContext(), 30);
+
+                            img.setLayoutParams(params_img);
+
+                            set.clone(layout);
+                            set.clear(R.id.guide_interpret_img, ConstraintSet.TOP);
+                            set.applyTo(layout);
+                            break;
+                        case 4:
+                            layout.setOnClickListener(v -> {
+                                curtainFlow.finish();
+                                layout.setOnClickListener(null);
+                            });
+
+                            img.setImageResource(R.drawable.guide_afterlogin_charge);
+                            img.setScaleType(ImageView.ScaleType.FIT_START);
+
+                            params_img.width = SizeUtil.dp2px(requireContext(), 220);
+                            params_img.height = SizeUtil.dp2px(requireContext(), 220);
+
+                            img.setLayoutParams(params_img);
+                            set.clone(layout);
+                            set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
+                            set.clear(R.id.guide_interpret_img, ConstraintSet.LEFT);
+                            set.applyTo(layout);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    Toast.makeText(getContext(), "主界面初次登陆引导完成", Toast.LENGTH_SHORT).show();
+                }
+            });
 
 
-//                    ConstraintSet constraintSet = new ConstraintSet();
-//                    constraintSet.clone(layout);
-//                    constraintSet.
-//                    constraintSet.applyTo(layout);
-                        }
-
-                        @Override
-                        public void onDismiss(IGuide iGuide) {
-
-                        }
-                    }).show();
         }
     }
+
 //    private void showInitGuide() {
 //        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
 //            ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
@@ -263,11 +301,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 //
 //                @Override
 //                public void onFinish() {
-//                    Toast.makeText(getContext(), "主界面初次登陆引导完成", Toast.LENGTH_SHORT).show();
+//
 //                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
 //                }
 //            });
 //        }
-//}
+//    }
 
 }

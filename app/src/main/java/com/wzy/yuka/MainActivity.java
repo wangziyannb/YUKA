@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -32,6 +35,7 @@ import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.ui.view.RoundImageView;
 
 import java.lang.reflect.Field;
@@ -222,8 +226,8 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
     private void showInitGuide_First() {
         new CurtainFlow.Builder()
-                .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 32, R.layout.guide))
-                .with(2, guideManager.weaveCurtain(login, new RoundShape(12), 32, R.layout.guide))
+                .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 0, R.layout.guide_interpret))
+                .with(2, guideManager.weaveCurtain(login, new RoundShape(12), 0, R.layout.guide))
                 .create()
                 .start(new CurtainFlow.CallBack() {
                     @Override
@@ -232,10 +236,22 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                         switch (currentId) {
                             case 1:
                                 drawer.addDrawerListener(listener);
-                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
+                                layout.setOnClickListener(v -> {
                                     drawer.openDrawer(GravityCompat.START, true);
                                     v.setOnClickListener(null);
                                 });
+                                ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                                img.setImageResource(R.drawable.guide_firstopen_menu);
+                                img.setScaleType(ImageView.ScaleType.FIT_START);
+                                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+                                layoutParams.width = SizeUtil.dp2px(MainActivity.this, 350);
+                                layoutParams.height = SizeUtil.dp2px(MainActivity.this, 200);
+                                ConstraintSet set = new ConstraintSet();
+                                set.clone(layout);
+                                set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
+                                set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
+                                set.applyTo(layout);
                                 break;
                             case 2:
                                 curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
