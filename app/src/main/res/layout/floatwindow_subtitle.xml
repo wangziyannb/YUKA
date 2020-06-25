@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:SubtitleFlowView="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/floatwindow_subtitle"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:background="@drawable/radius_style_floatwindow"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/sbw_close"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="5dp"
+        android:src="@drawable/floatwindow_close"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/sbw_pap"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="5dp"
+        android:src="@drawable/floatwindow_translate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/sbw_change"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="5dp"
+        android:src="@drawable/floatwindow_change"
+        app:layout_constraintRight_toLeftOf="@id/sbw_hide"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/sbw_hide"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="5dp"
+        android:src="@drawable/floatwindow_hide"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sbw_originalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="4dp"
+        android:text="显示原文"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:textColor="@color/text_color_DarkBg"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lineHeight="20sp" />
+
+    <com.wzy.yuka.core.floatwindow.SubtitleFlowView
+        android:id="@+id/sbw_translatedText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        SubtitleFlowView:firstText="显示译文"
+        SubtitleFlowView:textAlignment="center"
+        SubtitleFlowView:textColor="@color/text_color_DarkBg"
+        SubtitleFlowView:textSize="12"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lineHeight="20sp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
