@@ -87,10 +87,11 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
             SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, true);
             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, true);
             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true);
             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true);
+            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true);
             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true);
             UserManager.logout();
             UserManager.removeUser();

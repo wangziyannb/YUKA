@@ -167,6 +167,5 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
     public void onDestroy() {
         stopForeground(true);
         super.onDestroy();
-        globalHandler.removeCallbacks(null);
     }
 }

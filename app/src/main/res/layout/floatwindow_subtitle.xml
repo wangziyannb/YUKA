@@ -23,7 +23,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="5dp"
-        android:src="@drawable/floatwindow_translate"
+        android:src="@drawable/floatwindow_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

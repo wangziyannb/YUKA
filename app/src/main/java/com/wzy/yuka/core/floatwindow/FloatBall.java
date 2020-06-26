@@ -210,7 +210,7 @@ public class FloatBall implements View.OnClickListener {
                                     break;
                                 case 1:
                                     imageButtons[i].setId(R.id.detect_button);
-                                    imageButtons[i].setBackgroundResource(R.drawable.floatwindow_detect);
+                                    imageButtons[i].setBackgroundResource(R.drawable.floatmenu_detect);
                                     imageButtons[i].setOnClickListener(this);
                                     break;
                                 case 2:

@@ -200,7 +200,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void showInitGuide() {
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, true) && UserManager.checkLogin()) {
             ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
             ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
             guide2 = new CurtainFlow.Builder()
@@ -258,54 +258,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onFinish() {
                     Toast.makeText(getContext(), "主界面初次登陆引导完成", Toast.LENGTH_SHORT).show();
+                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
                 }
             });
 
 
         }
     }
-
-//    private void showInitGuide() {
-//        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, false)) {
-//            ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
-//            ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
-//
-//            guide2 = new CurtainFlow.Builder()
-//                    .with(3, guideManager.weaveCurtain(button, new CircleShape(), 60, R.layout.guide))
-//                    .with(5, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide))
-//                    .create();
-//            guide2.start(new CurtainFlow.CallBack() {
-//                @Override
-//                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-//                    switch (currentId) {
-//                        case 3:
-//                            drawer.addDrawerListener(listener);
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//                                drawer.openDrawer(GravityCompat.START, true);
-//                                v.setOnClickListener(null);
-//                            });
-//                            break;
-//                        case 4:
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//                                guide2.push();
-//                                drawer.closeDrawers();
-//                                v.setOnClickListener(null);
-//                            });
-//                            break;
-//                        case 5:
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//                                curtainFlow.finish();
-//                            });
-//                    }
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//
-//                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
-//                }
-//            });
-//        }
-//    }
 
 }

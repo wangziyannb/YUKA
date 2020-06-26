@@ -43,15 +43,17 @@ import java.text.DecimalFormat;
  */
 public class SelectWindow_Normal extends FloatWindows {
 
+    private int imageID = 0;
+    private boolean isPlay = false;
+    private Curtain curtain = null;
+
     SelectWindow_Normal(Activity activity, String tag, int index) {
         super(activity, tag, index);
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
                     setView(view1);
-                    if (GetParams.AdvanceSettings()[1] == 1) {
-                        view1.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
-                    }
+                    changeClass(GetParams.AdvanceSettings()[1], false);
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -82,9 +84,8 @@ public class SelectWindow_Normal extends FloatWindows {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                     });
                     view1.findViewById(R.id.sw_close).setOnClickListener(this);
-                    view1.findViewById(R.id.sw_translate).setOnClickListener(this);
+                    view1.findViewById(R.id.sw_pap).setOnClickListener(this);
                     view1.findViewById(R.id.sw_addwindows).setOnClickListener(this);
-                    view1.findViewById(R.id.sw_stopContinue).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2,
@@ -138,11 +139,7 @@ public class SelectWindow_Normal extends FloatWindows {
                     public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                         setLocation();
-                        if (GetParams.AdvanceSettings()[1] == 1) {
-                            view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
-                        } else {
-                            view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
-                        }
+                        changeClass(GetParams.AdvanceSettings()[1], true);
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             handler.postDelayed(r, 1000);
                         } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
@@ -202,37 +199,73 @@ public class SelectWindow_Normal extends FloatWindows {
         }
     }
 
+    private void changeClass(int mode, boolean check) {
+        switch (mode) {
+            case 0:
+                //普通模式
+                ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_translate);
+                view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
+                imageID = R.drawable.guide_floatwindow_normal;
+                break;
+            case 1:
+                //持续模式
+                ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_start);
+                view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
+                imageID = R.drawable.guide_floatwindow_continue;
+                break;
+        }
+        if (check) {
+            showInitGuide();
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sw_close:
                 dismiss();
                 break;
-            case R.id.sw_translate:
-                hide();
-                FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
+            case R.id.sw_pap:
                 if (GetParams.AdvanceSettings()[1] == 1) {
-                    v.setVisibility(View.GONE);
-                    view.findViewById(R.id.sw_stopContinue).setVisibility(View.VISIBLE);
+                    if (!isPlay) {
+                        hide();
+                        FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
+                        isPlay = true;
+                        ((ImageView) v).setImageResource(R.drawable.floatwindow_stop);
+                    } else {
+                        ScreenShotService_Continue.stopScreenshot();
+                        isPlay = false;
+                        ((ImageView) v).setImageResource(R.drawable.floatwindow_start);
+                    }
+                } else {
+                    isPlay = false;
+                    hide();
+                    FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
                 }
                 break;
             case R.id.sw_addwindows:
                 FloatWindowManager.addSelectWindow(activityWeakReference.get());
                 break;
-            case R.id.sw_stopContinue:
-                ScreenShotService_Continue.stopScreenshot();
-                v.setVisibility(View.GONE);
-                view.findViewById(R.id.sw_translate).setVisibility(View.VISIBLE);
-                break;
+
         }
     }
 
     private void showInitGuide() {
+        if (curtain != null) {
+            return;
+        }
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true)) {
-
+        String str = "";
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true)) {
+            str = SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1;
+        } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true)) {
+            str = SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2;
+        }
+        if (!str.equals("")) {
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            guideManager.weaveCurtain(view, (canvas, paint, info) -> {
+            String finalStr = str;
+            curtain = guideManager.weaveCurtain(view, (canvas, paint, info) -> {
             }, 0, R.layout.guide_interpret)
                     .setCallBack(new Curtain.CallBack() {
                         @Override
@@ -244,7 +277,8 @@ public class SelectWindow_Normal extends FloatWindows {
                                 v.setOnClickListener(null);
                             });
                             ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                            img.setImageResource(R.drawable.gudie_floatwindow_normag);
+                            img.setImageResource(imageID);
+
                             ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
                             params_img.width = SizeUtil.dp2px(activityWeakReference.get(), 335);
@@ -258,11 +292,12 @@ public class SelectWindow_Normal extends FloatWindows {
                         @Override
                         public void onDismiss(IGuide iGuide) {
                             Toast.makeText(activityWeakReference.get(), "普通悬浮窗引导完成", Toast.LENGTH_SHORT).show();
-                            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, false);
+                            sharedPreferencesUtil.saveParam(finalStr, false);
                             show();
+                            curtain = null;
                         }
-                    })
-                    .show();
+                    });
+            curtain.show();
         }
     }
 }

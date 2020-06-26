@@ -265,6 +265,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                     @Override
                     public void onFinish() {
                         Toast.makeText(MainActivity.this, "主界面初次进入app注册登陆引导完成", Toast.LENGTH_SHORT).show();
+                        sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, false);
                     }
                 });
     }

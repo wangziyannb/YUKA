@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.IGuide;
-import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
@@ -55,7 +55,6 @@ public class SelectWindow_Auto extends FloatWindows {
                 .setLayout(R.layout.floatwindow_main, view1 -> {
                     setView(view1);
                     view1.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
-                    view1.findViewById(R.id.sw_stopContinue).setVisibility(View.GONE);
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -86,11 +85,11 @@ public class SelectWindow_Auto extends FloatWindows {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                     });
                     view1.findViewById(R.id.sw_close).setOnClickListener(this);
-                    view1.findViewById(R.id.sw_translate).setOnClickListener(this);
+                    view1.findViewById(R.id.sw_pap).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2, GetParams.Screen()[1] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2)
-                .setAppFloatAnimator(null)
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2,
+                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2)).setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
                     public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
@@ -262,10 +261,10 @@ public class SelectWindow_Auto extends FloatWindows {
                     @Override
                     public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            handler.postDelayed(r, 1000);
+                            handler.postDelayed(r, 500);
                         } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                             handler.removeCallbacks(r);
-                            handler.postDelayed(r, 1000);
+                            handler.postDelayed(r, 500);
                         } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                             handler.removeCallbacks(r);
                         }
@@ -298,6 +297,10 @@ public class SelectWindow_Auto extends FloatWindows {
         super.dismiss();
     }
 
+    void shows() {
+        super.show();
+    }
+
     @Override
     void show() {
         Toast.makeText(activityWeakReference.get(), "目标图片已发送，请等待...", Toast.LENGTH_SHORT).show();
@@ -313,7 +316,7 @@ public class SelectWindow_Auto extends FloatWindows {
             case R.id.sw_close:
                 dismiss();
                 break;
-            case R.id.sw_translate:
+            case R.id.sw_pap:
                 hide();
                 FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
                 break;
@@ -324,24 +327,37 @@ public class SelectWindow_Auto extends FloatWindows {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true)) {
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            guideManager.weaveCurtain(new RoundShape(16), 32, R.layout.guide,
-                    view.findViewById(R.id.sw_close),
-                    view.findViewById(R.id.sw_translate),
-                    view.findViewById(R.id.sw_scale))
+            guideManager.weaveCurtain(view, (canvas, paint, info) -> {
+            }, 0, R.layout.guide_interpret)
                     .setCallBack(new Curtain.CallBack() {
                         @Override
                         public void onShow(IGuide iGuide) {
-                            iGuide.findViewByIdInTopView(R.id.test_guide1).setOnClickListener(v -> {
+                            hide();
+                            ConstraintLayout layout = iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
+                            layout.setOnClickListener(v -> {
                                 iGuide.dismissGuide();
+                                v.setOnClickListener(null);
                             });
+                            ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                            img.setImageResource(R.drawable.guide_floatwindow_auto);
+                            ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+
+                            params_img.width = SizeUtil.dp2px(activityWeakReference.get(), 335);
+                            params_img.height = SizeUtil.dp2px(activityWeakReference.get(), 242);
+
+                            params_img.topMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
+                            params_img.rightMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
+                            img.setLayoutParams(params_img);
                         }
 
                         @Override
                         public void onDismiss(IGuide iGuide) {
                             Toast.makeText(activityWeakReference.get(), "自动悬浮窗引导完成", Toast.LENGTH_SHORT).show();
                             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, false);
+                            shows();
                         }
-                    }).show();
+                    })
+                    .show();
         }
     }
 }

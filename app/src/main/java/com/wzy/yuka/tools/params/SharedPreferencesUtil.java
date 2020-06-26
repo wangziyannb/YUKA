@@ -25,7 +25,8 @@ public class SharedPreferencesUtil {
     public static final String FIRST_LOGIN = "first_Login";
     public static final String FIRST_INVOKE_FloatBall = "first_FloatBall";
     public static final String FIRST_INVOKE_SubtitleWindow = "first_SubtitleWindow";
-    public static final String FIRST_INVOKE_SelectWindow_N = "first_SWN";
+    public static final String FIRST_INVOKE_SelectWindow_N_1 = "first_SWN_1";
+    public static final String FIRST_INVOKE_SelectWindow_N_2 = "first_SWN_2";
     public static final String FIRST_INVOKE_SelectWindow_A = "first_SWA";
     private static SharedPreferencesUtil preferencesUtil;
     private SharedPreferencesUtil() {
