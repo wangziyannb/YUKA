@@ -77,7 +77,7 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
     private void initScreenshots(String date) {
         try {
             if (date == null) {
-                File path = Objects.requireNonNull(getContext()).getExternalFilesDir("screenshot");
+                File path = getContext().getExternalFilesDir("screenshot");
                 File[] dirs = ResultSort.orderByName(Objects.requireNonNull(path));
                 for (File dir : dirs) {
                     ArrayList<String> arrayList = ResultInput.ReadTxtFile(dir.getAbsolutePath() + "/imgList.txt");
@@ -90,7 +90,7 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
                 }
             } else {
                 isDetail = true;
-                String path = Objects.requireNonNull(getContext()).getExternalFilesDir("screenshot").getAbsolutePath() + "/" + date;
+                String path = getContext().getExternalFilesDir("screenshot").getAbsolutePath() + "/" + date;
                 Log.d("TAG", "initScreenshots: " + path);
                 ArrayList<String> arrayList = ResultInput.ReadTxtFile(path + "/imgList.txt");
                 for (int i = 0; i < arrayList.size(); i++) {

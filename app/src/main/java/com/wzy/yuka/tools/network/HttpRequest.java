@@ -69,7 +69,7 @@ public class HttpRequest {
                 .add("uuid", UserManager.getUser()[2])
                 .build();
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/yuka/")
+                .url("https://yukacn.xyz/yuka/yuka/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -156,7 +156,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/yuka/")
+                .url("https://yukacn.xyz/yuka/yuka/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -223,7 +223,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/yuka_advance/")
+                .url("https://yukacn.xyz/yuka/yuka_advance/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -242,7 +242,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/login/")
+                .url("https://yukacn.xyz/yuka/login/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -255,7 +255,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/logout/")
+                .url("https://yukacn.xyz/yuka/logout/")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -269,7 +269,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/regist/")
+                .url("https://yukacn.xyz/yuka/regist/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -282,7 +282,7 @@ public class HttpRequest {
                 .add("CDKEY", params[1])
                 .build();
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/activate/")
+                .url("https://yukacn.xyz/yuka/activate/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -294,7 +294,7 @@ public class HttpRequest {
                 .add("u_name", params[0])
                 .build();
         Request request = new Request.Builder()
-                .url("http://49.233.38.181:37103/account/")
+                .url("https://yukacn.xyz/yuka/account/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);

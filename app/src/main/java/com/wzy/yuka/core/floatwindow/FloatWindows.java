@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
  */
 public class FloatWindows implements View.OnClickListener {
     protected String tag;
-    protected WeakReference<Activity> activityWeakReference;
+    WeakReference<Activity> activityWeakReference;
     protected View view;
     int[] location;
     int index;
@@ -58,5 +58,4 @@ public class FloatWindows implements View.OnClickListener {
     public void onClick(View v) {
 
     }
-
 }

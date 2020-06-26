@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +32,6 @@ import java.util.HashMap;
  */
 public class HomeMain extends BaseFragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private TextInputLayout text_l;
-    private LinearLayout translate_panel;
     private GlobalHandler globalHandler;
 
     @Nullable
@@ -40,11 +39,8 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.home_main, container, false);
         globalHandler = GlobalHandler.getInstance();
-
-
         text_l = root.findViewById(R.id.inputLayout);
         text_l.findViewById(R.id.translate_button).setOnClickListener(this);
-        translate_panel = root.findViewById(R.id.translate_panel);
         return root;
     }
 
@@ -79,10 +75,14 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
                 try {
                     Log.d("TAG", "handleMsg: " + response);
                     JSONObject resultJson = new JSONObject(response);
-                    TextView textView = translate_panel.findViewById(R.id.text_translated);
-                    textView.append(resultJson.getString("results"));
+                    ImageView imageView = getView().findViewById(R.id.imageView2);
+                    imageView.setVisibility(View.GONE);
+                    TextView textView = getView().findViewById(R.id.text_translated);
+                    textView.setVisibility(View.VISIBLE);
+                    textView.setText(resultJson.getString("results"));
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(getContext(), "请求失败，请检查网络或于开发者选项者检查服务器！", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 400:

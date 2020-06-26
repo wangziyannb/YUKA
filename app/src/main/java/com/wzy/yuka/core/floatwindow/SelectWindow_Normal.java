@@ -1,9 +1,14 @@
 package com.wzy.yuka.core.floatwindow;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -37,6 +42,7 @@ import java.text.DecimalFormat;
  * Created by Ziyan on 2020/4/29.
  */
 public class SelectWindow_Normal extends FloatWindows {
+
     SelectWindow_Normal(Activity activity, String tag, int index) {
         super(activity, tag, index);
         EasyFloat.with(activity)
@@ -60,8 +66,7 @@ public class SelectWindow_Normal extends FloatWindows {
                     ScaleImageView si = view1.findViewById(R.id.sw_scale);
                     si.setOnScaledListener((x, y, event) -> {
                         TextView textView = view1.findViewById(R.id.translatedText);
-                        if (textView.getText().equals("选取目标位置后点识别" +
-                                "\n右下角可改变框体大小")) {
+                        if (textView.getText().equals("选取目标位置后点识别")) {
                             textView.setText("等待选取...");
                         }
                         params.width += (int) x;
@@ -86,11 +91,29 @@ public class SelectWindow_Normal extends FloatWindows {
                         (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2))
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
+                    Handler handler = new Handler();
+                    View view;
+                    Runnable r = () -> {
+                        if (view != null) {
+                            String str_t = ((TextView) this.view.findViewById(R.id.translatedText)).getText() + "";
+                            if ((!TextUtils.isEmpty(str_t)) && (!str_t.equals("选取目标位置后点识别")) && (!str_t.equals("等待选取..."))) {
+                                // 得到剪贴板管理器
+                                ClipboardManager cm = (ClipboardManager) activityWeakReference.get().getSystemService(Context.CLIPBOARD_SERVICE);
+                                // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
+                                ClipData clipData = ClipData.newPlainText("yuka", str_t);
+                                // 把数据集设置（复制）到剪贴板
+                                cm.setPrimaryClip(clipData);
+                                Toast.makeText(activityWeakReference.get(), "已复制选择的文本至剪切板", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+
                     @Override
                     public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
                         if (b) {
-                            showInitGuide();
+                            this.view = view;
                             setLocation();
+                            showInitGuide();
                         }
                     }
 
@@ -120,11 +143,20 @@ public class SelectWindow_Normal extends FloatWindows {
                         } else {
                             view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
                         }
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            handler.postDelayed(r, 1000);
+                        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            handler.removeCallbacks(r);
+                            handler.postDelayed(r, 1000);
+                        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                            handler.removeCallbacks(r);
+                        }
                     }
 
                     @Override
                     public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         setLocation();
+//                        handler.removeCallbacks(r);
                     }
 
                     @Override
@@ -132,8 +164,8 @@ public class SelectWindow_Normal extends FloatWindows {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                         setLocation();
                     }
-                })
-                .show();
+                }).show();
+
 
     }
 
@@ -159,7 +191,7 @@ public class SelectWindow_Normal extends FloatWindows {
         if (params[1]) {
             textView.setText("原文： ");
             textView.append(origin);
-            textView.append("\n译文： ");
+            textView.append("\r\n译文： ");
             textView.append(translation);
         } else {
             textView.setText(translation);
@@ -198,15 +230,19 @@ public class SelectWindow_Normal extends FloatWindows {
     private void showInitGuide() {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true)) {
+
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            guideManager.weaveCurtain((canvas, paint, info) -> {
-                    }, 0, R.layout.guide_interpret,
-                    view.findViewById(R.id.sw_close), view.findViewById(R.id.sw_scale),
-                    view.findViewById(R.id.sw_addwindows), view.findViewById(R.id.sw_translate))
+            guideManager.weaveCurtain(view, (canvas, paint, info) -> {
+            }, 0, R.layout.guide_interpret)
                     .setCallBack(new Curtain.CallBack() {
                         @Override
                         public void onShow(IGuide iGuide) {
+                            hide();
                             ConstraintLayout layout = iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
+                            layout.setOnClickListener(v -> {
+                                iGuide.dismissGuide();
+                                v.setOnClickListener(null);
+                            });
                             ImageView img = layout.findViewById(R.id.guide_interpret_img);
                             img.setImageResource(R.drawable.gudie_floatwindow_normag);
                             ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
@@ -221,65 +257,12 @@ public class SelectWindow_Normal extends FloatWindows {
 
                         @Override
                         public void onDismiss(IGuide iGuide) {
-
+                            Toast.makeText(activityWeakReference.get(), "普通悬浮窗引导完成", Toast.LENGTH_SHORT).show();
+                            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, false);
+                            show();
                         }
                     })
                     .show();
         }
     }
 }
-
-//    private void showInitGuide() {
-//        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-//        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true)) {
-//
-//            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-//            CurtainFlow cf = new CurtainFlow.Builder()
-//                    .with(21, guideManager.weaveCurtain(view, new RoundShape(12), 32, R.layout.guide))
-//                    .with(22, guideManager.weaveCurtain(view.findViewById(R.id.sw_close), new CircleShape(), 32, R.layout.guide))
-//                    .with(23, guideManager.weaveCurtain(view.findViewById(R.id.sw_addwindows), new CircleShape(), 32, R.layout.guide))
-//                    .with(24, guideManager.weaveCurtain(view.findViewById(R.id.sw_translate), new CircleShape(), 32, R.layout.guide))
-//                    .create();
-//            cf.start(new CurtainFlow.CallBack() {
-//                @Override
-//                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-//                    switch (currentId) {
-//                        case 21:
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//                                curtainFlow.push();
-//                            });
-//                            break;
-//                        case 22:
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//
-//                                if (view.findViewById(R.id.sw_addwindows).getVisibility() == View.GONE) {
-//                                    curtainFlow.toCurtainById(24);
-//                                } else {
-//                                    curtainFlow.push();
-//                                }
-//                            });
-//                            break;
-//                        case 23:
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//                                curtainFlow.push();
-//                            });
-//                            break;
-//                        case 24:
-//                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-//                                curtainFlow.finish();
-//                            });
-//                            break;
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    Toast.makeText(activityWeakReference.get(), "普通悬浮窗引导完成", Toast.LENGTH_SHORT).show();
-//                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, false);
-//                }
-//            });
-//
-//        }
-//    }
-//}

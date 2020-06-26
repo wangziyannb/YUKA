@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="选取目标位置后点识别\n右下角可改变框体大小"
+        android:text="选取目标位置后点识别"
         android:textColor="@color/text_color_DarkBg" />
 
     <com.wzy.yuka.core.floatwindow.ScaleImageView

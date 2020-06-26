@@ -1,9 +1,14 @@
 package com.wzy.yuka.core.floatwindow;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,8 +70,7 @@ public class SelectWindow_Auto extends FloatWindows {
                     ScaleImageView si = view1.findViewById(R.id.sw_scale);
                     si.setOnScaledListener((x, y, event) -> {
                         TextView textView = view1.findViewById(R.id.translatedText);
-                        if (textView.getText().equals("选取目标位置后点识别" +
-                                "\n右下角可改变框体大小")) {
+                        if (textView.getText().equals("选取目标位置后点识别")) {
                             textView.setText("等待选取...");
                         }
                         params.width += (int) x;
@@ -161,16 +165,16 @@ public class SelectWindow_Auto extends FloatWindows {
                 for (int j = 0; j < location.length(); j++) {
                     location_json[j] = location.getInt(j);
                 }
-                initLittleWindows(translationx, location_json, index);
+                initLittleWindows(words, translationx, location_json, index);
             }
-            Toast.makeText(activityWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activityWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
 
-    private void initLittleWindows(String translation, int[] locations, int index) {
+    private void initLittleWindows(String origin, String translation, int[] locations, int index) {
         boolean statusBar_offset = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_offset", false);
         int statusBar = 0;
         if (statusBar_offset) {
@@ -187,8 +191,8 @@ public class SelectWindow_Auto extends FloatWindows {
         EasyFloat.with(activityWeakReference.get())
                 .setTag(thisTag)
                 .setDragEnable(true)
-                .setLayout(R.layout.floatwindow_auto, view -> {
-                    ConstraintLayout constraintlayoutview = view.findViewById(R.id.floatwindow_auto);
+                .setLayout(R.layout.floatwindow_auto, v -> {
+                    ConstraintLayout constraintlayoutview = v.findViewById(R.id.floatwindow_auto);
                     ViewGroup.LayoutParams layoutParams1 = constraintlayoutview.getLayoutParams();
                     layoutParams1.width = locations[2] - locations[0];
                     layoutParams1.height = locations[3] - locations[1];
@@ -201,14 +205,80 @@ public class SelectWindow_Auto extends FloatWindows {
                         alpha_hex = "0" + alpha_hex;
                     }
                     drawable.setColor(Color.parseColor("#" + alpha_hex + "000000"));
-                    AppCompatTextView textView = view.findViewById(R.id.little_textView);
+                    AppCompatTextView textView = v.findViewById(R.id.little_textView);
+                    AppCompatTextView textView2 = v.findViewById(R.id.little_origin);
                     textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
                     textView.setText(translation);
+                    textView2.setText(origin);
                     boolean[] params = GetParams.SelectWindow();
                     if (params[0]) {
                         textView.setBackgroundResource(R.color.blackBg);
                     } else {
                         textView.setBackgroundResource(0);
+                    }
+
+                })
+                .registerCallbacks(new OnFloatCallbacks() {
+                    Handler handler = new Handler();
+                    View view;
+                    Runnable r = () -> {
+                        if (view != null) {
+                            String str_t = ((TextView) this.view.findViewById(R.id.little_textView)).getText() + "";
+                            String str_o = ((TextView) this.view.findViewById(R.id.little_origin)).getText() + "";
+                            if ((!TextUtils.isEmpty(str_t)) && (!TextUtils.isEmpty(str_o))) {
+                                // 得到剪贴板管理器
+                                ClipboardManager cm = (ClipboardManager) activityWeakReference.get().getSystemService(Context.CLIPBOARD_SERVICE);
+                                // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
+                                ClipData clipData = ClipData.newPlainText("yuka", "原文：" + str_o + "\r\n" + "译文：" + str_t);
+                                // 把数据集设置（复制）到剪贴板
+                                cm.setPrimaryClip(clipData);
+                                Toast.makeText(activityWeakReference.get(), "已复制选择的原文及译文至剪切板", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+
+                    @Override
+                    public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
+                        if (b) {
+                            this.view = view;
+                        }
+                    }
+
+                    @Override
+                    public void show(@NotNull View view) {
+
+                    }
+
+                    @Override
+                    public void hide(@NotNull View view) {
+
+                    }
+
+                    @Override
+                    public void dismiss() {
+
+                    }
+
+                    @Override
+                    public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            handler.postDelayed(r, 1000);
+                        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            handler.removeCallbacks(r);
+                            handler.postDelayed(r, 1000);
+                        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                            handler.removeCallbacks(r);
+                        }
+                    }
+
+                    @Override
+                    public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
+
+                    }
+
+                    @Override
+                    public void dragEnd(@NotNull View view) {
+
                     }
                 })
                 .setLocation(locations[0], locations[1])
@@ -255,9 +325,9 @@ public class SelectWindow_Auto extends FloatWindows {
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true)) {
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
             guideManager.weaveCurtain(new RoundShape(16), 32, R.layout.guide,
-                    view.requireViewById(R.id.sw_close),
-                    view.requireViewById(R.id.sw_translate),
-                    view.requireViewById(R.id.sw_scale))
+                    view.findViewById(R.id.sw_close),
+                    view.findViewById(R.id.sw_translate),
+                    view.findViewById(R.id.sw_scale))
                     .setCallBack(new Curtain.CallBack() {
                         @Override
                         public void onShow(IGuide iGuide) {
