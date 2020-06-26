@@ -83,7 +83,7 @@ public class SelectWindow_Normal extends FloatWindows {
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2,
-                        (GetParams.Screen()[1] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2))
+                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2))
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
@@ -199,21 +199,22 @@ public class SelectWindow_Normal extends FloatWindows {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N, true)) {
             GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            guideManager.weaveCurtain(view, (canvas, paint, info) -> {
-            }, 0, R.layout.guide_interpret)
+            guideManager.weaveCurtain((canvas, paint, info) -> {
+                    }, 0, R.layout.guide_interpret,
+                    view.findViewById(R.id.sw_close), view.findViewById(R.id.sw_scale),
+                    view.findViewById(R.id.sw_addwindows), view.findViewById(R.id.sw_translate))
                     .setCallBack(new Curtain.CallBack() {
                         @Override
                         public void onShow(IGuide iGuide) {
                             ConstraintLayout layout = iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
                             ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                            img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                            img.setImageResource(R.drawable.guide_floatwindow_normal);
+                            img.setImageResource(R.drawable.gudie_floatwindow_normag);
                             ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
                             params_img.width = SizeUtil.dp2px(activityWeakReference.get(), 335);
                             params_img.height = SizeUtil.dp2px(activityWeakReference.get(), 242);
 
-                            params_img.topMargin = SizeUtil.dp2px(activityWeakReference.get(), 15);
+                            params_img.topMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
                             params_img.rightMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
                             img.setLayoutParams(params_img);
                         }
