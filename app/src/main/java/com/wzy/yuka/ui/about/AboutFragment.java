@@ -6,12 +6,21 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.Navigation;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -19,6 +28,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
+import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -69,21 +80,33 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        getPreferenceScreen().findPreference("about_about_policy0").setOnPreferenceClickListener(this);
+        getPreferenceScreen().findPreference("about_about_policy1").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_dev").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_version").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_repository").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_thanks_open_source").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_thanks_reference").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_server").setOnPreferenceClickListener(this);
+        getPreferenceScreen().findPreference("about_about_server").setOnPreferenceClickListener(this);
+        String uuid = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        Preference preference = getPreferenceScreen().findPreference("about_this_1");
+        preference.setSummary(uuid + "\n\n" + preference.getSummary());
+
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
+            case "about_about_policy0":
+                showDialog(0);
+                break;
+            case "about_about_policy1":
+                showDialog(1);
+                break;
             case "about_about_dev":
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_about_to_nav_about_dev);
                 break;
-
             case "about_about_version":
                 // TODO: 2020/4/10  检查更新
                 break;
@@ -127,6 +150,35 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
                 break;
         }
         return false;
+    }
+
+    private void showDialog(int mode) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.policy, null, false);
+        final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).setCancelable(true).create();
+        Button ok = view.findViewById(R.id.policy_ok);
+        ok.setVisibility(View.GONE);
+        Button cancel = view.findViewById(R.id.policy_cancel);
+
+        cancel.setVisibility(View.GONE);
+        TextView title = view.findViewById(R.id.policy_appbar).findViewById(R.id.policy_textview1);
+
+        dialog.show();
+        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(getContext(), 600));
+        WebView webView = view.findViewById(R.id.policy_webview);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+        switch (mode) {
+            case 0:
+                title.setText("Yuka隐私协议");
+                webView.loadUrl("https://yukacn.xyz/%E9%9A%90%E7%A7%81%E5%8D%8F%E8%AE%AE.html");
+                break;
+            case 1:
+                title.setText("Yuka用户协议");
+                webView.loadUrl("https://yukacn.xyz/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE.html");
+                break;
+        }
+
     }
 
     @Nullable

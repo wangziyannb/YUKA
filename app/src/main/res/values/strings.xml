@@ -6,7 +6,6 @@
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="action_sign_in">登录</string>
-    <string name="agreement">登录即代表阅读并同意服务协议</string>
     <string name="avatar">用户头像</string>
 
     <string-array name="mode">

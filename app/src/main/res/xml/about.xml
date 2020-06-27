@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:title="关于"
-        app:iconSpaceReserved="false">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="使用协议">
+        <Preference
+            android:key="about_about_policy0"
+            android:title="隐私协议" />
+        <Preference
+            android:key="about_about_policy1"
+            android:title="用户协议" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="关于我们">
         <Preference
             android:key="about_about_dev"
-            android:summary="绯绯色欠片"
+            android:summary="Yuka开发团队"
             android:title="关于开发者" />
-        <Preference
-            android:key="about_about_donate"
-            android:summary="已经是个成熟的软件啦，可以自己赚钱了"
-            android:title="捐赠" />
         <Preference
             android:key="about_about_version"
             android:title="Yuka版本" />
@@ -38,18 +39,7 @@
     <PreferenceCategory android:title="本机信息">
         <Preference
             android:key="about_this_1"
-            android:summary="如遗忘账号，请联系管理员qq 1269586767提交本ID"
-            android:title="本机Android_ID" />
-        <Preference
-            android:key="about_this_aid"
-            app:isPreferenceVisible="false" />
-        <Preference
-            android:key="about_this_2"
-            android:summary="如遗忘密码，输入本ID到忘记密码即可。\n仅本次安装有效"
-            android:title="本机注册ID" />
-        <Preference />
-        <Preference
-            android:key="about_this_id"
-            app:isPreferenceVisible="false" />
+            android:summary="忘记账号或密码时请提交本id至管理员qq 1269586767处进行信息修改。务必保证此设备为账号注册设备"
+            android:title="本机ID" />
     </PreferenceCategory>
 </PreferenceScreen>

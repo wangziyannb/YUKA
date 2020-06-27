@@ -7,8 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +29,8 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 
 public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
@@ -39,19 +46,41 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.register_button).setOnClickListener(this);
-        alert();
-
+        showDialog();
         return root;
+    }
+
+    private void showDialog() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.policy, null, false);
+        final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).setCancelable(false).create();
+        TextView title = view.findViewById(R.id.policy_appbar).findViewById(R.id.policy_textview1);
+        title.setText("Yuka用户协议");
+        Button ok = view.findViewById(R.id.policy_ok);
+        Button cancel = view.findViewById(R.id.policy_cancel);
+        ok.setOnClickListener(v -> {
+            dialog.dismiss();
+            alert();
+        });
+        cancel.setOnClickListener(v -> {
+            dialog.dismiss();
+            NavHostFragment.findNavController(this).navigateUp();
+        });
+        dialog.show();
+        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(getContext(), 600));
+        WebView webView = view.findViewById(R.id.policy_webview);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.loadUrl("https://yukacn.xyz/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE.html");
     }
 
     private void alert() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("注册说明");
-        alert.setMessage("感谢使用Yuka！以下为注册说明：\n" +
-                "1、每台设备只能注册一次！重复注册会注册失败（多捞哦）\n" +
+        alert.setMessage("感谢使用Yuka注册服务！以下为注册说明：\n" +
+                "1、每台设备只能注册一次！\n" +
                 "2、本注册界面只有账号密码会提交至服务器！\n" +
-                "3、注册账号后将会附送10次翻译次数，后续使用则需要购买月卡（真不是做不出来年卡，是服务器不一定能撑一年），每月3元。\n" +
-                "4、如果已经有账号，请直接登陆。");
+                "3、注册账号后将会附送普通模式和自动模式各20次使用次数，后续使用请参考账号信息进行购买激活");
         alert.setPositiveButton("知道惹，我要注册！", (dialog, which) -> {
 
         });

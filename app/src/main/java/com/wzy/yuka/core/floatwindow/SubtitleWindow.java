@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -223,7 +222,6 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
 
                         @Override
                         public void onDismiss(IGuide iGuide) {
-                            Toast.makeText(activityWeakReference.get(), "同步字幕悬浮窗引导完成", Toast.LENGTH_SHORT).show();
                             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, false);
                             show();
                         }

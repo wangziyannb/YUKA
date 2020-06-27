@@ -257,9 +257,9 @@ public class SelectWindow_Normal extends FloatWindows {
         }
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         String str = "";
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true)) {
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true) && GetParams.AdvanceSettings()[1] == 0) {
             str = SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1;
-        } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true)) {
+        } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true) && GetParams.AdvanceSettings()[1] == 1) {
             str = SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2;
         }
         if (!str.equals("")) {
@@ -291,7 +291,6 @@ public class SelectWindow_Normal extends FloatWindows {
 
                         @Override
                         public void onDismiss(IGuide iGuide) {
-                            Toast.makeText(activityWeakReference.get(), "普通悬浮窗引导完成", Toast.LENGTH_SHORT).show();
                             sharedPreferencesUtil.saveParam(finalStr, false);
                             show();
                             curtain = null;

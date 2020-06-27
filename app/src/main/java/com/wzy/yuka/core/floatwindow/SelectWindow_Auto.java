@@ -352,7 +352,6 @@ public class SelectWindow_Auto extends FloatWindows {
 
                         @Override
                         public void onDismiss(IGuide iGuide) {
-                            Toast.makeText(activityWeakReference.get(), "自动悬浮窗引导完成", Toast.LENGTH_SHORT).show();
                             sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, false);
                             shows();
                         }

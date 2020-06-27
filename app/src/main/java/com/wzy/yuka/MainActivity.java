@@ -36,7 +36,6 @@ import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.ui.view.RoundImageView;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -83,15 +82,6 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                 UserManager.logout();
                 drawer.closeDrawers();
                 load("登出中...");
-            } else {
-                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
-            }
-        });
-        RoundImageView roundImageView = header.findViewById(R.id.user_info).findViewById(R.id.navBarIco);
-        roundImageView.setOnClickListener((v) -> {
-            if (UserManager.checkLogin()) {
-                navController.navigate(R.id.action_nav_home_to_nav_user_service);
-                drawer.closeDrawers();
             } else {
                 Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
             }
@@ -178,7 +168,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     @Override
     protected void onPause() {
         if (isFinishing()) {
-            globalHandler.removeCallbacks(null);
+
         }
         super.onPause();
     }
@@ -256,6 +246,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                             case 2:
                                 curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
                                     drawer.removeDrawerListener(listener);
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(null);
                                     curtainFlow.finish();
                                 });
                                 break;
@@ -264,7 +255,6 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
                     @Override
                     public void onFinish() {
-                        Toast.makeText(MainActivity.this, "主界面初次进入app注册登陆引导完成", Toast.LENGTH_SHORT).show();
                         sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, false);
                     }
                 });

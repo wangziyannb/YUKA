@@ -7,15 +7,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.tools.params.SizeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,14 +81,6 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         setCurrentDotPosition(position);
     }
 
-    @Override
-    protected void onPause() {
-        if (isFinishing()) {
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, false);
-        }
-        super.onPause();
-
-    }
 
     private void setCurrentDotPosition(int position) {
         for (int i = 0; i < idots.length; i++) {
@@ -106,6 +104,37 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         finish();
     }
 
+    private void showDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.policy, null, false);
+        final AlertDialog dialog = new AlertDialog.Builder(this).setView(view).setCancelable(false).create();
+        Button ok = view.findViewById(R.id.policy_ok);
+        Button cancel = view.findViewById(R.id.policy_cancel);
+        ok.setOnClickListener(v -> {
+            dialog.dismiss();
+            startHomeActivity();
+        });
+        cancel.setOnClickListener(v -> {
+            final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("不同意本协议无法使用本软件。确定要退出吗？");
+            alert.setPositiveButton("退出", (d, which) -> {
+                dialog.dismiss();
+                this.finishAffinity();
+                this.finish();
+                System.exit(0);
+            });
+            alert.setNegativeButton("重新阅读", (d, which) -> {
+            });
+            alert.show();
+        });
+        dialog.show();
+        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(this, 600));
+        WebView webView = view.findViewById(R.id.policy_webview);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.loadUrl("https://yukacn.xyz/%E9%9A%90%E7%A7%81%E5%8D%8F%E8%AE%AE.html");
+    }
+
     private class MyPagerAdapter extends PagerAdapter {
 
         private List<View> mImageViewList;
@@ -123,13 +152,16 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
                     container.addView(mImageViewList.get(position));
                     if (position == mImageViewList.size() - 1) {
                         Button button = mImageViewList.get(position).findViewById(R.id.start_now);
-                        button.setOnClickListener(v -> startHomeActivity());
+                        button.setOnClickListener(v -> {
+                            showDialog();
+                        });
                     }
                     return mImageViewList.get(position);
                 }
             }
             return null;
         }
+
 
         @Override
         public int getCount() {

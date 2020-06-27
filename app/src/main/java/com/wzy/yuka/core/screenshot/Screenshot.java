@@ -17,7 +17,6 @@ class Screenshot {
     Screenshot(Context context, int[][] location) {
         this.location = location;
         fullFileName = new String[location.length];
-
         mContext = new WeakReference<>(context);
         Date nowTime = new Date();
 

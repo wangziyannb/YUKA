@@ -257,7 +257,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
                 @Override
                 public void onFinish() {
-                    Toast.makeText(getContext(), "主界面初次登陆引导完成", Toast.LENGTH_SHORT).show();
                     sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
                 }
             });

@@ -32,9 +32,9 @@
         android:layout_marginTop="240dp"
         android:layout_marginEnd="24dp"
         android:hint="@string/id"
+        android:imeOptions="actionNext"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
-        android:imeOptions="actionNext"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -77,7 +77,7 @@
         android:enabled="true"
         android:text="@string/action_sign_in"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:layout_constraintBottom_toTopOf="@id/checkBox"
+        app:layout_constraintBottom_toTopOf="@id/login_checkboxlayout"
         app:layout_constraintEnd_toStartOf="@id/register"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password" />
@@ -87,26 +87,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginEnd="72dp"
         android:layout_marginTop="48dp"
+        android:layout_marginEnd="72dp"
         android:layout_marginBottom="36dp"
         android:text="@string/register"
+        app:layout_constraintBottom_toTopOf="@id/login_checkboxlayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/checkBox"
         app:layout_constraintStart_toEndOf="@id/login"
         app:layout_constraintTop_toBottomOf="@id/password" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <LinearLayout
+        android:id="@+id/login_checkboxlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="72dp"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="8dp"
-        android:checked="true"
-        android:text="@string/agreement"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已阅读并同意" />
+
+        <TextView
+            android:id="@+id/textViewx1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="隐私协议"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="及" />
+
+        <TextView
+            android:id="@+id/textViewx2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户协议"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,14 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.FragmentActivity;
 
 import com.lzf.easyfloat.EasyFloat;
@@ -140,6 +142,14 @@ public class FloatBall implements View.OnClickListener {
             });
         }
         fb.show();
+    }
+
+    private void show() {
+        EasyFloat.showAppFloat(tag);
+    }
+
+    private void hide() {
+        EasyFloat.hideAppFloat(tag);
     }
 
     void dismiss() {
@@ -274,42 +284,76 @@ public class FloatBall implements View.OnClickListener {
             GuideManager guideManager = new GuideManager((FragmentActivity) activity);
             CurtainFlow cf = new CurtainFlow.Builder()
                     .with(11, guideManager.weaveCurtain(FloatBallView, new CircleShape(), 32, R.layout.guide))
+                    .with(12, guideManager.weaveCurtain(FloatBallView, new RoundShape(12), 32, R.layout.guide))
                     .create();
             cf.start(new CurtainFlow.CallBack() {
+                ConstraintLayout layout;
+                ImageView img;
+                ConstraintLayout.LayoutParams params_img;
+                ConstraintSet set = new ConstraintSet();
+                FloatBallLayout fbl = FloatBallView.findViewById(R.id.test);
+
                 @Override
                 public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                    FloatBallLayout fbl = FloatBallView.findViewById(R.id.test);
                     switch (currentId) {
                         case 11:
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                fbl.findViewById(R.id.test1).performClick();
-                                fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
-                                    @Override
-                                    public void deployed() {
-                                        Log.e("TAG", "deployed: ");
-                                        cf.addCurtain(12, guideManager.weaveCurtain(FloatBallView, new RoundShape(12), 32, R.layout.guide));
-                                        curtainFlow.push();
-                                    }
+                            fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
+                                @Override
+                                public void deployed() {
+                                    curtainFlow.push();
+                                }
 
-                                    @Override
-                                    public void folded() {
-                                        Log.e("TAG", "folded: ");
-                                    }
-                                });
+                                @Override
+                                public void folded() {
+                                    curtainFlow.finish();
+                                }
                             });
+                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_layout);
+                            layout.setOnClickListener(v -> {
+                                v.setOnClickListener(null);
+
+                                fbl.findViewById(R.id.test1).performClick();
+
+                            });
+                            img = layout.findViewById(R.id.guide_2);
+                            img.setImageResource(R.drawable.guide_floatball_folded);
+                            params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+
+                            params_img.width = SizeUtil.dp2px(activity, 335);
+                            params_img.height = SizeUtil.dp2px(activity, 242);
+
+                            params_img.topMargin = SizeUtil.dp2px(activity, 10);
+                            params_img.rightMargin = SizeUtil.dp2px(activity, 10);
+                            img.setLayoutParams(params_img);
+
+                            set.clone(layout);
+                            set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
+                            set.applyTo(layout);
                             break;
                         case 12:
-                            fbl.removeFloatBallLayoutListener();
-                            curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_layout);
+                            layout.setOnClickListener(v -> {
                                 curtainFlow.finish();
+                                v.setOnClickListener(null);
                             });
+                            img = layout.findViewById(R.id.guide_2);
+                            img.setImageResource(R.drawable.guide_floatball_deployed);
+                            params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+                            params_img.width = SizeUtil.dp2px(activity, 335);
+                            params_img.height = SizeUtil.dp2px(activity, 242);
+                            params_img.topMargin = SizeUtil.dp2px(activity, 10);
+                            params_img.rightMargin = SizeUtil.dp2px(activity, 10);
+                            img.setLayoutParams(params_img);
+                            set.clone(layout);
+                            set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
+                            set.applyTo(layout);
                             break;
                     }
                 }
 
                 @Override
                 public void onFinish() {
-                    Toast.makeText(activity, "悬浮球控制面板引导完成", Toast.LENGTH_SHORT).show();
+                    fbl.removeFloatBallLayoutListener();
                     sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, false);
                 }
             });
