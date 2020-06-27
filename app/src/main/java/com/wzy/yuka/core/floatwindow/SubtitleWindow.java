@@ -150,7 +150,7 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
                 } else {
                     activityWeakReference.get().stopService(intent);
                     isPlay = false;
-                    ((ImageView) v).setImageResource(R.drawable.floatwindow_translate);
+                    ((ImageView) v).setImageResource(R.drawable.floatwindow_start);
                 }
                 break;
             case R.id.sbw_change:
