@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.audio;
+package com.wzy.yuka.yuka.services;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -26,14 +26,15 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.floatwindow.FloatWindowManager;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.WebsocketRequest;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
+import com.wzy.yuka.yuka.utils.YoudaoAsrResolver;
 
 import java.nio.ByteBuffer;
-
 
 
 /**
@@ -45,6 +46,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
     private YoudaoAsrResolver resolver;
     private boolean mWhetherRecord;
     private byte[] bytes;
+    private FloatWindowManager floatWindowManager;
 
     @Override
     public void handleMsg(Message msg) {
@@ -55,7 +57,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                 bundle = msg.getData();
                 json = bundle.getString("syncMessage");
                 resolver = new YoudaoAsrResolver(json);
-                FloatWindowManager.showSubtitle(resolver.getContext(), resolver.getTranContent());
+                floatWindowManager.show_result_subtitle(resolver.getContext(), resolver.getTranContent());
                 break;
             case 251:
                 Toast.makeText(this, "成功连接！现在开始语音同传", Toast.LENGTH_SHORT).show();
@@ -72,10 +74,10 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                 resolver = new YoudaoAsrResolver(json);
                 switch (resolver.getErrorCode()) {
                     case "601":
-                        FloatWindowManager.showSubtitle("用户名或密码错误", "用户名或密码错误");
+                        floatWindowManager.show_result_subtitle("用户名或密码错误", "用户名或密码错误");
                         break;
                     case "602":
-                        FloatWindowManager.showSubtitle("本机未登录", "本机未登录");
+                        floatWindowManager.show_result_subtitle("本机未登录", "本机未登录");
                         break;
                 }
                 break;
@@ -86,7 +88,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void initRecord() {
         MediaProjectionManager mediaProjectionManager = getSystemService(MediaProjectionManager.class);
-        MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(Activity.RESULT_OK, FloatWindowManager.getData());
+        MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(Activity.RESULT_OK, floatWindowManager.getData());
 
         AudioPlaybackCaptureConfiguration config = new AudioPlaybackCaptureConfiguration.Builder(mediaProjection)
                 .addMatchingUsage(AudioAttributes.USAGE_GAME)
@@ -116,6 +118,12 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotificationChannel();
         initRecord();
+        try {
+            floatWindowManager = FloatWindowManager.getInstance();
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
         return Service.START_NOT_STICKY;
     }
 

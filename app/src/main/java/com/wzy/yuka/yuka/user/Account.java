@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.user;
+package com.wzy.yuka.yuka.user;
 
 import android.content.Context;
 import android.content.SharedPreferences;

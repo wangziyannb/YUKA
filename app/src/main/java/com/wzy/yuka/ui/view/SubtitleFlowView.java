@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.floatwindow;
+package com.wzy.yuka.ui.view;
 
 /*
  * Created by Ziyan on 2020/5/30.
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.FrameLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -91,7 +90,7 @@ public class SubtitleFlowView extends TextSwitcher implements
         TextView t = new TextView(mContext);
         t.setGravity(Gravity.CENTER);
         t.setTextSize(mHeight);
-        t.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        t.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         t.setMaxLines(3);
         t.setTextAlignment(mtextAlignment);
         t.setTextColor(mtextColor);

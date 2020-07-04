@@ -1,10 +1,10 @@
-package com.wzy.yuka.core.floatwindow;
+package com.wzy.yuka.yuka.floatwindow;
+
 
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -17,9 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
@@ -27,28 +27,29 @@ import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.IGuide;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.ui.view.ScaleImageView;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 
 /**
  * Created by Ziyan on 2020/4/29.
  */
-public class SelectWindow_Normal extends FloatWindows {
+public class SelectWindow_Normal extends FloatWindow {
 
     private int imageID = 0;
     private boolean isPlay = false;
     private Curtain curtain = null;
+    public boolean isContinue = false;
 
-    SelectWindow_Normal(Activity activity, String tag, int index) {
-        super(activity, tag, index);
+    public SelectWindow_Normal(Activity activity, int index, String tag) throws FloatWindowManagerException {
+        super(activity, index, tag);
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
@@ -56,9 +57,8 @@ public class SelectWindow_Normal extends FloatWindows {
                     changeClass(GetParams.AdvanceSettings()[1], false);
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
-                    int alpha = (int) Math.round(preferences.getInt("settings_window_opacityBg", 50) * 2.55);
+                    int alpha = (int) Math.round((int) (SharedPreferencesUtil.getInstance().getParam("settings_window_opacityBg", 50)) * 2.55);
                     String alpha_hex = Integer.toHexString(alpha).toUpperCase();
                     if (alpha_hex.length() == 1) {
                         alpha_hex = "0" + alpha_hex;
@@ -167,7 +167,7 @@ public class SelectWindow_Normal extends FloatWindows {
     }
 
     @Override
-    void showResults(String origin, String translation, double time) {
+    public void showResults(String origin, String translation, double time) {
         TextView textView = view.findViewById(R.id.translatedText);
         boolean[] params = GetParams.SelectWindow();
         if (params[0]) {
@@ -206,18 +206,27 @@ public class SelectWindow_Normal extends FloatWindows {
                 ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_translate);
                 view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
                 imageID = R.drawable.guide_floatwindow_normal;
+                isContinue = false;
                 break;
             case 1:
                 //持续模式
                 ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_start);
                 view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
                 imageID = R.drawable.guide_floatwindow_continue;
+                isContinue = true;
                 break;
         }
         if (check) {
             showInitGuide();
         }
 
+    }
+
+    @Override
+    public void dismiss() {
+        floatWindowManager.stop_ScreenShotTrans_normal(true);
+        floatWindowManager.stop_ScreenShotTrans_normal(false);
+        super.dismiss();
     }
 
     @Override
@@ -230,22 +239,30 @@ public class SelectWindow_Normal extends FloatWindows {
                 if (GetParams.AdvanceSettings()[1] == 1) {
                     if (!isPlay) {
                         hide();
-                        FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
+                        floatWindowManager.start_ScreenShotTrans_normal(true, index);
                         isPlay = true;
                         ((ImageView) v).setImageResource(R.drawable.floatwindow_stop);
                     } else {
-                        ScreenShotService_Continue.stopScreenshot();
+                        floatWindowManager.stop_ScreenShotTrans_normal(true);
                         isPlay = false;
                         ((ImageView) v).setImageResource(R.drawable.floatwindow_start);
                     }
                 } else {
                     isPlay = false;
                     hide();
-                    FloatWindowManager.startScreenShot(activityWeakReference.get(), index);
+                    floatWindowManager.start_ScreenShotTrans_normal(false, index);
                 }
                 break;
             case R.id.sw_addwindows:
-                FloatWindowManager.addSelectWindow(activityWeakReference.get());
+                try {
+                    if (GetParams.AdvanceSettings()[1] == 1) {
+                        floatWindowManager.add_FloatWindow("SWN_C");
+                    } else {
+                        floatWindowManager.add_FloatWindow("SWN_S");
+                    }
+                } catch (FloatWindowManagerException e) {
+                    e.printStackTrace();
+                }
                 break;
 
         }

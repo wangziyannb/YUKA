@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.audio;
+package com.wzy.yuka.yuka.utils;
 
 import android.util.Log;
 
@@ -21,7 +21,7 @@ public class YoudaoAsrResolver {
     private String action;
     private String total_time;
 
-    YoudaoAsrResolver(@NotNull String json) {
+    public YoudaoAsrResolver(@NotNull String json) {
         Log.d("TAG", "YoudaoAsrResolver: " + json);
         try {
             JSONObject jsonObject = new JSONObject(json);

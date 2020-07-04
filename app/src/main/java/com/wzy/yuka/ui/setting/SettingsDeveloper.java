@@ -11,10 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.yuka.user.UserManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;

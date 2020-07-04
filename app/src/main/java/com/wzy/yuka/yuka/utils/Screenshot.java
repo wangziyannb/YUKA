@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.screenshot;
+package com.wzy.yuka.yuka.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +8,13 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-class Screenshot {
+public class Screenshot {
     private String[] fullFileName;
     private int[][] location;
     private String filePath;
     private WeakReference<Context> mContext;
 
-    Screenshot(Context context, int[][] location) {
+    public Screenshot(Context context, int[][] location) {
         this.location = location;
         fullFileName = new String[location.length];
         mContext = new WeakReference<>(context);
@@ -34,20 +34,20 @@ class Screenshot {
         }
     }
 
-    void getScreenshot(boolean isGrayscale, int delay, Intent data, Shotter.OnShotListener onShotListener) {
+    public void getScreenshot(boolean isGrayscale, int delay, Intent data, Shotter.OnShotListener onShotListener) {
         Shotter shotter = new Shotter(mContext.get(), -1, data);
         shotter.startScreenShot(onShotListener, fullFileName, location, isGrayscale, true, delay);
     }
 
-    String[] getFullFileNames() {
+    public String[] getFullFileNames() {
         return fullFileName;
     }
 
-    String getFilePath() {
+    public String getFilePath() {
         return filePath;
     }
 
-    void cleanImage() {
+    public void cleanImage() {
         for (String str : fullFileName) {
             File image = new File(str);
             image.delete();

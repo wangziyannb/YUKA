@@ -22,9 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.yuka.user.UserManager;
 
 /**
  * Created by Ziyan on 2020/5/15.

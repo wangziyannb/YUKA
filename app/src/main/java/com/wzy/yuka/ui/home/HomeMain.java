@@ -16,11 +16,11 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.yuka.user.UserManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;

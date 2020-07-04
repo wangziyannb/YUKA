@@ -14,7 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
@@ -41,19 +42,19 @@
             android:theme="@style/Theme.NotFullActivity" />
 
         <service
-            android:name=".core.screenshot.ScreenShotService_Single"
+            android:name=".yuka.services.ScreenShotService_Single"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".core.screenshot.ScreenShotService_Continue"
+            android:name=".yuka.services.ScreenShotService_Continue"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".core.screenshot.ScreenShotService_Auto"
+            android:name=".yuka.services.ScreenShotService_Auto"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
-            android:name=".core.audio.AudioService"
+            android:name=".yuka.services.AudioService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
     </application>

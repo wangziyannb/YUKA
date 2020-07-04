@@ -1,7 +1,6 @@
-package com.wzy.yuka.core.floatwindow;
+package com.wzy.yuka.yuka.floatwindow;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.MotionEvent;
@@ -20,11 +19,12 @@ import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.IGuide;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.audio.AudioService;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.ui.view.SubtitleFlowView;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,12 +32,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by Ziyan on 2020/5/23.
  */
-public class SubtitleWindow extends FloatWindows implements View.OnClickListener {
+public class SubtitleWindow extends FloatWindow implements View.OnClickListener {
     private int mode = 1;
     private boolean isPlay = false;
 
-    SubtitleWindow(Activity activity, String tag) {
-        super(activity, tag, 0);
+    public SubtitleWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
+        super(activity, index, tag);
         EasyFloat.with(activityWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
@@ -107,13 +107,13 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
     }
 
     @Override
-    void dismiss() {
-        FloatWindowManager.dismissSubtitleWindow();
-        EasyFloat.dismissAppFloat(tag);
+    public void dismiss() {
+        floatWindowManager.stop_RecordingTrans();
+        super.dismiss();
     }
 
-    void showResults(String origin, String translation) {
-
+    @Override
+    public void showResults(String origin, String translation, double time) {
         TextView ori = view.findViewById(R.id.sbw_originalText);
         SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
 
@@ -135,19 +135,17 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(activityWeakReference.get(), AudioService.class);
         switch (v.getId()) {
             case R.id.sbw_close:
-                activityWeakReference.get().stopService(intent);
                 dismiss();
                 break;
             case R.id.sbw_pap:
                 if (!isPlay) {
-                    FloatWindowManager.startVoiceTrans(activityWeakReference.get());
+                    floatWindowManager.start_RecordingTrans();
                     isPlay = true;
                     ((ImageView) v).setImageResource(R.drawable.floatwindow_stop);
                 } else {
-                    activityWeakReference.get().stopService(intent);
+                    floatWindowManager.stop_RecordingTrans();
                     isPlay = false;
                     ((ImageView) v).setImageResource(R.drawable.floatwindow_start);
                 }
@@ -230,3 +228,4 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
         }
     }
 }
+

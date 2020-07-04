@@ -1,27 +1,31 @@
-package com.wzy.yuka.core.floatwindow;
+package com.wzy.yuka.yuka.floatwindow;
 
 import android.app.Activity;
 import android.view.View;
 
 import com.lzf.easyfloat.EasyFloat;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import java.lang.ref.WeakReference;
 
 /**
  * Created by Ziyan on 2020/6/6.
  */
-public class FloatWindows implements View.OnClickListener {
+public class FloatWindow implements View.OnClickListener {
     protected String tag;
     WeakReference<Activity> activityWeakReference;
     protected View view;
-    int[] location;
+    public int[] location;
+    FloatWindowManager floatWindowManager;
     int index;
 
-    FloatWindows(Activity activity, String tag, int index) {
+    FloatWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
         this.activityWeakReference = new WeakReference<>(activity);
         this.tag = tag;
         this.index = index;
         location = new int[4];
+        floatWindowManager = FloatWindowManager.getInstance();
     }
 
     void setView(View view) {
@@ -38,20 +42,24 @@ public class FloatWindows implements View.OnClickListener {
         this.index = index;
     }
 
-    void showResults(String origin, String translation, double time) {
+    public void showResults(String origin, String translation, double time) {
     }
 
-    void dismiss() {
-        FloatWindowManager.dismissFloatWindow(index);
+    public void dismiss() {
         EasyFloat.dismissAppFloat(tag);
+        floatWindowManager.remove_FloatWindow(index);
     }
 
-    void hide() {
+    public void hide() {
         EasyFloat.hideAppFloat(tag);
     }
 
-    void show() {
+    public void show() {
         EasyFloat.showAppFloat(tag);
+    }
+
+    public void reset() {
+
     }
 
     @Override
