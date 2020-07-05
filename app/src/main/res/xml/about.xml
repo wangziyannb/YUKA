@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:title="关于"
-        app:iconSpaceReserved="false">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="使用协议">
         <Preference
-            android:iconSpaceReserved="false"
+            android:key="about_about_policy0"
+            android:title="隐私协议" />
+        <Preference
+            android:key="about_about_policy1"
+            android:title="用户协议" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="关于我们">
+        <Preference
             android:key="about_about_dev"
-            android:summary="绯绯色欠片"
+            android:summary="Yuka开发团队"
             android:title="关于开发者" />
         <Preference
-            android:iconSpaceReserved="false"
-            android:key="about_about_donate"
-            android:summary="毕设产生了经济效益？"
-            android:title="捐献" />
-        <Preference
-            android:iconSpaceReserved="false"
             android:key="about_about_version"
-            android:title="Yuka版本号" />
+            android:title="Yuka版本" />
         <Preference
-            android:iconSpaceReserved="false"
             android:key="about_about_server"
-            android:summary="2.3"
+            android:summary="点击查询"
             android:title="服务器版本" />
         <Preference
-            android:iconSpaceReserved="false"
             android:key="about_about_repository"
-            android:summary="github"
+            android:summary="远古版本，毕设留档可参考"
             android:title="项目地址" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:iconSpaceReserved="false"
         android:title="鸣谢">
         <Preference
-            android:iconSpaceReserved="false"
             android:key="about_thanks_open_source"
             android:summary="大佬们的轮子"
             android:title="开源许可证" />
         <Preference
-            android:iconSpaceReserved="false"
             android:key="about_thanks_reference"
             android:title="参考文献" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="本机信息">
+        <Preference
+            android:key="about_this_1"
+            android:summary="忘记账号或密码时请提交本id至管理员qq 1269586767处进行信息修改。务必保证此设备为账号注册设备"
+            android:title="本机ID" />
     </PreferenceCategory>
 </PreferenceScreen>
