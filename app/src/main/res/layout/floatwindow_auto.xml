@@ -4,7 +4,7 @@
     android:id="@+id/floatwindow_auto"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    android:background="@drawable/radius_style_floatwindow"
+    android:background="@drawable/radius_style_miniwindow"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView

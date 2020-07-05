@@ -1,17 +1,17 @@
-package com.wzy.yuka.core.floatwindow;
+package com.wzy.yuka.yuka.floatball;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.FragmentActivity;
@@ -25,30 +25,33 @@ import com.qw.curtain.lib.flow.CurtainFlowInterface;
 import com.qw.curtain.lib.shape.CircleShape;
 import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.audio.AudioService;
-import com.wzy.yuka.core.screenshot.ScreenShotService_Continue;
-import com.wzy.yuka.core.screenshot.ScreenShotService_Single;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.lang.ref.WeakReference;
 
 /**
- * Created by Ziyan on 2020/4/30.
+ * Created by Ziyan on 2020/7/3.
  */
 public class FloatBall implements View.OnClickListener {
     private String tag;
-    private Activity activity;
+    private WeakReference<Activity> mActivityRef;
     private View FloatBallView;
+    private int index;
+    private FloatWindowManager floatWindowManager;
 
-    FloatBall(Activity activity, String tag) {
-        this.activity = activity;
+    public FloatBall(Activity activity, String tag) throws FloatWindowManagerException {
+        this.mActivityRef = new WeakReference<>(activity);
         this.tag = tag;
+        floatWindowManager = FloatWindowManager.getInstance();
         boolean[] params1 = GetParams.FloatBall();
-        EasyFloat.Builder fb = EasyFloat.with(activity)
+        EasyFloat.Builder fb = EasyFloat.with(mActivityRef.get())
                 .setTag(tag)
                 .setLayout(R.layout.float_ball, v -> {
                     FloatBallView = v;
@@ -60,8 +63,7 @@ public class FloatBall implements View.OnClickListener {
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setDragEnable(true)
                 .registerCallbacks(new OnFloatCallbacks() {
-                    //WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-                    WindowManager windowManager = activity.getWindowManager();
+                    WindowManager windowManager = mActivityRef.get().getWindowManager();
                     Handler handler = new Handler();
                     Runnable runnable = () -> {
                         int[] size = GetParams.Screen();
@@ -126,7 +128,6 @@ public class FloatBall implements View.OnClickListener {
         if (!params1[4]) {
             fb.setDisplayHeight(context -> {
                 boolean[] params = GetParams.FloatBall();
-                WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                 int[] size = GetParams.Screen();
                 if (params[3]) {
                     if (size[0] < size[1]) {
@@ -142,25 +143,23 @@ public class FloatBall implements View.OnClickListener {
             });
         }
         fb.show();
+        Log.e("TAG", "FloatBall: ");
     }
 
-    private void show() {
+    public void show() {
         EasyFloat.showAppFloat(tag);
     }
 
-    private void hide() {
+    public void hide() {
         EasyFloat.hideAppFloat(tag);
     }
 
-    void dismiss() {
+    public void dismiss() {
         EasyFloat.dismissAppFloat(tag);
     }
 
     @Override
     public void onClick(View v) {
-        Intent service_Single = new Intent(activity, ScreenShotService_Single.class);
-        Intent service_Continue = new Intent(activity, ScreenShotService_Continue.class);
-        Intent service_audio = new Intent(activity, AudioService.class);
         ImageButton imageButton = FloatBallView.findViewById(R.id.test1);
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) FloatBallView.getLayoutParams();
         try {
@@ -174,7 +173,7 @@ public class FloatBall implements View.OnClickListener {
             case R.id.test1:
                 FloatBallLayout FloatBallLayout = FloatBallView.findViewById(R.id.test);
 
-                WindowManager windowManager = activity.getWindowManager();
+                WindowManager windowManager = mActivityRef.get().getWindowManager();
                 int[] size = GetParams.Screen();
 
                 if (FloatBallLayout.isDeployed) {
@@ -208,9 +207,9 @@ public class FloatBall implements View.OnClickListener {
                         imageButton.setBackgroundResource(R.drawable.floatmenu_close);
                         ImageButton[] imageButtons = new ImageButton[4];
                         for (int i = 0; i < imageButtons.length; i++) {
-                            imageButtons[i] = new ImageButton(activity);
-                            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(activity, 44),
-                                    SizeUtil.dp2px(activity, 44));
+                            imageButtons[i] = new ImageButton(mActivityRef.get());
+                            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(mActivityRef.get(), 44),
+                                    SizeUtil.dp2px(mActivityRef.get(), 44));
                             imageButtons[i].setLayoutParams(lp);
                             switch (i) {
                                 case 0:
@@ -240,39 +239,25 @@ public class FloatBall implements View.OnClickListener {
                 }
                 break;
             case R.id.settings_button:
-                activity.finish();
-                Intent intent = new Intent(activity, com.wzy.yuka.ui.setting.SettingsActivity.class);
-                activity.startActivity(intent);
+                mActivityRef.get().finish();
+                Intent intent = new Intent(mActivityRef.get(), com.wzy.yuka.ui.setting.SettingsActivity.class);
+                mActivityRef.get().startActivity(intent);
                 if (params[1]) {
                     imageButton.performClick();
                 }
                 break;
             case R.id.detect_button:
-                if (FloatWindowManager.getNumOfFloatWindows() > 0) {
-                    FloatWindowManager.hideAllFloatWindow();
-                    FloatWindowManager.startScreenShot(activity);
-                    //params[]是获取的关于悬浮窗的设置！
-                    if (params[1]) {
-                        imageButton.performClick();
-                    }
-                } else {
-                    Toast.makeText(activity, "还没有悬浮窗初始化呢！", Toast.LENGTH_SHORT).show();
-                }
+                floatWindowManager.detect();
                 break;
             case R.id.reset_button:
-                activity.stopService(service_Continue);
-                activity.stopService(service_Single);
-                activity.stopService(service_audio);
-                FloatWindowManager.reset(activity);
-                if (params[1]) {
-                    imageButton.performClick();
-                }
+                floatWindowManager.reset();
                 break;
             case R.id.exit_button:
-                activity.stopService(service_Continue);
-                activity.stopService(service_Single);
-                activity.stopService(service_audio);
-                activity.finishAffinity();
+                floatWindowManager.stop_RecordingTrans();
+                floatWindowManager.stop_ScreenShotTrans_normal(true);
+                floatWindowManager.stop_ScreenShotTrans_normal(false);
+                floatWindowManager.stop_ScreenShotTrans_auto();
+                mActivityRef.get().finishAffinity();
                 System.exit(0);
                 break;
         }
@@ -281,7 +266,7 @@ public class FloatBall implements View.OnClickListener {
     private void showInitGuide() {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true)) {
-            GuideManager guideManager = new GuideManager((FragmentActivity) activity);
+            GuideManager guideManager = new GuideManager((FragmentActivity) mActivityRef.get());
             CurtainFlow cf = new CurtainFlow.Builder()
                     .with(11, guideManager.weaveCurtain(FloatBallView, new CircleShape(), 32, R.layout.guide))
                     .with(12, guideManager.weaveCurtain(FloatBallView, new RoundShape(12), 32, R.layout.guide))
@@ -319,11 +304,11 @@ public class FloatBall implements View.OnClickListener {
                             img.setImageResource(R.drawable.guide_floatball_folded);
                             params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
-                            params_img.width = SizeUtil.dp2px(activity, 335);
-                            params_img.height = SizeUtil.dp2px(activity, 242);
+                            params_img.width = SizeUtil.dp2px(mActivityRef.get(), 335);
+                            params_img.height = SizeUtil.dp2px(mActivityRef.get(), 242);
 
-                            params_img.topMargin = SizeUtil.dp2px(activity, 10);
-                            params_img.rightMargin = SizeUtil.dp2px(activity, 10);
+                            params_img.topMargin = SizeUtil.dp2px(mActivityRef.get(), 10);
+                            params_img.rightMargin = SizeUtil.dp2px(mActivityRef.get(), 10);
                             img.setLayoutParams(params_img);
 
                             set.clone(layout);
@@ -339,10 +324,10 @@ public class FloatBall implements View.OnClickListener {
                             img = layout.findViewById(R.id.guide_2);
                             img.setImageResource(R.drawable.guide_floatball_deployed);
                             params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-                            params_img.width = SizeUtil.dp2px(activity, 335);
-                            params_img.height = SizeUtil.dp2px(activity, 242);
-                            params_img.topMargin = SizeUtil.dp2px(activity, 10);
-                            params_img.rightMargin = SizeUtil.dp2px(activity, 10);
+                            params_img.width = SizeUtil.dp2px(mActivityRef.get(), 335);
+                            params_img.height = SizeUtil.dp2px(mActivityRef.get(), 242);
+                            params_img.topMargin = SizeUtil.dp2px(mActivityRef.get(), 10);
+                            params_img.rightMargin = SizeUtil.dp2px(mActivityRef.get(), 10);
                             img.setLayoutParams(params_img);
                             set.clone(layout);
                             set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
@@ -361,4 +346,3 @@ public class FloatBall implements View.OnClickListener {
         }
     }
 }
-

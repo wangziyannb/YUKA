@@ -29,13 +29,15 @@ import com.qw.curtain.lib.CurtainFlow;
 import com.qw.curtain.lib.flow.CurtainFlowInterface;
 import com.qw.curtain.lib.shape.CircleShape;
 import com.qw.curtain.lib.shape.RoundShape;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -57,6 +59,12 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         super.onCreate(savedInstanceState);
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
+
+        try {
+            FloatWindowManager.getInstance();
+        } catch (FloatWindowManagerException e) {
+            FloatWindowManager.init(this);
+        }
 
         setContentView(R.layout.main_activity);
 

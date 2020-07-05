@@ -36,12 +36,14 @@ import com.qw.curtain.lib.shape.CircleShape;
 import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.floatwindow.FloatWindowManager;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.floatball.FloatBall;
+import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -55,7 +57,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private Button button;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     private GuideManager guideManager;
-
+    private FloatWindowManager floatWindowManager;
     private ImageButton NavButton;
     private MainActivity mainActivity;
     private DrawerLayout drawer;
@@ -70,11 +72,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         requestPermission();
                     }
                     if (data != null) {
-                        if (FloatWindowManager.floatBall == null) {
-                            FloatWindowManager.initFloatWindow(getActivity(), data);
+                        if (floatWindowManager.getNumOfFloatBalls() == 0) {
+                            try {
+                                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getActivityWeakRef().get(), "mainFloatBall"));
+                            } catch (FloatWindowManagerException e) {
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                             v.setBackgroundResource(R.drawable.nav_start_checked);
                         } else {
-                            FloatWindowManager.dismissAllFloatWindow(false);
+                            floatWindowManager.remove_AllFloatBall();
+                            floatWindowManager.remove_AllFloatWindow();
                             v.setBackgroundResource(R.drawable.nav_start_unchecked);
                         }
                     }
@@ -195,7 +203,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
             this.data = data;
             button.setBackgroundResource(R.drawable.nav_start_checked);
-            FloatWindowManager.initFloatWindow(getActivity(), data);
+            try {
+                Log.e(TAG, "onActivityResult: ");
+                floatWindowManager = FloatWindowManager.getInstance();
+                floatWindowManager.setData(data);
+                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getActivityWeakRef().get(), "mainFloatBall"));
+            } catch (FloatWindowManagerException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 

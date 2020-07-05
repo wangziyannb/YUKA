@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.screenshot;
+package com.wzy.yuka.yuka.services;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -12,16 +12,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
+import com.wzy.yuka.yuka.utils.Screenshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +40,7 @@ import okhttp3.Response;
 public class ScreenShotService_Auto extends Service implements GlobalHandler.HandleMsgListener {
     private final String TAG = "AutoScreenShotService";
     private GlobalHandler globalHandler;
-
+    private FloatWindowManager floatWindowManager;
     @Override
     public void handleMsg(Message msg) {
         switch (msg.what) {
@@ -52,76 +55,90 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
 
     private void responseProcess(Message message) {
         Bundle bundle = message.getData();
-//        bundle.getString("fileName");
-//        bundle.getString("filePath");
-//        bundle.getBoolean("save");
-        FloatWindowManager.showResultsIndex("", bundle.getString("response"), 0, bundle.getInt("index", 0));
+        floatWindowManager.show_result_auto("", bundle.getString("response"));
     }
 
     private void errorProcess(Message message) {
         Bundle bundle = message.getData();
         int index = bundle.getInt("index");
         String error = bundle.getString("error");
-        FloatWindowManager.showResultsIndex("yuka error", error, 0, index);
+        floatWindowManager.show_result_auto("yuka error", error);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotificationChannel();
-        int index = intent.getIntExtra("index", 0);
+        try {
+            floatWindowManager = FloatWindowManager.getInstance();
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
-        getScreenshot(index);
+        getScreenshot();
         return Service.START_NOT_STICKY;
     }
 
-    private void getScreenshot(int index) {
-        Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
+    private void getScreenshot() {
+        try {
+            Screenshot screenshot = new Screenshot(this, floatWindowManager.getmLocation(0));
+            int[] params = GetParams.AdvanceSettings();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            int delay = 800;
+            boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
+            if (params[0] == 1) {
+                //危险，性能不足会导致窗子不再出现（消失动画未完成）
+                delay = 200;
+            }
+            if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
+                //时间足够长，点击退出按钮会导致本过程失效
+                globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
+            }
+            screenshot.getScreenshot(false, delay, floatWindowManager.getData(), () -> {
+                try {
+                    floatWindowManager.show_all(true, 0);
+                } catch (FloatWindowManagerException e) {
+                    e.printStackTrace();
+                }
+                String fileName = screenshot.getFullFileNames()[0];
+                String filePath = screenshot.getFilePath();
+                Callback callback = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("error", e.toString());
+                        Message message = Message.obtain();
+                        message.what = 0;
+                        message.setData(bundle);
+                        globalHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("index", 0);
+                        bundle.putString("response", response.body().string());
+                        bundle.putString("fileName", fileName);
+                        bundle.putString("filePath", filePath);
+                        bundle.putBoolean("save", save);
+                        Message message = Message.obtain();
+                        message.what = 1;
+                        message.setData(bundle);
+                        globalHandler.sendMessage(message);
+                    }
+                };
+                HttpRequest.yuka_advance(GetParams.Yuka(), fileName, callback);
+            });
+
+
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
         //各项设置，包括快速模式、保存照片
-        int[] params = GetParams.AdvanceSettings();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int delay = 800;
-        boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-        if (params[0] == 1) {
-            //危险，性能不足会导致窗子不再出现（消失动画未完成）
-            delay = 200;
-        }
-        if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
-            //时间足够长，点击退出按钮会导致本过程失效
-            globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
-        }
 
-        screenshot.getScreenshot(false, delay, FloatWindowManager.getData(), () -> {
-            FloatWindowManager.showAllFloatWindow(true, index);
-            String fileName = screenshot.getFullFileNames()[0];
-            String filePath = screenshot.getFilePath();
-            Callback callback = new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("error", e.toString());
-                    Message message = Message.obtain();
-                    message.what = 0;
-                    message.setData(bundle);
-                    globalHandler.sendMessage(message);
-                }
 
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("index", 0);
-                    bundle.putString("response", response.body().string());
-                    bundle.putString("fileName", fileName);
-                    bundle.putString("filePath", filePath);
-                    bundle.putBoolean("save", save);
-                    Message message = Message.obtain();
-                    message.what = 1;
-                    message.setData(bundle);
-                    globalHandler.sendMessage(message);
-                }
-            };
-            HttpRequest.yuka_advance(GetParams.Yuka(), fileName, callback);
-        });
     }
 
     @TargetApi(Build.VERSION_CODES.O)

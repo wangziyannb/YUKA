@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.screenshot;
+package com.wzy.yuka.yuka.services;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -13,17 +13,20 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.floatwindow.FloatWindowManager;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.yuka.FloatWindowManager;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
+import com.wzy.yuka.yuka.utils.Screenshot;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -41,58 +44,67 @@ import okhttp3.Response;
 public class ScreenShotService_Continue extends Service implements GlobalHandler.HandleMsgListener {
     private final String TAG = "SingleScreenShotService";
     private GlobalHandler globalHandler;
+    private FloatWindowManager floatWindowManager;
     private static boolean continuous = false;
     private Runnable runnable = () -> {
-        FloatWindowManager.hideAllFloatWindow();
-        Screenshot screenshot = new Screenshot(this, FloatWindowManager.getLocation());
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int delay = 800;
-        int[] params = GetParams.AdvanceSettings();
-        if (params[0] == 1) {
-            //危险，性能不足会导致窗子不再出现（消失动画未完成）
-            delay = 200;
-        }
-        boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-        if (!save) {
-            //时间足够长，点击退出按钮会导致本过程失效
-            globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
-        }
-        if (continuous) {
-            screenshot.getScreenshot(true, delay, FloatWindowManager.getData(), () -> {
-                FloatWindowManager.showAllFloatWindow(true, 0);
-                String fileName = screenshot.getFullFileNames()[0];
-                String filePath = screenshot.getFilePath();
-                Callback callback = new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("error", e.toString());
-                        Message message = Message.obtain();
-                        message.what = 0;
-                        message.setData(bundle);
-                        globalHandler.sendMessage(message);
+        try {
+            floatWindowManager.hide_all();
+            Screenshot screenshot = new Screenshot(this, floatWindowManager.getmLocation(0));
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            int delay = 800;
+            int[] params = GetParams.AdvanceSettings();
+            if (params[0] == 1) {
+                //危险，性能不足会导致窗子不再出现（消失动画未完成）
+                delay = 200;
+            }
+            boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
+            if (!save) {
+                //时间足够长，点击退出按钮会导致本过程失效
+                globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
+            }
+            if (continuous) {
+                screenshot.getScreenshot(true, delay, floatWindowManager.getData(), () -> {
+                    try {
+                        floatWindowManager.show_all(true, 0);
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
                     }
+                    String fileName = screenshot.getFullFileNames()[0];
+                    String filePath = screenshot.getFilePath();
+                    Callback callback = new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("error", e.toString());
+                            Message message = Message.obtain();
+                            message.what = 0;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
 
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("index", 0);
-                        bundle.putString("response", response.body().string());
-                        bundle.putString("fileName", fileName);
-                        bundle.putString("filePath", filePath);
-                        bundle.putBoolean("save", save);
-                        Message message = Message.obtain();
-                        message.what = 1;
-                        message.setData(bundle);
-                        globalHandler.sendMessage(message);
-                    }
-                };
-                HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
-            });
-        } else {
-            FloatWindowManager.showAllFloatWindow(false, 0);
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("index", 0);
+                            bundle.putString("response", response.body().string());
+                            bundle.putString("fileName", fileName);
+                            bundle.putString("filePath", filePath);
+                            bundle.putBoolean("save", save);
+                            Message message = Message.obtain();
+                            message.what = 1;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
+                    };
+                    HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
+                });
+            } else {
+                floatWindowManager.show_all(false, 0);
+            }
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
-
     };
 
     @Override
@@ -120,7 +132,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             String origin = resultJson.getString("origin");
             String result = resultJson.getString("results");
             double time = resultJson.getDouble("time");
-            FloatWindowManager.showResultsIndex(origin, result, time, index);
+            floatWindowManager.show_result_normal(origin, result, time, index);
             int[] params = GetParams.AdvanceSettings();
             if (params[1] == 1 && continuous) {
                 startScreenshot(params[2] * 1000);
@@ -138,7 +150,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         Bundle bundle = message.getData();
         int index = bundle.getInt("index");
         String error = bundle.getString("error");
-        FloatWindowManager.showResultsIndex("yuka error", error, 0, index);
+        floatWindowManager.show_result_normal("yuka error", error, 0, index);
     }
 
     public static void stopScreenshot() {
@@ -160,6 +172,11 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         createNotificationChannel();
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
+        try {
+            floatWindowManager = FloatWindowManager.getInstance();
+        } catch (FloatWindowManagerException e) {
+            e.printStackTrace();
+        }
         startScreenshot(50);
         return Service.START_NOT_STICKY;
     }
@@ -205,8 +222,8 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        stopForeground(true);
         globalHandler.removeCallbacks(runnable);
-        globalHandler.removeCallbacks(null);
+        super.onDestroy();
     }
 }

@@ -1,4 +1,4 @@
-package com.wzy.yuka.core.floatwindow;
+package com.wzy.yuka.yuka.floatwindow;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,20 +11,18 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.fragment.app.FragmentActivity;
 import androidx.transition.TransitionManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
-import com.qw.curtain.lib.Curtain;
-import com.qw.curtain.lib.IGuide;
+import com.wzy.yuka.CurtainActivity;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.audio.AudioService;
-import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.ui.view.SubtitleFlowView;
+import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,12 +30,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by Ziyan on 2020/5/23.
  */
-public class SubtitleWindow extends FloatWindows implements View.OnClickListener {
+public class SubtitleWindow extends FloatWindow implements View.OnClickListener {
     private int mode = 1;
     private boolean isPlay = false;
 
-    SubtitleWindow(Activity activity, String tag) {
-        super(activity, tag, 0);
+    public SubtitleWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
+        super(activity, index, tag);
         EasyFloat.with(activityWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
@@ -107,13 +105,13 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
     }
 
     @Override
-    void dismiss() {
-        FloatWindowManager.dismissSubtitleWindow();
-        EasyFloat.dismissAppFloat(tag);
+    public void dismiss() {
+        floatWindowManager.stop_RecordingTrans();
+        super.dismiss();
     }
 
-    void showResults(String origin, String translation) {
-
+    @Override
+    public void showResults(String origin, String translation, double time) {
         TextView ori = view.findViewById(R.id.sbw_originalText);
         SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
 
@@ -135,19 +133,17 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(activityWeakReference.get(), AudioService.class);
         switch (v.getId()) {
             case R.id.sbw_close:
-                activityWeakReference.get().stopService(intent);
                 dismiss();
                 break;
             case R.id.sbw_pap:
                 if (!isPlay) {
-                    FloatWindowManager.startVoiceTrans(activityWeakReference.get());
+                    floatWindowManager.start_RecordingTrans();
                     isPlay = true;
                     ((ImageView) v).setImageResource(R.drawable.floatwindow_stop);
                 } else {
-                    activityWeakReference.get().stopService(intent);
+                    floatWindowManager.stop_RecordingTrans();
                     isPlay = false;
                     ((ImageView) v).setImageResource(R.drawable.floatwindow_start);
                 }
@@ -196,37 +192,11 @@ public class SubtitleWindow extends FloatWindows implements View.OnClickListener
     private void showInitGuide() {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true)) {
-            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            guideManager.weaveCurtain(view, (canvas, paint, info) -> {
-            }, 0, R.layout.guide_interpret)
-                    .setCallBack(new Curtain.CallBack() {
-                        @Override
-                        public void onShow(IGuide iGuide) {
-                            hide();
-                            ConstraintLayout layout = iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
-                            layout.setOnClickListener(v -> {
-                                iGuide.dismissGuide();
-                                v.setOnClickListener(null);
-                            });
-                            ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                            img.setImageResource(R.drawable.guide_floatwindow_subtitle);
-                            ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-
-                            params_img.width = SizeUtil.dp2px(activityWeakReference.get(), 335);
-                            params_img.height = SizeUtil.dp2px(activityWeakReference.get(), 242);
-
-                            params_img.topMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
-                            params_img.rightMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
-                            img.setLayoutParams(params_img);
-                        }
-
-                        @Override
-                        public void onDismiss(IGuide iGuide) {
-                            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, false);
-                            show();
-                        }
-                    })
-                    .show();
+            Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
+            intent.putExtra(CurtainActivity.name, "SBW");
+            intent.putExtra(CurtainActivity.index, index);
+            activityWeakReference.get().startActivity(intent);
         }
     }
 }
+

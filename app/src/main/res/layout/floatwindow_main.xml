@@ -42,7 +42,7 @@
         android:text="选取目标位置后点识别"
         android:textColor="@color/text_color_DarkBg" />
 
-    <com.wzy.yuka.core.floatwindow.ScaleImageView
+    <com.wzy.yuka.ui.view.ScaleImageView
         android:id="@+id/sw_scale"
         android:layout_width="20dp"
         android:layout_height="20dp"

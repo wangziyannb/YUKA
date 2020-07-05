@@ -27,12 +27,12 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.yuka.user.UserManager;
 
 
 public class Login extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {

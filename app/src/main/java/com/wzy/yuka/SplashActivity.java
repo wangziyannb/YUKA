@@ -11,9 +11,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.wzy.yuka.core.user.UserManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.yuka.user.UserManager;
 
 /**
  * Created by Ziyan on 2020/5/16.
