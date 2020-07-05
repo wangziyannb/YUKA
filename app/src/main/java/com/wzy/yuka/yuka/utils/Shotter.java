@@ -135,7 +135,6 @@ public class Shotter {
             if (params == null || params.length < 1 || params[0] == null) {
                 return null;
             }
-            Log.d("shotter", "开始工作");
             Image image = params[0];
             int width = image.getWidth();
             int height = image.getHeight();
@@ -180,7 +179,6 @@ public class Shotter {
                     }
                     bitmaps[i] = Bitmap.createBitmap(bitmap, location[i][0], location[i][1],
                             windowWidth, windowHeight);
-                    Log.d("shotter", i + "");
                 }
             }
             image.close();
@@ -206,7 +204,6 @@ public class Shotter {
                         FileOutputStream out = new FileOutputStream(fileImage);
                         if (out != null) {
                             bitmaps[i].compress(Bitmap.CompressFormat.JPEG, 90, out);
-                            Log.d("shotter", "存储成功");
                             out.flush();
                             out.close();
                         }

@@ -70,11 +70,17 @@ public class FloatWindowManager {
         this.mData = data;
     }
 
-    public int[][] getmLocation() throws FloatWindowManagerException {
+    public int[][] getmLocation(int index) throws FloatWindowManagerException {
+        Log.e("TAG", "getmLocation: " + index);
         if (getNumOfFloatWindows() != 0) {
-            mLocation = new int[mFloatWindows.length][4];
-            for (int i = 0; i < mFloatWindows.length; i++) {
-                mLocation[i] = mFloatWindows[i].location;
+            if (index == 1000) {
+                mLocation = new int[mFloatWindows.length][4];
+                for (int i = 0; i < mFloatWindows.length; i++) {
+                    mLocation[i] = mFloatWindows[i].location;
+                }
+            } else {
+                mLocation = new int[1][4];
+                mLocation[0] = mFloatWindows[index].location;
             }
         } else {
             throw new FloatWindowManagerException("No floatWindow initialized");
@@ -164,6 +170,23 @@ public class FloatWindowManager {
 
     }
 
+    public FloatWindow get_FloatWindow(int index) throws FloatWindowManagerException {
+        if (getNumOfFloatWindows() > index) {
+            return mFloatWindows[index];
+        } else {
+            throw new FloatWindowManagerException("Index illegal");
+        }
+    }
+
+    public FloatBall get_FloatBall(int index) throws FloatWindowManagerException {
+        if (getNumOfFloatBalls() > index) {
+            if (mFloatBalls[index].getClass().equals(FloatBall.class)) {
+                return mFloatBalls[index];
+            }
+        }
+        throw new FloatWindowManagerException("Index illegal");
+    }
+
     public void remove_FloatWindow(int index) {
         if (getNumOfFloatWindows() != 0) {
             mFloatWindows[index] = null;
@@ -225,7 +248,6 @@ public class FloatWindowManager {
         }
     }
 
-
     public void start_ScreenShotTrans_normal(boolean ifContinue, int index) {
         if (judgeTypeOfFloatWindow(SelectWindow_Normal.class, 0)) {
             if (ifContinue) {
@@ -241,6 +263,7 @@ public class FloatWindowManager {
                     startService(ssss);
                 } else {
                     //单悬浮窗
+                    ssss.putExtra(ScreenShotService_Single.index, index);
                     startService(ssss);
                 }
             }
@@ -279,7 +302,6 @@ public class FloatWindowManager {
     public void stop_RecordingTrans() {
         mActivity_wr.get().stopService(as);
     }
-
 
     public void show_result_normal(String origin, String translation, double time, int index) {
         if (judgeTypeOfFloatWindow(SelectWindow_Normal.class, index)) {
@@ -342,7 +364,6 @@ public class FloatWindowManager {
             e.printStackTrace();
         }
     }
-
 
     private boolean judgeTypeOfFloatWindow(Class clazz, int index) {
         if (getNumOfFloatWindows() > index) {

@@ -49,73 +49,62 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
     private Runnable runnable = () -> {
         try {
             floatWindowManager.hide_all();
+            Screenshot screenshot = new Screenshot(this, floatWindowManager.getmLocation(0));
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            int delay = 800;
+            int[] params = GetParams.AdvanceSettings();
+            if (params[0] == 1) {
+                //危险，性能不足会导致窗子不再出现（消失动画未完成）
+                delay = 200;
+            }
+            boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
+            if (!save) {
+                //时间足够长，点击退出按钮会导致本过程失效
+                globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
+            }
+            if (continuous) {
+                screenshot.getScreenshot(true, delay, floatWindowManager.getData(), () -> {
+                    try {
+                        floatWindowManager.show_all(true, 0);
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
+                    }
+                    String fileName = screenshot.getFullFileNames()[0];
+                    String filePath = screenshot.getFilePath();
+                    Callback callback = new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("error", e.toString());
+                            Message message = Message.obtain();
+                            message.what = 0;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("index", 0);
+                            bundle.putString("response", response.body().string());
+                            bundle.putString("fileName", fileName);
+                            bundle.putString("filePath", filePath);
+                            bundle.putBoolean("save", save);
+                            Message message = Message.obtain();
+                            message.what = 1;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
+                    };
+                    HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
+                });
+            } else {
+                floatWindowManager.show_all(false, 0);
+            }
         } catch (FloatWindowManagerException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-        Screenshot screenshot = null;
-        try {
-            screenshot = new Screenshot(this, floatWindowManager.getmLocation());
-        } catch (FloatWindowManagerException e) {
-            e.printStackTrace();
-        }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int delay = 800;
-        int[] params = GetParams.AdvanceSettings();
-        if (params[0] == 1) {
-            //危险，性能不足会导致窗子不再出现（消失动画未完成）
-            delay = 200;
-        }
-        boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-        Screenshot finalScreenshot = screenshot;
-        if (!save) {
-            //时间足够长，点击退出按钮会导致本过程失效
-            globalHandler.postDelayed(() -> finalScreenshot.cleanImage(), 6000);
-        }
-        if (continuous) {
-            screenshot.getScreenshot(true, delay, floatWindowManager.getData(), () -> {
-                try {
-                    floatWindowManager.show_all(true, 0);
-                } catch (FloatWindowManagerException e) {
-                    e.printStackTrace();
-                }
-                String fileName = finalScreenshot.getFullFileNames()[0];
-                String filePath = finalScreenshot.getFilePath();
-                Callback callback = new Callback() {
-                    @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("error", e.toString());
-                        Message message = Message.obtain();
-                        message.what = 0;
-                        message.setData(bundle);
-                        globalHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("index", 0);
-                        bundle.putString("response", response.body().string());
-                        bundle.putString("fileName", fileName);
-                        bundle.putString("filePath", filePath);
-                        bundle.putBoolean("save", save);
-                        Message message = Message.obtain();
-                        message.what = 1;
-                        message.setData(bundle);
-                        globalHandler.sendMessage(message);
-                    }
-                };
-                HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
-            });
-        } else {
-            try {
-                floatWindowManager.show_all(false, 0);
-            } catch (FloatWindowManagerException e) {
-                e.printStackTrace();
-            }
-        }
-
     };
 
     @Override

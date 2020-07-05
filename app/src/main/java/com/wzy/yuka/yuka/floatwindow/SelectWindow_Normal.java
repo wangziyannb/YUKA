@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -18,16 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentActivity;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
-import com.qw.curtain.lib.Curtain;
-import com.qw.curtain.lib.IGuide;
+import com.wzy.yuka.CurtainActivity;
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
@@ -45,7 +42,7 @@ public class SelectWindow_Normal extends FloatWindow {
 
     private int imageID = 0;
     private boolean isPlay = false;
-    private Curtain curtain = null;
+
     public boolean isContinue = false;
 
     public SelectWindow_Normal(Activity activity, int index, String tag) throws FloatWindowManagerException {
@@ -268,52 +265,23 @@ public class SelectWindow_Normal extends FloatWindow {
         }
     }
 
+    private boolean isGuiding = false;
     private void showInitGuide() {
-        if (curtain != null) {
-            return;
-        }
-        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        String str = "";
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true) && GetParams.AdvanceSettings()[1] == 0) {
-            str = SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1;
-        } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true) && GetParams.AdvanceSettings()[1] == 1) {
-            str = SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2;
-        }
-        if (!str.equals("")) {
-            GuideManager guideManager = new GuideManager((FragmentActivity) activityWeakReference.get());
-            String finalStr = str;
-            curtain = guideManager.weaveCurtain(view, (canvas, paint, info) -> {
-            }, 0, R.layout.guide_interpret)
-                    .setCallBack(new Curtain.CallBack() {
-                        @Override
-                        public void onShow(IGuide iGuide) {
-                            hide();
-                            ConstraintLayout layout = iGuide.findViewByIdInTopView(R.id.guide_interpret_layout);
-                            layout.setOnClickListener(v -> {
-                                iGuide.dismissGuide();
-                                v.setOnClickListener(null);
-                            });
-                            ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                            img.setImageResource(imageID);
-
-                            ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-
-                            params_img.width = SizeUtil.dp2px(activityWeakReference.get(), 335);
-                            params_img.height = SizeUtil.dp2px(activityWeakReference.get(), 242);
-
-                            params_img.topMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
-                            params_img.rightMargin = SizeUtil.dp2px(activityWeakReference.get(), 10);
-                            img.setLayoutParams(params_img);
-                        }
-
-                        @Override
-                        public void onDismiss(IGuide iGuide) {
-                            sharedPreferencesUtil.saveParam(finalStr, false);
-                            show();
-                            curtain = null;
-                        }
-                    });
-            curtain.show();
+        if (!isGuiding) {
+            SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+            isGuiding = true;
+            String str = "";
+            if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true) && !isContinue) {
+                str = "SWN_S";
+            } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true) && isContinue) {
+                str = "SWN_C";
+            }
+            if (!str.equals("")) {
+                Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
+                intent.putExtra(CurtainActivity.name, str);
+                intent.putExtra(CurtainActivity.index, index);
+                activityWeakReference.get().startActivity(intent);
+            }
         }
     }
 }
