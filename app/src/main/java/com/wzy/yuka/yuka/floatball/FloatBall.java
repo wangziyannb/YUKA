@@ -248,9 +248,15 @@ public class FloatBall implements View.OnClickListener {
                 break;
             case R.id.detect_button:
                 floatWindowManager.detect();
+                if (params[1]) {
+                    imageButton.performClick();
+                }
                 break;
             case R.id.reset_button:
                 floatWindowManager.reset();
+                if (params[1]) {
+                    imageButton.performClick();
+                }
                 break;
             case R.id.exit_button:
                 floatWindowManager.stop_RecordingTrans();

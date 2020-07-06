@@ -110,10 +110,16 @@ public class FloatWindowManager {
 
     public void add_FloatBall(FloatBall floatBall) {
         if (floatBall != null) {
-            Log.e("TAG", "add_FloatBall: ");
             mFloatBalls = LengthUtil.appendIndex(mFloatBalls);
             mFloatBalls[mFloatBalls.length - 1] = floatBall;
-            Log.e("TAG", "add_FloatBall: " + getNumOfFloatBalls());
+        }
+    }
+
+    public void add_FloatWindow(FloatWindow floatWindow) {
+        //无视上限限制强行加入FloatWindow
+        if (floatWindow != null) {
+            mFloatWindows = LengthUtil.appendIndex(mFloatWindows);
+            mFloatWindows[mFloatWindows.length - 1] = floatWindow;
         }
     }
 
@@ -209,6 +215,7 @@ public class FloatWindowManager {
                 floatWindow = null;
             }
         }
+        mFloatWindows = null;
     }
 
     public void remove_AllFloatBall() {
@@ -218,6 +225,7 @@ public class FloatWindowManager {
                 floatBall = null;
             }
         }
+        mFloatBalls = null;
     }
 
     public void show_all(boolean after, int index) throws FloatWindowManagerException {
@@ -349,7 +357,6 @@ public class FloatWindowManager {
         }
         remove_AllFloatWindow();
         mLocation = null;
-        mFloatWindows = null;
         try {
             if (sync) {
                 add_FloatWindow("SBW");
