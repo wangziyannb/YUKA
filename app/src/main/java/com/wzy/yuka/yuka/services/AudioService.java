@@ -87,28 +87,33 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void initRecord() {
-        MediaProjectionManager mediaProjectionManager = getSystemService(MediaProjectionManager.class);
-        MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(Activity.RESULT_OK, floatWindowManager.getData());
+        try {
+            floatWindowManager = FloatWindowManager.getInstance();
+            MediaProjectionManager mediaProjectionManager = getSystemService(MediaProjectionManager.class);
+            MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(Activity.RESULT_OK, floatWindowManager.getData());
 
-        AudioPlaybackCaptureConfiguration config = new AudioPlaybackCaptureConfiguration.Builder(mediaProjection)
-                .addMatchingUsage(AudioAttributes.USAGE_GAME)
-                .addMatchingUsage(AudioAttributes.USAGE_MEDIA)
-                .addMatchingUsage(AudioAttributes.USAGE_UNKNOWN)
-                .build();
-        AudioFormat audioFormat = new AudioFormat.Builder()
-                .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                .setSampleRate(16000)
-                .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
-                .build();
-        int size = AudioRecord.getMinBufferSize(16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+            AudioPlaybackCaptureConfiguration config = new AudioPlaybackCaptureConfiguration.Builder(mediaProjection)
+                    .addMatchingUsage(AudioAttributes.USAGE_GAME)
+                    .addMatchingUsage(AudioAttributes.USAGE_MEDIA)
+                    .addMatchingUsage(AudioAttributes.USAGE_UNKNOWN)
+                    .build();
+            AudioFormat audioFormat = new AudioFormat.Builder()
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setSampleRate(16000)
+                    .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
+                    .build();
+            int size = AudioRecord.getMinBufferSize(16000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
 
-        AudioRecord record = new AudioRecord.Builder()
-                .setAudioPlaybackCaptureConfig(config)
-                .setAudioFormat(audioFormat)
-                .setBufferSizeInBytes(size)
-                .build();
-        startRecord(record, size);
-
+            AudioRecord record = new AudioRecord.Builder()
+                    .setAudioPlaybackCaptureConfig(config)
+                    .setAudioFormat(audioFormat)
+                    .setBufferSizeInBytes(size)
+                    .build();
+            startRecord(record, size);
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     private WebsocketRequest websocketRequest;
@@ -118,12 +123,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
     public int onStartCommand(Intent intent, int flags, int startId) {
         createNotificationChannel();
         initRecord();
-        try {
-            floatWindowManager = FloatWindowManager.getInstance();
-        } catch (FloatWindowManagerException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+
         return Service.START_NOT_STICKY;
     }
 
