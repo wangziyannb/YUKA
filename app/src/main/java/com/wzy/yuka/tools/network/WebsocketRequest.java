@@ -59,7 +59,7 @@ public class WebsocketRequest {
     }
 
     public void start(@NotNull String from, @NotNull String to, @NotNull String pattern) {
-        String url = "ws://49.233.38.181:37103/youdaoAsr"
+        String url = "wss://yukacn.xyz/yuka/youdaoAsr"
                 + "/" + u_name + "&" + uuid
                 + "/from=" + from + "&to=" + to + "&p=" + pattern;
 
