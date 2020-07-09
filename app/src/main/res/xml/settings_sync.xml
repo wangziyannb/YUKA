@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="同步字幕设置">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_trans_syncMode"
+            android:summary="根据系统内录声音生成同步字幕，需要目标app支持，需要安卓Q(10)"
+            android:title="启用同传" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_provider"
+            android:entryValues="@array/sync_providerset"
+            android:key="settings_trans_syncProvider"
+            android:title="翻译器选择" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_mode"
+            android:entryValues="@array/sync_modeset"
+            android:key="settings_trans_syncModes"
+            android:summary="默认实时传输"
+            android:title="识别模式" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_o_language"
+            android:entryValues="@array/sync_o_languageset"
+            android:key="settings_trans_sync_o"
+            android:summary="默认中文"
+            android:title="源音频语言" />
+        <ListPreference
+            android:dependency="settings_trans_syncMode"
+            android:entries="@array/sync_t_language"
+            android:entryValues="@array/sync_t_languageset"
+            android:key="settings_trans_sync_t"
+            android:summary="默认英文"
+            android:title="译文语言" />
+    </PreferenceCategory>
+</PreferenceScreen>

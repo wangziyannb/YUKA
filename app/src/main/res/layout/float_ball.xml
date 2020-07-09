@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.wzy.yuka.tools.floatwindow.FloatBallLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/test"
+<com.wzy.yuka.yuka.floatball.FloatBallLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/floatball_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <ImageButton
-        android:id="@+id/test1"
+        android:id="@+id/floatball_main"
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:background="#00000000"
@@ -13,4 +13,4 @@
         android:src="@drawable/main" />
 
 
-</com.wzy.yuka.tools.floatwindow.FloatBallLayout>
+</com.wzy.yuka.yuka.floatball.FloatBallLayout>
