@@ -20,6 +20,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 
@@ -100,7 +101,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
     private void startHomeActivity() {
         Intent intent = new Intent(GuideActivity.this, MainActivity.class);
         startActivity(intent);
-        sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, false);
+        sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_GuideActivity, false);
         finish();
     }
 

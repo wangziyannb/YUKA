@@ -26,6 +26,7 @@ import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.CurtainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.ui.view.ScaleImageView;
@@ -33,17 +34,16 @@ import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
-
 /**
  * Created by Ziyan on 2020/4/29.
  */
 public class SelectWindow_Normal extends FloatWindow {
 
-    private int imageID = 0;
+    public boolean isGuiding = false;
     private boolean isPlay = false;
 
     public boolean isContinue = false;
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
     public SelectWindow_Normal(Activity activity, int index, String tag) throws FloatWindowManagerException {
         super(activity, index, tag);
@@ -51,11 +51,11 @@ public class SelectWindow_Normal extends FloatWindow {
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
                     setView(view1);
-                    changeClass(GetParams.AdvanceSettings()[1], false);
+                    changeClass(false);
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
-                    int alpha = (int) Math.round((int) (SharedPreferencesUtil.getInstance().getParam("settings_window_opacityBg", 50)) * 2.55);
+                    int alpha = (int) Math.round((int) (sharedPreferencesUtil.getParam("settings_window_opacityBg", 50)) * 2.55);
                     String alpha_hex = Integer.toHexString(alpha).toUpperCase();
                     if (alpha_hex.length() == 1) {
                         alpha_hex = "0" + alpha_hex;
@@ -136,7 +136,7 @@ public class SelectWindow_Normal extends FloatWindow {
                     public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                         setLocation();
-                        changeClass(GetParams.AdvanceSettings()[1], true);
+                        changeClass(true);
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             handler.postDelayed(r, 1000);
                         } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
@@ -166,12 +166,13 @@ public class SelectWindow_Normal extends FloatWindow {
     @Override
     public void showResults(String origin, String translation, double time) {
         TextView textView = view.findViewById(R.id.translatedText);
-        boolean[] params = GetParams.SelectWindow();
-        if (params[0]) {
+
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.window_textBlackBg, false)) {
             textView.setBackgroundResource(R.color.blackBg);
         } else {
             textView.setBackgroundResource(0);
         }
+
         if (origin.equals("yuka error")) {
             textView.setText(translation);
             textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.colorError, null));
@@ -182,7 +183,8 @@ public class SelectWindow_Normal extends FloatWindow {
             textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
             return;
         }
-        if (params[1]) {
+
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.window_originalText, false)) {
             textView.setText("原文： ");
             textView.append(origin);
             textView.append("\r\n译文： ");
@@ -190,33 +192,6 @@ public class SelectWindow_Normal extends FloatWindow {
         } else {
             textView.setText(translation);
         }
-        if (params[2]) {
-            DecimalFormat df = new DecimalFormat("#0.000");
-            Toast.makeText(activityWeakReference.get(), "耗时" + df.format(time) + "秒", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void changeClass(int mode, boolean check) {
-        switch (mode) {
-            case 0:
-                //普通模式
-                ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_translate);
-                view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
-                imageID = R.drawable.guide_floatwindow_normal;
-                isContinue = false;
-                break;
-            case 1:
-                //持续模式
-                ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_start);
-                view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
-                imageID = R.drawable.guide_floatwindow_continue;
-                isContinue = true;
-                break;
-        }
-        if (check) {
-            showInitGuide();
-        }
-
     }
 
     @Override
@@ -226,6 +201,24 @@ public class SelectWindow_Normal extends FloatWindow {
         super.dismiss();
     }
 
+    private void changeClass(boolean check) {
+        if ((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousMode, false)) {
+            //持续模式
+            isContinue = true;
+            ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_start);
+            view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
+        } else {
+            //普通模式
+            isContinue = false;
+            ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_translate);
+            view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
+        }
+        if (check) {
+            showInitGuide();
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -233,7 +226,7 @@ public class SelectWindow_Normal extends FloatWindow {
                 dismiss();
                 break;
             case R.id.sw_pap:
-                if (GetParams.AdvanceSettings()[1] == 1) {
+                if (isContinue) {
                     if (!isPlay) {
                         hide();
                         floatWindowManager.start_ScreenShotTrans_normal(true, index);
@@ -252,7 +245,7 @@ public class SelectWindow_Normal extends FloatWindow {
                 break;
             case R.id.sw_addwindows:
                 try {
-                    if (GetParams.AdvanceSettings()[1] == 1) {
+                    if (isContinue) {
                         floatWindowManager.add_FloatWindow("SWN_C");
                     } else {
                         floatWindowManager.add_FloatWindow("SWN_S");
@@ -265,15 +258,14 @@ public class SelectWindow_Normal extends FloatWindow {
         }
     }
 
-    private boolean isGuiding = false;
     private void showInitGuide() {
         if (!isGuiding) {
             SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
             isGuiding = true;
             String str = "";
-            if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true) && !isContinue) {
+            if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_SelectWindow_N_1, true) && !isContinue) {
                 str = "SWN_S";
-            } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true) && isContinue) {
+            } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_SelectWindow_N_2, true) && isContinue) {
                 str = "SWN_C";
             }
             if (!str.equals("")) {

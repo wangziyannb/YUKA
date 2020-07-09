@@ -12,6 +12,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.user.UserManager;
 
@@ -59,7 +60,7 @@ public class SplashActivity extends Activity implements GlobalHandler.HandleMsgL
         setContentView(R.layout.welcome);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, true);
+        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_GuideActivity, true);
         if (isFirstOpen) {
             mHandler.sendEmptyMessageDelayed(GO_GUIDE, ENTER_DURATION);
         } else {

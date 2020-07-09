@@ -33,6 +33,7 @@ import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
@@ -201,7 +202,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             case 601:
                 LoadingViewManager.dismiss();
                 Toast.makeText(this, "账户不存在", Toast.LENGTH_SHORT).show();
-                if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, true)) {
+                if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_MainActivity, true)) {
                     showInitGuide_First();
                 } else {
                     drawer.openDrawer(GravityCompat.START, true);
@@ -263,7 +264,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
                     @Override
                     public void onFinish() {
-                        sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, false);
+                        sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_MainActivity, false);
                     }
                 });
     }

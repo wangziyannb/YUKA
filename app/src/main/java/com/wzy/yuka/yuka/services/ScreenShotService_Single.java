@@ -6,7 +6,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,13 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
 import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 import com.wzy.yuka.yuka.utils.Screenshot;
@@ -42,10 +42,10 @@ import okhttp3.Response;
  * Created by Ziyan on 2020/4/30.
  */
 public class ScreenShotService_Single extends Service implements GlobalHandler.HandleMsgListener {
-    private final String TAG = "SingleScreenShotService";
     private GlobalHandler globalHandler;
     private FloatWindowManager floatWindowManager;
     public final static String index = "index";
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
     @Override
     public void handleMsg(Message msg) {
@@ -66,13 +66,12 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         String fileName = bundle.getString("fileName");
         String filePath = bundle.getString("filePath");
         boolean save = bundle.getBoolean("save");
-        Log.e(TAG, response);
+        Log.e("SSSS", response);
         try {
             JSONObject resultJson = new JSONObject(response);
             String origin = resultJson.getString("origin");
             String result = resultJson.getString("results");
             double time = resultJson.getDouble("time");
-            Log.e(TAG, "" + index);
             floatWindowManager.show_result_normal(origin, result, time, index);
             if (save) {
                 ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);
@@ -94,15 +93,15 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             floatWindowManager = FloatWindowManager.getInstance();
+            int index = intent.getIntExtra("index", 1000);
+            createNotificationChannel();
+            globalHandler = GlobalHandler.getInstance();
+            globalHandler.setHandleMsgListener(this);
+            getScreenshot(index);
         } catch (FloatWindowManagerException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-        int index = intent.getIntExtra("index", 1000);
-        createNotificationChannel();
-        globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
-        getScreenshot(index);
         return Service.START_NOT_STICKY;
     }
 
@@ -117,19 +116,15 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         try {
             int[][] location = floatWindowManager.getmLocation(index);
             Screenshot screenshot = new Screenshot(this, location);
-            //各项设置，包括快速模式、保存照片
-            int[] params = GetParams.AdvanceSettings();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            int delay = 800;
-            boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-            if (params[0] == 1) {
-                //危险，性能不足会导致窗子不再出现（消失动画未完成）
-                delay = 200;
-            }
-            if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
+
+            //性能不足可能会导致窗子不再出现（消失动画未完成）
+            int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
+            boolean save = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true);
+            if (!save) {
                 //时间足够长，点击退出按钮会导致本过程失效
-                globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
+                globalHandler.postDelayed(screenshot::cleanImage, 6000);
             }
+
             screenshot.getScreenshot(false, delay, floatWindowManager.getData(), () -> {
                 try {
                     floatWindowManager.show_all(true, index);

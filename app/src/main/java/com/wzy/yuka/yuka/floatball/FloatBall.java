@@ -3,7 +3,6 @@ package com.wzy.yuka.yuka.floatball;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
@@ -39,25 +39,39 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Ziyan on 2020/7/3.
  */
-public class FloatBall implements View.OnClickListener {
+public class FloatBall implements View.OnClickListener, View.OnLongClickListener {
     private String tag;
     private WeakReference<Activity> mActivityRef;
     private View FloatBallView;
     private int index;
     private FloatWindowManager floatWindowManager;
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private boolean isInChoosing = false;
+
+    public void show() {
+        EasyFloat.showAppFloat(tag);
+    }
+
+    public void hide() {
+        EasyFloat.hideAppFloat(tag);
+    }
+
+    public void dismiss() {
+        EasyFloat.dismissAppFloat(tag);
+    }
 
     public FloatBall(Activity activity, String tag) throws FloatWindowManagerException {
         this.mActivityRef = new WeakReference<>(activity);
         this.tag = tag;
         floatWindowManager = FloatWindowManager.getInstance();
-        boolean[] params1 = GetParams.FloatBall();
+
         EasyFloat.Builder fb = EasyFloat.with(mActivityRef.get())
                 .setTag(tag)
                 .setLayout(R.layout.float_ball, v -> {
                     FloatBallView = v;
-                    ImageButton imageButton = v.findViewById(R.id.test1);
+                    ImageButton imageButton = v.findViewById(R.id.floatball_main);
                     imageButton.getBackground().setAlpha(50);
-                    v.findViewById(R.id.test1).setOnClickListener(this);
+                    v.findViewById(R.id.floatball_main).setOnClickListener(this);
                 })
                 .setSidePattern(SidePattern.RESULT_HORIZONTAL)
                 .setShowPattern(ShowPattern.ALL_TIME)
@@ -119,17 +133,16 @@ public class FloatBall implements View.OnClickListener {
 
                     @Override
                     public void dragEnd(@NotNull View view) {
-                        if (GetParams.FloatBall()[0]) {
+                        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoHide, true)) {
                             handler.postDelayed(runnable, 3000);
                         }
                     }
                 })
                 .setLocation(100, 500);
-        if (!params1[4]) {
+        if (!(boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_fluidMode, false)) {
             fb.setDisplayHeight(context -> {
-                boolean[] params = GetParams.FloatBall();
                 int[] size = GetParams.Screen();
-                if (params[3]) {
+                if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_safeMode, true)) {
                     if (size[0] < size[1]) {
                         //竖屏
                         return size[1] - SizeUtil.dp2px(context, 52 + 11);
@@ -139,28 +152,15 @@ public class FloatBall implements View.OnClickListener {
                 } else {
                     return size[1];
                 }
-
             });
         }
         fb.show();
-        Log.e("TAG", "FloatBall: ");
-    }
-
-    public void show() {
-        EasyFloat.showAppFloat(tag);
-    }
-
-    public void hide() {
-        EasyFloat.hideAppFloat(tag);
-    }
-
-    public void dismiss() {
-        EasyFloat.dismissAppFloat(tag);
     }
 
     @Override
     public void onClick(View v) {
-        ImageButton imageButton = FloatBallView.findViewById(R.id.test1);
+        ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
+
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) FloatBallView.getLayoutParams();
         try {
             int currentFlags = (Integer) layoutParams.getClass().getField("privateFlags").get(layoutParams);
@@ -168,110 +168,173 @@ public class FloatBall implements View.OnClickListener {
         } catch (Exception e) {
             //do nothing. Probably using other version of android
         }
-        boolean[] params = GetParams.FloatBall();
+
         switch (v.getId()) {
-            case R.id.test1:
-                FloatBallLayout FloatBallLayout = FloatBallView.findViewById(R.id.test);
-
-                WindowManager windowManager = mActivityRef.get().getWindowManager();
-                int[] size = GetParams.Screen();
-
-                if (FloatBallLayout.isDeployed) {
-                    //展开则关闭
-                    EasyFloat.appFloatDragEnable(true, "mainFloatBall");
-                    FloatBallLayout.fold();
-                    imageButton.setBackgroundResource(R.drawable.main);
-                    layoutParams.y = layoutParams.y + SizeUtil.dp2px(FloatBallView.getContext(), 52);
-                    if (layoutParams.x > size[0] / 2) {
-                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
+            case R.id.floatball_main:
+                FloatBallLayout floatBallLayout = FloatBallView.findViewById(R.id.floatball_layout);
+                if (isInChoosing) {
+                    isInChoosing = false;
+                    if (floatBallLayout.isDeployed) {
+                        //展开则关闭
+                        floatBallLayout.findViewById(R.id.floatball_top).setBackgroundResource(R.drawable.floatmenu_settings);
+                        floatBallLayout.findViewById(R.id.floatball_mid1).setBackgroundResource(R.drawable.floatmenu_detect);
+                        floatBallLayout.findViewById(R.id.floatball_mid2).setBackgroundResource(R.drawable.floatmenu_reset);
+                        floatBallLayout.findViewById(R.id.floatball_bottom).setBackgroundResource(R.drawable.floatmenu_exit);
                     }
-                    windowManager.updateViewLayout(FloatBallView, layoutParams);
                 } else {
-                    if (params[2]) {
-                        EasyFloat.appFloatDragEnable(false, "mainFloatBall");
-                    } else {
-                        EasyFloat.appFloatDragEnable(true, "mainFloatBall");
-                    }
-                    if (layoutParams.x > size[0] / 2) {
-                        FloatBallLayout.setIsLeft(false);
-                        layoutParams.x = layoutParams.x - SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
-                    } else {
-                        FloatBallLayout.setIsLeft(true);
-                    }
-                    layoutParams.y = layoutParams.y - SizeUtil.dp2px(FloatBallView.getContext(), 52);
-                    windowManager.updateViewLayout(FloatBallView, layoutParams);
-                    imageButton.setVisibility(View.INVISIBLE);
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> {
-                        imageButton.setVisibility(View.VISIBLE);
-                        imageButton.setBackgroundResource(R.drawable.floatmenu_close);
-                        ImageButton[] imageButtons = new ImageButton[4];
-                        for (int i = 0; i < imageButtons.length; i++) {
-                            imageButtons[i] = new ImageButton(mActivityRef.get());
-                            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(mActivityRef.get(), 44),
-                                    SizeUtil.dp2px(mActivityRef.get(), 44));
-                            imageButtons[i].setLayoutParams(lp);
-                            switch (i) {
-                                case 0:
-                                    imageButtons[i].setId(R.id.settings_button);
-                                    imageButtons[i].setBackgroundResource(R.drawable.floatmenu_settings);
-                                    imageButtons[i].setOnClickListener(this);
-                                    break;
-                                case 1:
-                                    imageButtons[i].setId(R.id.detect_button);
-                                    imageButtons[i].setBackgroundResource(R.drawable.floatmenu_detect);
-                                    imageButtons[i].setOnClickListener(this);
-                                    break;
-                                case 2:
-                                    imageButtons[i].setId(R.id.reset_button);
-                                    imageButtons[i].setBackgroundResource(R.drawable.floatmenu_reset);
-                                    imageButtons[i].setOnClickListener(this);
-                                    break;
-                                case 3:
-                                    imageButtons[i].setId(R.id.exit_button);
-                                    imageButtons[i].setBackgroundResource(R.drawable.floatmenu_exit);
-                                    imageButtons[i].setOnClickListener(this);
-                                    break;
-                            }
-                            FloatBallLayout.addView(imageButtons[i]);
+                    WindowManager windowManager = mActivityRef.get().getWindowManager();
+                    int[] size = GetParams.Screen();
+
+                    if (floatBallLayout.isDeployed) {
+                        //展开则关闭
+                        EasyFloat.appFloatDragEnable(true, tag);
+                        floatBallLayout.fold();
+                        imageButton.setBackgroundResource(R.drawable.main);
+                        layoutParams.y = layoutParams.y + SizeUtil.dp2px(FloatBallView.getContext(), 52);
+                        if (layoutParams.x > size[0] / 2) {
+                            layoutParams.x = layoutParams.x + SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
                         }
-                    }, 30);
+                        windowManager.updateViewLayout(FloatBallView, layoutParams);
+                    } else {
+                        EasyFloat.appFloatDragEnable(false, tag);
+
+                        if (layoutParams.x > size[0] / 2) {
+                            floatBallLayout.setIsLeft(false);
+                            layoutParams.x = layoutParams.x - SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                        } else {
+                            floatBallLayout.setIsLeft(true);
+                        }
+
+                        layoutParams.y = layoutParams.y - SizeUtil.dp2px(FloatBallView.getContext(), 52);
+                        windowManager.updateViewLayout(FloatBallView, layoutParams);
+                        imageButton.setVisibility(View.INVISIBLE);
+                        Handler handler = new Handler();
+                        handler.postDelayed(() -> {
+                            imageButton.setVisibility(View.VISIBLE);
+                            imageButton.setBackgroundResource(R.drawable.floatmenu_close);
+                            ImageButton[] imageButtons = new ImageButton[4];
+                            for (int i = 0; i < imageButtons.length; i++) {
+                                imageButtons[i] = new ImageButton(mActivityRef.get());
+                                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(SizeUtil.dp2px(mActivityRef.get(), 44),
+                                        SizeUtil.dp2px(mActivityRef.get(), 44));
+                                imageButtons[i].setLayoutParams(lp);
+                                switch (i) {
+                                    case 0:
+                                        imageButtons[i].setId(R.id.floatball_top);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_settings);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 1:
+                                        imageButtons[i].setId(R.id.floatball_mid1);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_detect);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                    case 2:
+                                        imageButtons[i].setId(R.id.floatball_mid2);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_reset);
+                                        imageButtons[i].setOnClickListener(this);
+                                        imageButtons[i].setOnLongClickListener(this);
+                                        break;
+                                    case 3:
+                                        imageButtons[i].setId(R.id.floatball_bottom);
+                                        imageButtons[i].setBackgroundResource(R.drawable.floatmenu_exit);
+                                        imageButtons[i].setOnClickListener(this);
+                                        break;
+                                }
+                            }
+                            floatBallLayout.expand(imageButtons);
+                        }, 30);
+                    }
+                }
+
+                break;
+            case R.id.floatball_top:
+                if (isInChoosing) {
+                    try {
+                        floatWindowManager.remove_AllFloatWindow();
+                        floatWindowManager.add_FloatWindow("SWN_S");
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mActivityRef.get().finish();
+                    Intent intent = new Intent(mActivityRef.get(), com.wzy.yuka.ui.setting.SettingsActivity.class);
+                    mActivityRef.get().startActivity(intent);
+                    if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoClose, true)) {
+                        imageButton.performClick();
+                    }
                 }
                 break;
-            case R.id.settings_button:
-                mActivityRef.get().finish();
-                Intent intent = new Intent(mActivityRef.get(), com.wzy.yuka.ui.setting.SettingsActivity.class);
-                mActivityRef.get().startActivity(intent);
-                if (params[1]) {
-                    imageButton.performClick();
+            case R.id.floatball_mid1:
+                if (isInChoosing) {
+                    try {
+                        floatWindowManager.remove_AllFloatWindow();
+                        floatWindowManager.add_FloatWindow("SWN_C");
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    floatWindowManager.detect();
+                    if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoClose, true)) {
+                        imageButton.performClick();
+                    }
                 }
                 break;
-            case R.id.detect_button:
-                floatWindowManager.detect();
-                if (params[1]) {
-                    imageButton.performClick();
+            case R.id.floatball_mid2:
+                if (isInChoosing) {
+                    try {
+                        floatWindowManager.remove_AllFloatWindow();
+                        floatWindowManager.add_FloatWindow("SWA");
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    floatWindowManager.reset();
+                    if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoClose, true)) {
+                        imageButton.performClick();
+                    }
                 }
                 break;
-            case R.id.reset_button:
-                floatWindowManager.reset();
-                if (params[1]) {
-                    imageButton.performClick();
+            case R.id.floatball_bottom:
+                if (isInChoosing) {
+                    try {
+                        floatWindowManager.remove_AllFloatWindow();
+                        floatWindowManager.add_FloatWindow("SBW");
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    floatWindowManager.stop_RecordingTrans();
+                    floatWindowManager.stop_ScreenShotTrans_normal(true);
+                    floatWindowManager.stop_ScreenShotTrans_normal(false);
+                    floatWindowManager.stop_ScreenShotTrans_auto();
+                    mActivityRef.get().finishAffinity();
+                    System.exit(0);
                 }
-                break;
-            case R.id.exit_button:
-                floatWindowManager.stop_RecordingTrans();
-                floatWindowManager.stop_ScreenShotTrans_normal(true);
-                floatWindowManager.stop_ScreenShotTrans_normal(false);
-                floatWindowManager.stop_ScreenShotTrans_auto();
-                mActivityRef.get().finishAffinity();
-                System.exit(0);
                 break;
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if (isInChoosing) {
+            return false;
+        }
+        switch (v.getId()) {
+            case R.id.floatball_mid2:
+                isInChoosing = true;
+                FloatBallLayout floatBallLayout = FloatBallView.findViewById(R.id.floatball_layout);
+                floatBallLayout.findViewById(R.id.floatball_top).setBackgroundResource(R.drawable.floatmenu_normal);
+                floatBallLayout.findViewById(R.id.floatball_mid1).setBackgroundResource(R.drawable.floatmenu_continue);
+                floatBallLayout.findViewById(R.id.floatball_mid2).setBackgroundResource(R.drawable.floatmenu_auto);
+                floatBallLayout.findViewById(R.id.floatball_bottom).setBackgroundResource(R.drawable.floatmenu_subtitle);
+                break;
+        }
+        return true;
+    }
+
     private void showInitGuide() {
-        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true)) {
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_FloatBall, true)) {
             GuideManager guideManager = new GuideManager((FragmentActivity) mActivityRef.get());
             CurtainFlow cf = new CurtainFlow.Builder()
                     .with(11, guideManager.weaveCurtain(FloatBallView, new CircleShape(), 32, R.layout.guide))
@@ -282,7 +345,7 @@ public class FloatBall implements View.OnClickListener {
                 ImageView img;
                 ConstraintLayout.LayoutParams params_img;
                 ConstraintSet set = new ConstraintSet();
-                FloatBallLayout fbl = FloatBallView.findViewById(R.id.test);
+                FloatBallLayout fbl = FloatBallView.findViewById(R.id.floatball_layout);
 
                 @Override
                 public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
@@ -303,7 +366,7 @@ public class FloatBall implements View.OnClickListener {
                             layout.setOnClickListener(v -> {
                                 v.setOnClickListener(null);
 
-                                fbl.findViewById(R.id.test1).performClick();
+                                fbl.findViewById(R.id.floatball_main).performClick();
 
                             });
                             img = layout.findViewById(R.id.guide_2);
@@ -345,10 +408,12 @@ public class FloatBall implements View.OnClickListener {
                 @Override
                 public void onFinish() {
                     fbl.removeFloatBallLayoutListener();
-                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, false);
+                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, false);
                 }
             });
 
         }
     }
+
+
 }

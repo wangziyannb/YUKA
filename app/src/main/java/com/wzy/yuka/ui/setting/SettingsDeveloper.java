@@ -13,6 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.user.UserManager;
 
@@ -85,14 +86,14 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
         });
         getPreferenceScreen().findPreference("settings_debug_reset").setOnPreferenceClickListener(preference -> {
             SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_GuideActivity, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_OPEN_MainActivity, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_FloatBall, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, true);
-            sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_GuideActivity, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_MainActivity, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SubtitleWindow, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_1, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_2, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_A, true);
             UserManager.logout();
             UserManager.removeUser();
             Toast.makeText(getContext(), "已经重置所有用户引导并退出账号", Toast.LENGTH_SHORT).show();

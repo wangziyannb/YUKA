@@ -1,6 +1,5 @@
 package com.wzy.yuka.ui.view;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -14,14 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wzy.yuka.R;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
  * Created by Ziyan on 2020/5/17.
  */
 public class ScreenshotAdapter extends RecyclerView.Adapter<ScreenshotAdapter.VH> implements View.OnClickListener {
-    private WeakReference<Context> mContext;
     private List<Screenshot> screenshots;
     private onItemClickListener onItemClickListener;
 
@@ -44,7 +41,6 @@ public class ScreenshotAdapter extends RecyclerView.Adapter<ScreenshotAdapter.VH
     @Override
     public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_screenshot, parent, false);
-        mContext = new WeakReference<>(parent.getContext());
         VH vh = new VH(view);
         view.setOnClickListener(this);
         return vh;

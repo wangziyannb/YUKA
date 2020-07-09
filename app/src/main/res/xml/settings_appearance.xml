@@ -14,10 +14,6 @@
             android:title="自动收回" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="settings_ball_openLock"
-            android:title="展开后锁定位置" />
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="settings_ball_safeMode"
             android:summary="启用安全区域，防止错误展开悬浮球"
             android:title="安全模式" />

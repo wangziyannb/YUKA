@@ -58,6 +58,12 @@ public class FloatBallLayout extends ViewGroup {
         }
     }
 
+    public void expand(View[] views) {
+        for (int i = 0; i < 4; i++) {
+            addView(views[i]);
+        }
+    }
+
     public void setFloatBallLayoutListener(FloatBallLayoutListener floatBallLayoutListener) {
         this.mListener = floatBallLayoutListener;
     }

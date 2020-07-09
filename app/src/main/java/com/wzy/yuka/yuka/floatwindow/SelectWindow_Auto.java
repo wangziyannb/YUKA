@@ -30,6 +30,7 @@ import com.wzy.yuka.CurtainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.ui.view.ScaleImageView;
@@ -45,6 +46,7 @@ import org.json.JSONObject;
  */
 public class SelectWindow_Auto extends FloatWindow {
     private String[] Tags = new String[1];
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
     public SelectWindow_Auto(Activity activity, int index, String tag) throws FloatWindowManagerException {
         super(activity, index, tag);
@@ -56,7 +58,7 @@ public class SelectWindow_Auto extends FloatWindow {
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
-                    int alpha = (int) Math.round((int) (SharedPreferencesUtil.getInstance().getParam("settings_window_opacityBg", 50)) * 2.55);
+                    int alpha = (int) Math.round((int) (SharedPreferencesUtil.getInstance().getParam(SharedPreferenceCollection.window_opacityBg, 50)) * 2.55);
                     String alpha_hex = Integer.toHexString(alpha).toUpperCase();
                     if (alpha_hex.length() == 1) {
                         alpha_hex = "0" + alpha_hex;
@@ -215,8 +217,8 @@ public class SelectWindow_Auto extends FloatWindow {
                     textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
                     textView.setText(translation);
                     textView2.setText(origin);
-                    boolean[] params = GetParams.SelectWindow();
-                    if (params[0]) {
+
+                    if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.window_textBlackBg, false)) {
                         textView.setBackgroundResource(R.color.blackBg);
                     } else {
                         textView.setBackgroundResource(0);
@@ -336,8 +338,7 @@ public class SelectWindow_Auto extends FloatWindow {
 
     private void showInitGuide() {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, true)) {
-            Log.e("TAG", "showInitGuide: ");
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_SelectWindow_A, true)) {
             Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
             intent.putExtra(CurtainActivity.name, "SWA");
             intent.putExtra(CurtainActivity.index, index);

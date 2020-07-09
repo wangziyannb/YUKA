@@ -19,6 +19,7 @@ import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.CurtainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.ui.view.SubtitleFlowView;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class SubtitleWindow extends FloatWindow implements View.OnClickListener {
     private int mode = 1;
     private boolean isPlay = false;
-
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     public SubtitleWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
         super(activity, index, tag);
         EasyFloat.with(activityWeakReference.get())
@@ -115,7 +116,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
         TextView ori = view.findViewById(R.id.sbw_originalText);
         SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
 
-        if (GetParams.SelectWindow()[0]) {
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.window_textBlackBg, false)) {
             ori.setBackgroundResource(R.color.blackBg);
             result.setBackgroundResource(R.color.blackBg);
         } else {
@@ -190,8 +191,8 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
     }
 
     private void showInitGuide() {
-        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, true)) {
+
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_SubtitleWindow, true)) {
             Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
             intent.putExtra(CurtainActivity.name, "SBW");
             intent.putExtra(CurtainActivity.index, index);
