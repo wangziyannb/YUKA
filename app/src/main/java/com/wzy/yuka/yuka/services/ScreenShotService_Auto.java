@@ -6,7 +6,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,12 +15,13 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
 import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 import com.wzy.yuka.yuka.utils.Screenshot;
@@ -41,6 +41,7 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
     private final String TAG = "AutoScreenShotService";
     private GlobalHandler globalHandler;
     private FloatWindowManager floatWindowManager;
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     @Override
     public void handleMsg(Message msg) {
         switch (msg.what) {
@@ -83,17 +84,11 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
     private void getScreenshot() {
         try {
             Screenshot screenshot = new Screenshot(this, floatWindowManager.getmLocation(0));
-            int[] params = GetParams.AdvanceSettings();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            int delay = 800;
-            boolean save = sharedPreferences.getBoolean("settings_debug_savePic", true);
-            if (params[0] == 1) {
-                //危险，性能不足会导致窗子不再出现（消失动画未完成）
-                delay = 200;
-            }
-            if (!sharedPreferences.getBoolean("settings_debug_savePic", true)) {
+            //性能不足可能会导致窗子不再出现（消失动画未完成）
+            int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
+            if (!(Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true)) {
                 //时间足够长，点击退出按钮会导致本过程失效
-                globalHandler.postDelayed(() -> screenshot.cleanImage(), 6000);
+                globalHandler.postDelayed(screenshot::cleanImage, 6000);
             }
             screenshot.getScreenshot(false, delay, floatWindowManager.getData(), () -> {
                 try {
@@ -119,9 +114,6 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
                         Bundle bundle = new Bundle();
                         bundle.putInt("index", 0);
                         bundle.putString("response", response.body().string());
-                        bundle.putString("fileName", fileName);
-                        bundle.putString("filePath", filePath);
-                        bundle.putBoolean("save", save);
                         Message message = Message.obtain();
                         message.what = 1;
                         message.setData(bundle);

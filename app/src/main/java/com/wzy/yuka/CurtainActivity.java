@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.IGuide;
 import com.wzy.yuka.tools.interaction.GuideManager;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
@@ -30,7 +31,7 @@ public class CurtainActivity extends FragmentActivity {
     public static final String name = "type";
     public static final String index = "index";
     private Curtain curtain = null;
-
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +56,6 @@ public class CurtainActivity extends FragmentActivity {
             return;
         }
         try {
-            SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
             GuideManager guideManager = new GuideManager(this);
             FloatWindowManager floatWindowManager = FloatWindowManager.getInstance();
             FloatWindow floatWindow = floatWindowManager.get_FloatWindow(i);
@@ -85,8 +85,9 @@ public class CurtainActivity extends FragmentActivity {
 
                                 @Override
                                 public void onDismiss(IGuide iGuide) {
-                                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_1, false);
+                                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_1, false);
                                     normal_s.show();
+                                    normal_s.isContinue = false;
                                     finish();
                                 }
                             });
@@ -116,8 +117,9 @@ public class CurtainActivity extends FragmentActivity {
 
                                 @Override
                                 public void onDismiss(IGuide iGuide) {
-                                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_N_2, false);
+                                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_2, false);
                                     normal_c.show();
+                                    normal_c.isContinue = false;
                                     finish();
                                 }
                             });
@@ -149,7 +151,7 @@ public class CurtainActivity extends FragmentActivity {
 
                                 @Override
                                 public void onDismiss(IGuide iGuide) {
-                                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SelectWindow_A, false);
+                                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_A, false);
                                     finish();
                                     auto.shows();
                                 }
@@ -182,7 +184,7 @@ public class CurtainActivity extends FragmentActivity {
 
                                 @Override
                                 public void onDismiss(IGuide iGuide) {
-                                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_INVOKE_SubtitleWindow, false);
+                                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SubtitleWindow, false);
                                     finish();
                                     sw.show();
                                 }

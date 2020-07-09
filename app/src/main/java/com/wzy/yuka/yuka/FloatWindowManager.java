@@ -6,8 +6,8 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.LengthUtil;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.floatball.FloatBall;
 import com.wzy.yuka.yuka.floatwindow.FloatWindow;
@@ -37,6 +37,7 @@ public class FloatWindowManager {
     private Intent ssss;
     private Intent as;
     private int sum = 0;
+    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
     private FloatWindowManager(Activity activity) {
         this.mActivity_wr = new WeakReference<>(activity);
@@ -349,8 +350,8 @@ public class FloatWindowManager {
     }
 
     public void reset() {
-        boolean sync = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_trans_syncMode", false);
-        boolean auto = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_switch", false);
+        boolean sync = (boolean) sharedPreferencesUtil.getParam("settings_trans_syncMode", false);
+        boolean auto = (boolean) sharedPreferencesUtil.getParam("settings_auto_switch", false);
         if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
             mFloatWindows[0].reset();
             return;
@@ -362,7 +363,7 @@ public class FloatWindowManager {
                 add_FloatWindow("SBW");
             } else if (auto) {
                 add_FloatWindow("SWA");
-            } else if (GetParams.AdvanceSettings()[1] == 1) {
+            } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousMode, false)) {
                 add_FloatWindow("SWN_C");
             } else {
                 add_FloatWindow("SWN_S");

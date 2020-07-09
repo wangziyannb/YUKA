@@ -38,6 +38,7 @@ import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.message.BaseFragment;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
@@ -188,6 +189,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         return root;
     }
 
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         String TAG = "HomeFragment";
         if (resultCode == Activity.RESULT_CANCELED) {
@@ -216,7 +218,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void showInitGuide() {
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferencesUtil.FIRST_LOGIN, true) && UserManager.checkLogin()) {
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_LOGIN, true) && UserManager.checkLogin()) {
             ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
             ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
             guide2 = new CurtainFlow.Builder()
@@ -273,7 +275,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
                 @Override
                 public void onFinish() {
-                    sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, false);
+                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, false);
                 }
             });
 

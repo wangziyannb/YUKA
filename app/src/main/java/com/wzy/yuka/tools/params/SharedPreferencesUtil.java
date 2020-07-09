@@ -20,14 +20,7 @@ import java.io.Serializable;
 public class SharedPreferencesUtil {
     private static SharedPreferences preferences = null;
     private SharedPreferences.Editor editor = null;
-    public static final String FIRST_OPEN_GuideActivity = "first_open_guideActivity";
-    public static final String FIRST_OPEN_MainActivity = "first_open_mainActivity";
-    public static final String FIRST_LOGIN = "first_Login";
-    public static final String FIRST_INVOKE_FloatBall = "first_FloatBall";
-    public static final String FIRST_INVOKE_SubtitleWindow = "first_SubtitleWindow";
-    public static final String FIRST_INVOKE_SelectWindow_N_1 = "first_SWN_1";
-    public static final String FIRST_INVOKE_SelectWindow_N_2 = "first_SWN_2";
-    public static final String FIRST_INVOKE_SelectWindow_A = "first_SWA";
+
     private static SharedPreferencesUtil preferencesUtil;
     private SharedPreferencesUtil() {
 

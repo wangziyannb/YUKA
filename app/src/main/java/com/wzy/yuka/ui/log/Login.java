@@ -30,6 +30,7 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.user.UserManager;
@@ -46,7 +47,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "登陆成功", Toast.LENGTH_SHORT).show();
-                sharedPreferencesUtil.saveParam(SharedPreferencesUtil.FIRST_LOGIN, true);
+                sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, true);
                 NavHostFragment.findNavController(this).navigateUp();
                 break;
             case 601:
