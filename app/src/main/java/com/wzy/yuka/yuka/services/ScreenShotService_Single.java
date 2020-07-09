@@ -167,7 +167,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
                         }
                     };
                 }
-                HttpRequest.yuka(GetParams.Yuka(), screenshot.getFullFileNames(), callbacks);
+                HttpRequest.yuka(GetParams.Yuka("SWN_S"), screenshot.getFullFileNames(), callbacks);
             });
         } catch (FloatWindowManagerException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

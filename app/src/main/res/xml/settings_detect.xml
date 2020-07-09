@@ -12,16 +12,11 @@
             android:key="settings_fastMode"
             android:summary="高性能要求，出现取词框消失请禁用"
             android:title="快速识别" />
-        <SwitchPreference
-            android:key="settings_continuousMode"
-            android:summary="最多一个取词框，可配合快速识别"
-            android:title="持续模式" />
         <SeekBarPreference
-            android:dependency="settings_continuousMode"
             app:showSeekBarValue="true"
             android:key="settings_continuousMode_interval"
             android:max="30"
-            android:title="识别间隔（秒）"
+            android:title="持续模式的识别间隔（秒）"
             app:adjustable="true"
             app:defaultValue="6"
             app:min="2"

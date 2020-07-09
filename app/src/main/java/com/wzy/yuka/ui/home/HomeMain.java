@@ -54,7 +54,7 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
-                    HashMap<String, String> params = GetParams.Yuka();
+                    HashMap<String, String> params = GetParams.Yuka("NONE");
                     params.put("mode", "text");
                     HttpRequest.yuka(params, origin);
                 }
