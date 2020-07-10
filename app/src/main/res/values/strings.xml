@@ -115,8 +115,8 @@
         <item>sentence</item>
         <item>stream</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="register">注册</string>
 
+    <string name="register">注册</string>
+    <string name="mb_mid_4250_name">伊莉雅</string>
+    <string name="sync_HowToModifyTargetSdk">一般来说，TargetSdk为29（即安卓Q）的App默认支持本功能。低于29的App默认不支持本功能。如要强制支持，请用MT管理器修改该App中的AndroidManifest.xml中的android:targetSdkVersion值为29即可</string>
 </resources>

@@ -91,5 +91,10 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
         }
     }
 
-
+    @Override
+    public void onDestroyView() {
+        text_l = null;
+        globalHandler = null;
+        super.onDestroyView();
+    }
 }

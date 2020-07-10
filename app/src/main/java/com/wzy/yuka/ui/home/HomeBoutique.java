@@ -30,7 +30,7 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
     private List<Screenshot> screenshots = new ArrayList<>();
     private ScreenshotAdapter adapter;
     private boolean isDetail = false;
-
+    private HashMap<String, Integer> spacesVelue;
     @Override
     public boolean onBackPressed() {
         if (isDetail) {
@@ -59,7 +59,7 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        HashMap<String, Integer> spacesVelue = new HashMap<>();
+        spacesVelue = new HashMap<>();
         spacesVelue.put(SpacesItemDecoration.TOP_SPACE, 0);
         spacesVelue.put(SpacesItemDecoration.BOTTOM_SPACE, 20);
         spacesVelue.put(SpacesItemDecoration.LEFT_SPACE, 0);
@@ -113,5 +113,13 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
             initScreenshots(textView.getText() + "");
             adapter.notifyItemRangeInserted(0, screenshots.size());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        spacesVelue = null;
+        screenshots = null;
+        adapter = null;
+        super.onDestroyView();
     }
 }
