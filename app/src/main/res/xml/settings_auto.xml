@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="自动识别翻译">
-        <SwitchPreference
-            android:key="settings_auto_switch"
-            android:summary="选取欲翻译位置，将自动将所有检测到文字的区域识别并翻译，且在相应位置使用悬浮窗显示结果。"
-            android:title="自动识别翻译" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="识别设置">
         <SwitchPreference
             android:key="settings_fastMode"

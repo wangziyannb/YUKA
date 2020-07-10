@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.wzy.yuka.tools.params.LengthUtil;
-import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.floatball.FloatBall;
 import com.wzy.yuka.yuka.floatwindow.FloatWindow;
@@ -37,6 +36,7 @@ public class FloatWindowManager {
     private Intent ssss;
     private Intent as;
     private int sum = 0;
+    private String lastMode = "SWN_S";
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
     private FloatWindowManager(Activity activity) {
@@ -117,9 +117,9 @@ public class FloatWindowManager {
     }
 
     public void add_FloatWindow(FloatWindow floatWindow) {
-        //无视上限限制强行加入FloatWindow
         if (floatWindow != null) {
             mFloatWindows = LengthUtil.appendIndex(mFloatWindows);
+            floatWindow.setIndex(mFloatWindows.length - 1);
             mFloatWindows[mFloatWindows.length - 1] = floatWindow;
         }
     }
@@ -139,36 +139,40 @@ public class FloatWindowManager {
                             Toast.makeText(mActivity_wr.get(), "暂不支持其他模式的多悬浮窗识别！", Toast.LENGTH_SHORT).show();
                         }
                     }
-                    mFloatWindows = LengthUtil.appendIndex(mFloatWindows);
-                    floatWindow = new SelectWindow_Normal(mActivity_wr.get(), mFloatWindows.length - 1, "floatwindow" + sum);
-                    mFloatWindows[mFloatWindows.length - 1] = floatWindow;
+                    floatWindow = new SelectWindow_Normal(mActivity_wr.get(), 0, "floatwindow" + sum, false);
+                    add_FloatWindow(floatWindow);
+                    lastMode = mode;
                 }
                 break;
             case "SWN_C":
                 if (getNumOfFloatWindows() >= limit) {
                     Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
                 } else {
-                    mFloatWindows = LengthUtil.appendIndex(mFloatWindows);
-                    floatWindow = new SelectWindow_Normal(mActivity_wr.get(), mFloatWindows.length - 1, "floatwindow" + sum);
-                    mFloatWindows[mFloatWindows.length - 1] = floatWindow;
+                    floatWindow = new SelectWindow_Normal(mActivity_wr.get(), 0, "floatwindow" + sum, true);
+                    add_FloatWindow(floatWindow);
+                    lastMode = mode;
                 }
                 break;
             case "SWA":
                 if (getNumOfFloatWindows() >= limit) {
                     Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
                 } else {
-                    mFloatWindows = LengthUtil.appendIndex(mFloatWindows);
-                    floatWindow = new SelectWindow_Auto(mActivity_wr.get(), mFloatWindows.length - 1, "floatwindow" + sum);
-                    mFloatWindows[mFloatWindows.length - 1] = floatWindow;
+                    floatWindow = new SelectWindow_Auto(mActivity_wr.get(), 0, "floatwindow" + sum);
+                    add_FloatWindow(floatWindow);
+                    lastMode = mode;
                 }
                 break;
             case "SBW":
                 if (getNumOfFloatWindows() >= limit) {
                     Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
                 } else {
-                    mFloatWindows = LengthUtil.appendIndex(mFloatWindows);
-                    floatWindow = new SubtitleWindow(mActivity_wr.get(), mFloatWindows.length - 1, "floatwindow" + sum);
-                    mFloatWindows[mFloatWindows.length - 1] = floatWindow;
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        Toast.makeText(mActivity_wr.get(), "需要安卓10才可使用同步字幕", Toast.LENGTH_SHORT).show();
+                    } else {
+                        floatWindow = new SubtitleWindow(mActivity_wr.get(), 0, "floatwindow" + sum);
+                        add_FloatWindow(floatWindow);
+                        lastMode = mode;
+                    }
                 }
                 break;
             default:
@@ -349,9 +353,8 @@ public class FloatWindowManager {
         }
     }
 
+
     public void reset() {
-        boolean sync = (boolean) sharedPreferencesUtil.getParam("settings_trans_syncMode", false);
-        boolean auto = (boolean) sharedPreferencesUtil.getParam("settings_auto_switch", false);
         if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
             mFloatWindows[0].reset();
             return;
@@ -359,15 +362,7 @@ public class FloatWindowManager {
         remove_AllFloatWindow();
         mLocation = null;
         try {
-            if (sync) {
-                add_FloatWindow("SBW");
-            } else if (auto) {
-                add_FloatWindow("SWA");
-            } else if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousMode, false)) {
-                add_FloatWindow("SWN_C");
-            } else {
-                add_FloatWindow("SWN_S");
-            }
+            add_FloatWindow(lastMode);
         } catch (FloatWindowManagerException e) {
             e.printStackTrace();
         }

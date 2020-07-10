@@ -1,10 +1,15 @@
 package com.wzy.yuka.yuka.floatball;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.SizeUtil;
 
 public class FloatBallLayout extends ViewGroup {
@@ -12,17 +17,22 @@ public class FloatBallLayout extends ViewGroup {
     public boolean isDeployed = false;
 
     private FloatBallLayoutListener mListener;
+    private boolean ifAnimate;
 
     public FloatBallLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public FloatBallLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+
     }
 
     public FloatBallLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray floatBallArray = context.obtainStyledAttributes(attrs, R.styleable.FloatBallLayout);
+        ifAnimate = floatBallArray.getBoolean(R.styleable.FloatBallLayout_animateLayoutChanges, false);
+        floatBallArray.recycle();
     }
 
     @Override
@@ -48,11 +58,20 @@ public class FloatBallLayout extends ViewGroup {
         setLayoutParams(layoutParams);
     }
 
+
     public void fold() {
+        isDeployed = false;
+        if (ifAnimate) {
+            performAnimations();
+        } else {
+            removeViews();
+        }
+    }
+
+    private void removeViews() {
         do {
             removeViewAt(getChildCount() - 1);
         } while (getChildCount() != 1);
-        isDeployed = false;
         if (mListener != null) {
             mListener.folded();
         }
@@ -64,13 +83,22 @@ public class FloatBallLayout extends ViewGroup {
         }
     }
 
+    public void setIfAnimate(boolean ifAnimate) {
+        this.ifAnimate = ifAnimate;
+    }
+
     public void setFloatBallLayoutListener(FloatBallLayoutListener floatBallLayoutListener) {
         this.mListener = floatBallLayoutListener;
+    }
+
+    public FloatBallLayoutListener getFloatBallLayoutListener() {
+        return mListener;
     }
 
     public void removeFloatBallLayoutListener() {
         this.mListener = null;
     }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     }
@@ -78,6 +106,7 @@ public class FloatBallLayout extends ViewGroup {
     public void setIsLeft(boolean isLeft) {
         this.mIsLeft = isLeft;
     }
+
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -87,6 +116,7 @@ public class FloatBallLayout extends ViewGroup {
             View child = getChildAt(i);
             int radius = child.getMeasuredWidth() / 2;
             if (count > 1) {
+                //有数个view，分情况考虑（第一个view要放到正中间）
                 if (mIsLeft) {
                     center[0] = center[0] - child.getWidth() / 2;
                 } else {
@@ -95,12 +125,17 @@ public class FloatBallLayout extends ViewGroup {
                 if (i == 0) {
                     child.layout(center[0] - radius, center[1] - radius,
                             center[0] + radius, center[1] + radius);
+                } else if (ifAnimate) {
+                    child.setAlpha(0f);
+                    child.layout(center[0] - radius, center[1] - radius,
+                            center[0] + radius, center[1] + radius);
                 } else {
                     int[] newCoordinate = calculate(center, SizeUtil.dp2px(getContext(), 52), i - 1);
                     child.layout(newCoordinate[0] - radius, newCoordinate[1] - radius,
                             newCoordinate[0] + radius, newCoordinate[1] + radius);
                 }
             } else {
+                //只有一个View
                 child.layout(center[0] - radius, center[1] - radius,
                         center[0] + radius, center[1] + radius);
             }
@@ -108,12 +143,84 @@ public class FloatBallLayout extends ViewGroup {
         }
         if (getChildCount() == 5) {
             isDeployed = true;
+            performAnimations();
             if (mListener != null) {
                 mListener.deployed();
             }
 
         }
     }
+
+    private void performAnimations() {
+        int[] center = {(getRight() - getLeft()) / 2, (getBottom() - getTop()) / 2};
+        int count = getChildCount();
+        if (isDeployed) {
+            for (int i = 1; i < count; i++) {
+                View child = getChildAt(i);
+                if (mIsLeft) {
+                    center[0] = center[0] - child.getWidth() / 2;
+                } else {
+                    center[0] = center[0] + child.getWidth() / 2;
+                }
+                int[] newCoordinate = calculate(center, SizeUtil.dp2px(getContext(), 52), i - 1);
+                ObjectAnimator animatorX = ObjectAnimator
+                        .ofFloat(child, "translationX", 0f, newCoordinate[0] - center[0]);
+                ObjectAnimator animatorY = ObjectAnimator
+                        .ofFloat(child, "translationY", 0f, newCoordinate[1] - center[1]);
+                ObjectAnimator animatorAlpha = ObjectAnimator
+                        .ofFloat(child, "alpha", 0f, 1f);
+                AnimatorSet xySet = new AnimatorSet();
+                xySet.play(animatorX).with(animatorY).with(animatorAlpha);
+                xySet.setDuration(200);
+                xySet.start();
+            }
+        } else {
+            for (int i = 1; i < count; i++) {
+                View child = getChildAt(i);
+                if (mIsLeft) {
+                    center[0] = center[0] - child.getWidth() / 2;
+                } else {
+                    center[0] = center[0] + child.getWidth() / 2;
+                }
+                int[] newCoordinate = calculate(center, SizeUtil.dp2px(getContext(), 52), i - 1);
+                ObjectAnimator animatorX = ObjectAnimator
+                        .ofFloat(child, "translationX", newCoordinate[0] - center[0], 0f);
+                ObjectAnimator animatorY = ObjectAnimator
+                        .ofFloat(child, "translationY", newCoordinate[1] - center[1], 0f);
+                ObjectAnimator animatorAlpha = ObjectAnimator
+                        .ofFloat(child, "alpha", 1f, 0f);
+                AnimatorSet xySet = new AnimatorSet();
+                xySet.play(animatorX).with(animatorY).with(animatorAlpha);
+                xySet.setDuration(200);
+                if (i == count - 1) {
+                    xySet.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            removeViews();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                }
+                xySet.start();
+            }
+
+        }
+    }
+
 
     private int[] calculate(int[] center, int radius, int index) {
         int[] newCoordinate = new int[2];

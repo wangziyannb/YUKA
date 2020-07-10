@@ -92,7 +92,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                             globalHandler.sendMessage(message);
                         }
                     };
-                    HttpRequest.yuka(GetParams.Yuka(), fileName, callback);
+                    HttpRequest.yuka(GetParams.Yuka("SWN_C"), fileName, callback);
                 });
             } else {
                 floatWindowManager.show_all(false, 0);
@@ -130,7 +130,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             double time = resultJson.getDouble("time");
             floatWindowManager.show_result_normal(origin, result, time, index);
 
-            if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousMode, false) && continuous) {
+            if (continuous) {
                 startScreenshot((int) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousModeInterval, 6) * 1000);
             }
             if (save) {

@@ -33,7 +33,7 @@ public class GetParams {
     }
 
 
-    public static HashMap<String, String> Yuka() {
+    public static HashMap<String, String> Yuka(String mode) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Resources resources = context.getResources();
         HashMap<String, String> params = new HashMap<>();
@@ -48,40 +48,48 @@ public class GetParams {
         params.put("translator", resources.getStringArray(R.array.translator)[0]);
         params.put("SBCS", resources.getString(R.string.False));
 
-        if (preferences.getBoolean("settings_auto_switch", false)) {
-            params.put("mode", resources.getStringArray(R.array.mode)[3]);
-            if (preferences.getBoolean("settings_baidu_punctuation", false)) {
-                //标点优化
-                params.put("punctuation", resources.getString(R.string.True));
-            }
-            if (preferences.getBoolean("settings_auto_vertical", false)) {
-                //横竖排文字
-                params.put("vertical", resources.getString(R.string.True));
-            }
-            if (preferences.getBoolean("settings_baidu_reverse", false)) {
-                //阅读顺序逆转
-                params.put("reverse", resources.getString(R.string.True));
-            }
-        } else {
-            switch (preferences.getString("settings_detect_model", resources.getStringArray(R.array.detect_modelset)[0])) {
-                case "google":
-                    break;
-                case "baidu":
-                    params.put("model", resources.getStringArray(R.array.detect_modelset)[1]);
-                    if (preferences.getBoolean("settings_baidu_precise", false)) {
-                        //高精度模式
-                        params.put("precise", resources.getString(R.string.True));
-                    }
-                    if (preferences.getBoolean("settings_baidu_punctuation", false)) {
-                        //竖排标点优化
-                        params.put("punctuation", resources.getString(R.string.True));
-                    }
-                    if (preferences.getBoolean("settings_baidu_reverse", false)) {
-                        //阅读顺序逆转
-                        params.put("reverse", resources.getString(R.string.True));
-                    }
-                    break;
-            }
+        switch (mode) {
+            case "NONE":
+            case "SWN_S":
+            case "SWN_C":
+                switch (preferences.getString("settings_detect_model", resources.getStringArray(R.array.detect_modelset)[0])) {
+                    case "google":
+                        break;
+                    case "baidu":
+                        params.put("model", resources.getStringArray(R.array.detect_modelset)[1]);
+                        if (preferences.getBoolean("settings_baidu_precise", false)) {
+                            //高精度模式
+                            params.put("precise", resources.getString(R.string.True));
+                        }
+                        if (preferences.getBoolean("settings_baidu_punctuation", false)) {
+                            //竖排标点优化
+                            params.put("punctuation", resources.getString(R.string.True));
+                        }
+                        if (preferences.getBoolean("settings_baidu_reverse", false)) {
+                            //阅读顺序逆转
+                            params.put("reverse", resources.getString(R.string.True));
+                        }
+                        break;
+                }
+                break;
+            case "SWA":
+                params.put("mode", resources.getStringArray(R.array.mode)[3]);
+                if (preferences.getBoolean("settings_baidu_punctuation", false)) {
+                    //标点优化
+                    params.put("punctuation", resources.getString(R.string.True));
+                }
+                if (preferences.getBoolean("settings_auto_vertical", false)) {
+                    //横竖排文字
+                    params.put("vertical", resources.getString(R.string.True));
+                }
+                if (preferences.getBoolean("settings_baidu_reverse", false)) {
+                    //阅读顺序逆转
+                    params.put("reverse", resources.getString(R.string.True));
+                }
+                break;
+            case "SBW":
+
+                break;
         }
         switch (preferences.getString("settings_trans_translator", resources.getStringArray(R.array.translator)[0])) {
             case "google":

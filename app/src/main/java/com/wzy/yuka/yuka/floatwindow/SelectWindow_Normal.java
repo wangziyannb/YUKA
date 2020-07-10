@@ -45,13 +45,14 @@ public class SelectWindow_Normal extends FloatWindow {
     public boolean isContinue = false;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
-    public SelectWindow_Normal(Activity activity, int index, String tag) throws FloatWindowManagerException {
+    public SelectWindow_Normal(Activity activity, int index, String tag, boolean isContinue) throws FloatWindowManagerException {
         super(activity, index, tag);
+        this.isContinue = isContinue;
         EasyFloat.with(activity)
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
                     setView(view1);
-                    changeClass(false);
+                    changeClass();
                     RelativeLayout rl = view1.findViewById(R.id.select_window_layout);
                     //改变悬浮框透明度
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
@@ -136,7 +137,6 @@ public class SelectWindow_Normal extends FloatWindow {
                     public void touchEvent(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         //locationA[0]左上角对左边框，locationA[1]左上角对上边框
                         setLocation();
-                        changeClass(true);
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             handler.postDelayed(r, 1000);
                         } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
@@ -201,22 +201,17 @@ public class SelectWindow_Normal extends FloatWindow {
         super.dismiss();
     }
 
-    private void changeClass(boolean check) {
-        if ((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousMode, false)) {
+    private void changeClass() {
+        if (isContinue) {
             //持续模式
-            isContinue = true;
             ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_start);
             view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
         } else {
             //普通模式
-            isContinue = false;
             ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_translate);
             view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
         }
-        if (check) {
-            showInitGuide();
-        }
-
+        showInitGuide();
     }
 
     @Override

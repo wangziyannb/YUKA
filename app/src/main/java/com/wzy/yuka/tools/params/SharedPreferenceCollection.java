@@ -15,10 +15,9 @@ public class SharedPreferenceCollection {
 
     public static final String debug_savePic = "settings_debug_savePic";
 
-
     public static final String action_fastMode = "settings_fastMode";
-    public static final String action_continuousMode = "settings_continuousMode";
     public static final String action_continuousModeInterval = "settings_continuousMode_interval";
+
 
     public static final String FIRST_GuideActivity = "first_open_guideActivity";
     public static final String FIRST_MainActivity = "first_open_mainActivity";

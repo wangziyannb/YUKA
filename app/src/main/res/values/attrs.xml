@@ -36,4 +36,8 @@
         </attr>
 
     </declare-styleable>
+
+    <declare-styleable name="FloatBallLayout">
+        <attr name="animateLayoutChanges" format="boolean" />
+    </declare-styleable>
 </resources>

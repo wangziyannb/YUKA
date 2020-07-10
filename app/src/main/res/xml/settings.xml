@@ -3,17 +3,21 @@
     <PreferenceCategory android:title="外观设置">
         <Preference
             android:key="settings_appearance"
+            android:summary="悬浮球悬浮窗外观、行为定制"
             android:title="悬浮球与悬浮窗" />
     </PreferenceCategory>
     <PreferenceCategory android:title="功能设置">
         <Preference
             android:key="settings_detect"
-            android:title="基本识别翻译" />
+            android:summary="复数悬浮窗翻译多行文本，间隔固定时间持续翻译"
+            android:title="复数和持续翻译" />
         <Preference
             android:key="settings_auto"
+            android:summary="自动检测所选区域所有文字，且在相应位置使用悬浮窗显示结果"
             android:title="自动识别翻译" />
         <Preference
             android:key="settings_sync"
+            android:summary="根据系统内录音频生成同步字幕，需要目标app支持，需要安卓Q(10)"
             android:title="系统内录同步字幕" />
     </PreferenceCategory>
     <PreferenceCategory android:title="开发者选项">
