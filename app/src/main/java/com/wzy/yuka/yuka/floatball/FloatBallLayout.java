@@ -143,7 +143,9 @@ public class FloatBallLayout extends ViewGroup {
         }
         if (getChildCount() == 5) {
             isDeployed = true;
-            performAnimations();
+            if (ifAnimate) {
+                performAnimations();
+            }
             if (mListener != null) {
                 mListener.deployed();
             }

@@ -219,7 +219,6 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     if (floatBallLayout.isDeployed) {
                         //展开则关闭
                         removeOnClickListeners();
-                        floatBallLayout.fold();
                         if (!isInGuiding) {
                             floatBallLayout.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
                                 @Override
@@ -241,6 +240,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                                 }
                             });
                         }
+                        floatBallLayout.fold();
                     } else {
                         removeOnClickListeners();
                         EasyFloat.appFloatDragEnable(false, tag);
