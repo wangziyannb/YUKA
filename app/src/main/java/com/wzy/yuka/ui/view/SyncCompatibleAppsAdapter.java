@@ -4,9 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wzy.yuka.R;
@@ -46,7 +46,7 @@ public class SyncCompatibleAppsAdapter extends RecyclerView.Adapter<SyncCompatib
 
     static class VH extends RecyclerView.ViewHolder {
         ImageView icon;
-        TextView name;
+        AppCompatTextView name;
 
         VH(View view) {
             super(view);

@@ -4,6 +4,7 @@
     android:layout_height="120dp"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <ImageView
@@ -16,7 +17,7 @@
         android:layout_marginBottom="3dp"
         android:src="@drawable/mb_mid_4250" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/sync_app_name"
         android:layout_width="74dp"
         android:layout_height="27dp"
@@ -25,5 +26,9 @@
         android:layout_marginBottom="3dp"
         android:gravity="center"
         android:maxLines="1"
-        android:text="@string/mb_mid_4250_name" />
+        android:text="@string/mb_mid_4250_name"
+        app:autoSizeMaxTextSize="12dp"
+        app:autoSizeMinTextSize="5dp"
+        app:autoSizeStepGranularity="1dp"
+        app:autoSizeTextType="uniform" />
 </LinearLayout>
