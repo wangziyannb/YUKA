@@ -10,32 +10,39 @@ import androidx.preference.PreferenceManager;
 
 import com.wzy.yuka.R;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 public class GetParams {
-    private static Context context;
+    private static WeakReference<Context> context;
 
     public static void init(Context application) {
-        context = application;
+        context = new WeakReference<>(application);
     }
 
     public static int[] Screen() {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.get().getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         windowManager.getDefaultDisplay().getSize(point);
         int[] size = new int[3];
         size[0] = point.x;
         size[1] = point.y;
-        Resources resources = context.getResources();
+        Resources resources = context.get().getResources();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         size[2] = resources.getDimensionPixelSize(resourceId);
         return size;
     }
 
+    public static int[] ScreenDp() {
+        int[] params = Screen();
+        int height = SizeUtil.px2dp(context.get(), params[0]);
+        int width = SizeUtil.px2dp(context.get(), params[1]);
+        return params;
+    }
 
     public static HashMap<String, String> Yuka(String mode) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Resources resources = context.getResources();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.get());
+        Resources resources = context.get().getResources();
         HashMap<String, String> params = new HashMap<>();
 
         //初始化设置
