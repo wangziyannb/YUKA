@@ -261,8 +261,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             img.setImageResource(R.drawable.guide_afterlogin_charge);
                             img.setScaleType(ImageView.ScaleType.FIT_START);
 
-                            params_img.width = SizeUtil.dp2px(requireContext(), 220);
-                            params_img.height = SizeUtil.dp2px(requireContext(), 220);
+                            params_img.width = SizeUtil.dp2px(requireContext(), 230);
+                            params_img.height = SizeUtil.dp2px(requireContext(), 240);
 
                             img.setLayoutParams(params_img);
                             set.clone(layout);
