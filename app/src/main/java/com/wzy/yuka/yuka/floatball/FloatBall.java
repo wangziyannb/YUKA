@@ -428,18 +428,18 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                 ConstraintLayout layout;
                 FloatBallLayout fbl = FloatBallView.findViewById(R.id.floatball_layout);
 
-                private void setImg(ConstraintLayout layout, int imageResource) {
+                private void setImg(ConstraintLayout layout, int imageResource, int width, int height, int top, int right) {
                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                     Log.e(tag, "setImg: " + layout);
                     Log.e(tag, "setImg: " + img);
                     img.setImageResource(imageResource);
+                    img.setScaleType(ImageView.ScaleType.FIT_START);
                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
-                    params_img.width = SizeUtil.dp2px(mActivityRef.get(), 335);
-                    params_img.height = SizeUtil.dp2px(mActivityRef.get(), 242);
-
-                    params_img.topMargin = SizeUtil.dp2px(mActivityRef.get(), 10);
-                    params_img.rightMargin = SizeUtil.dp2px(mActivityRef.get(), 10);
+                    params_img.width = SizeUtil.dp2px(mActivityRef.get(), width);
+                    params_img.height = SizeUtil.dp2px(mActivityRef.get(), height);
+                    params_img.topMargin = SizeUtil.dp2px(mActivityRef.get(), top);
+                    params_img.rightMargin = SizeUtil.dp2px(mActivityRef.get(), right);
                     img.setLayoutParams(params_img);
 
                     ConstraintSet set = new ConstraintSet();
@@ -481,7 +481,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                                 v.setOnClickListener(null);
                                 fbl.findViewById(R.id.floatball_main).performClick();
                             });
-                            setImg(layout, R.drawable.guide_floatball_folded);
+                            setImg(layout, R.drawable.guide_floatball_folded, 192, 27, 80, 20);
                             break;
                         case 12:
                             layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
@@ -489,7 +489,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                                 fbl.fold();
                                 v.setOnClickListener(null);
                             });
-                            setImg(layout, R.drawable.guide_floatball_deployed);
+                            setImg(layout, R.drawable.guide_floatball_deployed, 320, 220, 10, 10);
                             break;
                     }
                 }
