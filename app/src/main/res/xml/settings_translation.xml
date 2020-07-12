@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="翻译设置">
+        <ListPreference
+            android:entries="@array/translator_name"
+            android:entryValues="@array/translator"
+            android:key="settings_trans_translator"
+            android:summary="默认谷歌"
+            android:title="翻译器选择" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="额外设置(仅百度)">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换" />
+    </PreferenceCategory>
+</PreferenceScreen>
