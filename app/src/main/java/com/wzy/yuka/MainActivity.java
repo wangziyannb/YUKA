@@ -96,6 +96,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             }
         });
 
+
         try {
             Message message = getIntent().getParcelableExtra("msg");
             if (message.what == 100) {
@@ -177,7 +178,15 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     @Override
     protected void onPause() {
         if (isFinishing()) {
-
+            mAppBarConfiguration = null;
+            globalHandler = null;
+            drawer = null;
+            navController = null;
+            sharedPreferencesUtil = null;
+            login = null;
+            NavButton = null;
+            navigationView = null;
+            guideManager = null;
         }
         super.onPause();
     }

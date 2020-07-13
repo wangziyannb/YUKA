@@ -230,11 +230,6 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    /**
-     * Login.
-     *
-     * @param params 账号、密码、uuid
-     */
     public static void Login(String[] params, Callback callback) {
         RequestBody body = new FormBody.Builder()
                 .add("u_name", params[0])
@@ -295,6 +290,16 @@ public class HttpRequest {
                 .build();
         Request request = new Request.Builder()
                 .url("https://yukacn.xyz/yuka/account/")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void checkUpdate(Callback callback) {
+        RequestBody requestBody = new FormBody.Builder().build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/latest_version/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
