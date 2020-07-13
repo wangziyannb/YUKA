@@ -153,7 +153,15 @@
     <fragment
         android:id="@+id/nav_about_dev"
         android:name="com.wzy.yuka.ui.about.AboutDev"
-        android:label="关于开发者" />
+        android:label="关于开发者">
+        <action
+            android:id="@+id/action_nav_about_dev_to_nav_about_dev_function"
+            app:destination="@id/nav_about_dev_function" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_about_dev_function"
+        android:name="com.wzy.yuka.ui.about.AboutDevFunction"
+        android:label="功能介绍" />
     <fragment
         android:id="@+id/nav_about_opensource"
         android:name="com.wzy.yuka.ui.about.AboutOpenSource"

@@ -88,7 +88,7 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
         getPreferenceScreen().findPreference("about_thanks_open_source").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_thanks_reference").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_server").setOnPreferenceClickListener(this);
-        getPreferenceScreen().findPreference("about_about_server").setOnPreferenceClickListener(this);
+        getPreferenceScreen().findPreference("about_about_dev").setOnPreferenceClickListener(this);
         String uuid = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         Preference preference = getPreferenceScreen().findPreference("about_this_1");
         preference.setSummary(uuid + "\n\n" + preference.getSummary());
