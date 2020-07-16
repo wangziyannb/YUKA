@@ -6,7 +6,7 @@
             android:entries="@array/detect_model"
             android:entryValues="@array/detect_modelset"
             android:key="settings_detect_model"
-            android:summary="默认谷歌"
+            android:summary="默认百度"
             android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
@@ -21,6 +21,12 @@
             app:defaultValue="6"
             app:min="2"
             app:seekBarIncrement="1" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_HV"
+            android:summaryOff="横排文字识别"
+            android:summaryOn="竖排文字识别"
+            android:title="横竖排识别（仅百度）" />
     </PreferenceCategory>
     <PreferenceCategory android:title="翻译设置">
         <ListPreference

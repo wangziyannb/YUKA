@@ -63,10 +63,12 @@ public class HttpRequest {
                 .add("SBCS", Objects.requireNonNull(params.get("SBCS")))
                 .add("precise", Objects.requireNonNull(params.get("precise")))
                 .add("vertical", Objects.requireNonNull(params.get("vertical")))
-                .add("reverse", Objects.requireNonNull(params.get("reverse")))
+                // .add("reverse", Objects.requireNonNull(params.get("reverse")))
                 .add("origin", origin)
                 .add("u_name", UserManager.getUser()[0])
                 .add("uuid", UserManager.getUser()[2])
+                .add("direction", Objects.requireNonNull(params.get("direction")))
+                .add("tolerance", Objects.requireNonNull(params.get("tolerance")))
                 .build();
         Request request = new Request.Builder()
                 .url("https://yukacn.xyz/yuka/yuka/")
@@ -119,8 +121,12 @@ public class HttpRequest {
                             RequestBody.create(Objects.requireNonNull(params.get("mode")), null)
                     )
                     .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"model\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("model")), null)
+                            Headers.of("Content-Disposition", "form-data; name=\"detect_model\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("detect_model")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"auto_model\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("auto_model")), null)
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"translator\""),
@@ -138,10 +144,10 @@ public class HttpRequest {
                             Headers.of("Content-Disposition", "form-data; name=\"punctuation\""),
                             RequestBody.create(Objects.requireNonNull(params.get("punctuation")), null)
                     )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
-                    )
+                    /*   .addPart(
+                               Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
+                               RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
+                       )*/
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
                             RequestBody.create(UserManager.getUser()[0], null)
@@ -149,6 +155,14 @@ public class HttpRequest {
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
                             RequestBody.create(UserManager.getUser()[2], null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"direction\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("direction")), null)
+                    )
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"tolerance\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("tolerance")), null)
                     )
                     .build();
         } else {
