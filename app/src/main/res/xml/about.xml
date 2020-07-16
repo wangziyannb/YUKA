@@ -39,7 +39,7 @@
     <PreferenceCategory android:title="本机信息">
         <Preference
             android:key="about_this_1"
-            android:summary="忘记账号或密码时请提交本id至管理员qq 1269586767处进行信息修改。务必保证此设备为账号注册设备"
+            android:summary="忘记账号或密码时请提交本id至管理员qq 1269586767处进行信息修改。务必保证此设备为账号注册设备，且apk的签名未改动，否则会导致本id与注册id不匹配"
             android:title="本机ID" />
     </PreferenceCategory>
 </PreferenceScreen>

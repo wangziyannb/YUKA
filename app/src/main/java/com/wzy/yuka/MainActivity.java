@@ -1,6 +1,10 @@
 package com.wzy.yuka;
 
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.MenuItem;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -33,6 +38,7 @@ import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
@@ -40,8 +46,16 @@ import com.wzy.yuka.yuka.FloatWindowManager;
 import com.wzy.yuka.yuka.user.UserManager;
 import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class MainActivity extends BaseActivity implements GlobalHandler.HandleMsgListener {
@@ -203,6 +217,25 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             case 200:
                 LoadingViewManager.dismiss();
                 Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
+                HttpRequest.checkUpdate(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Message message = Message.obtain();
+                        message.what = 399;
+                        globalHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String res = response.body().string();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("response", res);
+                        Message message = Message.obtain();
+                        message.what = 199;
+                        message.setData(bundle);
+                        globalHandler.sendMessage(message);
+                    }
+                });
                 break;
             case 201:
                 LoadingViewManager.dismiss();
@@ -217,6 +250,12 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                     drawer.openDrawer(GravityCompat.START, true);
                 }
                 break;
+            case 399:
+                Toast.makeText(this, "Yuka检查更新失败", Toast.LENGTH_SHORT).show();
+                break;
+            case 199:
+                showUpdate(msg.getData().getString("response"));
+                break;
             case 400:
                 LoadingViewManager.dismiss();
                 Toast.makeText(this, "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
@@ -224,6 +263,44 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         }
     }
 
+    private void showUpdate(String res) {
+        try {
+            PackageManager packageManager = getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+            String versionName = packageInfo.versionName;
+            long versionCode = packageInfo.getLongVersionCode();
+
+            JSONObject jsonObject = new JSONObject(res);
+            String version_name = jsonObject.getString("version_name");
+            String version_code = jsonObject.getString("version_code");
+            String version_status = jsonObject.getString("version_status");
+            String update_time = jsonObject.getString("update_time");
+            String compatible_server_version = jsonObject.getString("compatible_server_version");
+            String description = jsonObject.getString("description");
+            String download_url = jsonObject.getString("download_url");
+
+            if (Integer.parseInt(version_code) > versionCode) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("发现更新：Yuka V" + version_name + "-" + version_status);
+                String message = "更新时间：" + update_time + "\n" + description + "\n" +
+                        "支持的服务器版本：" + compatible_server_version;
+                alert.setMessage(message);
+                alert.setPositiveButton("更新", (dialog, which) -> {
+                    Uri uri = Uri.parse(download_url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                });
+                alert.setNegativeButton("下次一定（", (dialog, which) -> {
+                });
+                alert.show();
+            } else {
+                Toast.makeText(this, "已经是最新版啦", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "服务器正忙...请稍后重试", Toast.LENGTH_SHORT).show();
+        }
+    }
     private CurtainFlowInterface curtainFlowInterface;
     private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
         @Override
