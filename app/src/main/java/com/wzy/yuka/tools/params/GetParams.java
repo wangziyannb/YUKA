@@ -47,13 +47,15 @@ public class GetParams {
 
         //初始化设置
         params.put("mode", resources.getStringArray(R.array.mode)[1]);
-        params.put("model", resources.getStringArray(R.array.detect_modelset)[0]);
+        params.put("detect_model", resources.getStringArray(R.array.detect_modelset)[0]);
         params.put("precise", resources.getString(R.string.False));
         params.put("vertical", resources.getString(R.string.False));
         params.put("punctuation", resources.getString(R.string.False));
-        params.put("reverse", resources.getString(R.string.False));
+        params.put("direction", resources.getString(R.string.False));
         params.put("translator", resources.getStringArray(R.array.translator)[0]);
         params.put("SBCS", resources.getString(R.string.False));
+        params.put("auto_model", resources.getStringArray(R.array.auto_modelset)[0]);
+        params.put("tolerance", resources.getString(R.string.False));
 
         switch (mode) {
             case "NONE":
@@ -63,7 +65,7 @@ public class GetParams {
                     case "google":
                         break;
                     case "baidu":
-                        params.put("model", resources.getStringArray(R.array.detect_modelset)[1]);
+                        params.put("detect_model", resources.getStringArray(R.array.detect_modelset)[1]);
                         if (preferences.getBoolean("settings_baidu_precise", false)) {
                             //高精度模式
                             params.put("precise", resources.getString(R.string.True));
@@ -72,30 +74,33 @@ public class GetParams {
                             //竖排标点优化
                             params.put("punctuation", resources.getString(R.string.True));
                         }
-                        if (preferences.getBoolean("settings_baidu_reverse", false)) {
-                            //阅读顺序逆转
-                            params.put("reverse", resources.getString(R.string.True));
+                        if (preferences.getBoolean("settings_baidu_HV", false)) {
+                            //横竖排文字
+                            params.put("direction", resources.getString(R.string.True));
                         }
                         break;
                 }
                 break;
             case "SWA":
-                params.put("mode", resources.getStringArray(R.array.mode)[3]);
-                if (preferences.getBoolean("settings_baidu_punctuation", false)) {
-                    //标点优化
-                    params.put("punctuation", resources.getString(R.string.True));
-                }
-                if (preferences.getBoolean("settings_auto_vertical", false)) {
-                    //横竖排文字
-                    params.put("vertical", resources.getString(R.string.True));
-                }
-                if (preferences.getBoolean("settings_baidu_reverse", false)) {
-                    //阅读顺序逆转
-                    params.put("reverse", resources.getString(R.string.True));
+                switch (preferences.getString("settings_auto_model", resources.getStringArray(R.array.auto_modelset)[0])) {
+                    case "google":
+                        //宽容度
+                        params.put("tolerance", preferences.getInt("settings_auto_tolerance", 15) + "");
+                        break;
+                    case "baidu":
+                        params.put("auto_model", resources.getStringArray(R.array.auto_modelset)[1]);
+                        if (preferences.getBoolean("settings_baidu_punctuation", false)) {
+                            //标点优化
+                            params.put("punctuation", resources.getString(R.string.True));
+                        }
+                        if (preferences.getBoolean("settings_auto_vertical", false)) {
+                            //横竖排文字
+                            params.put("vertical", resources.getString(R.string.True));
+                        }
+                        break;
                 }
                 break;
             case "SBW":
-
                 break;
         }
         switch (preferences.getString("settings_trans_translator", resources.getStringArray(R.array.translator)[0])) {

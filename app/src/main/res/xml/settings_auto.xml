@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="识别设置">
+        <ListPreference
+            android:entries="@array/auto_model"
+            android:entryValues="@array/auto_modelset"
+            android:key="settings_auto_model"
+            android:summary="谷歌（Google Cloud Vision）"
+            android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
             android:summary="高性能要求，出现取词框消失请禁用"
             android:title="快速识别" />
+        <SeekBarPreference
+            android:key="settings_auto_tolerance"
+            android:max="100"
+            android:title="宽容度选择"
+            app:adjustable="true"
+            app:defaultValue="15"
+            app:min="0"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_baidu_reverse"
