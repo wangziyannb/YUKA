@@ -24,6 +24,14 @@ public class SettingsAuto extends PreferenceFragmentCompat {
             preference.setSummary(listPreference.getEntry());
             return false;
         });
+        ListPreference listPreference2 = getPreferenceScreen().findPreference("settings_trans_translator");
+        listPreference2.setSummary(listPreference2.getEntry());
+        listPreference2.setOnPreferenceChangeListener((preference, newValue) -> {
+            listPreference2.setValue((String) newValue);
+            preference.setSummary(listPreference2.getEntry());
+            return false;
+        });
+
     }
 
     @Nullable

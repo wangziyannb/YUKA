@@ -293,8 +293,6 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                 alert.setNegativeButton("下次一定（", (dialog, which) -> {
                 });
                 alert.show();
-            } else {
-                Toast.makeText(this, "已经是最新版啦", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();

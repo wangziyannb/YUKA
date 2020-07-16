@@ -33,7 +33,7 @@
             android:key="settings_window_opacityBg"
             android:max="85"
             android:summary="默认30%"
-            android:title="选词窗背景透明度（%）"
+            android:title="选词窗背景不透明度（%）"
             app:adjustable="true"
             app:defaultValue="30"
             app:min="5"

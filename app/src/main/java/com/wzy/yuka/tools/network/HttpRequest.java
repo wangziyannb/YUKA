@@ -61,17 +61,12 @@ public class HttpRequest {
                 .add("mode", Objects.requireNonNull(params.get("mode")))
                 .add("translator", Objects.requireNonNull(params.get("translator")))
                 .add("SBCS", Objects.requireNonNull(params.get("SBCS")))
-                .add("precise", Objects.requireNonNull(params.get("precise")))
-                .add("vertical", Objects.requireNonNull(params.get("vertical")))
-                // .add("reverse", Objects.requireNonNull(params.get("reverse")))
                 .add("origin", origin)
                 .add("u_name", UserManager.getUser()[0])
                 .add("uuid", UserManager.getUser()[2])
-                .add("direction", Objects.requireNonNull(params.get("direction")))
-                .add("tolerance", Objects.requireNonNull(params.get("tolerance")))
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/yuka/")
+                .url("https://yukacn.xyz/yuka_test/yuka/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -121,12 +116,8 @@ public class HttpRequest {
                             RequestBody.create(Objects.requireNonNull(params.get("mode")), null)
                     )
                     .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"detect_model\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("detect_model")), null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"auto_model\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("auto_model")), null)
+                            Headers.of("Content-Disposition", "form-data; name=\"model\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("model")), null)
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"translator\""),
@@ -137,17 +128,13 @@ public class HttpRequest {
                             RequestBody.create(Objects.requireNonNull(params.get("SBCS")), null)
                     )
                     .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"precise\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("precise")), null)
-                    )
-                    .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"punctuation\""),
                             RequestBody.create(Objects.requireNonNull(params.get("punctuation")), null)
                     )
-                    /*   .addPart(
-                               Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
-                               RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
-                       )*/
+                    .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"vertical\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("vertical")), null)
+                    )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
                             RequestBody.create(UserManager.getUser()[0], null)
@@ -156,21 +143,13 @@ public class HttpRequest {
                             Headers.of("Content-Disposition", "form-data; name=\"uuid\""),
                             RequestBody.create(UserManager.getUser()[2], null)
                     )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"direction\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("direction")), null)
-                    )
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"tolerance\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("tolerance")), null)
-                    )
                     .build();
         } else {
             Log.e(Tag, "filePath invalid");
             return;
         }
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/yuka/")
+                .url("https://yukacn.xyz/yuka_test/yuka/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -204,6 +183,10 @@ public class HttpRequest {
                             RequestBody.create(Objects.requireNonNull(params.get("mode")), null)
                     )
                     .addPart(
+                            Headers.of("Content-Disposition", "form-data; name=\"model\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("model")), null)
+                    )
+                    .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"translator\""),
                             RequestBody.create(Objects.requireNonNull(params.get("translator")), null)
                     )
@@ -220,8 +203,8 @@ public class HttpRequest {
                             RequestBody.create(Objects.requireNonNull(params.get("punctuation")), null)
                     )
                     .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"reverse\""),
-                            RequestBody.create(Objects.requireNonNull(params.get("reverse")), null)
+                            Headers.of("Content-Disposition", "form-data; name=\"toleration\""),
+                            RequestBody.create(Objects.requireNonNull(params.get("toleration")), null)
                     )
                     .addPart(
                             Headers.of("Content-Disposition", "form-data; name=\"u_name\""),
@@ -237,7 +220,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/yuka_advance/")
+                .url("https://yukacn.xyz/yuka_test/yuka_advance/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -251,7 +234,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/login/")
+                .url("https://yukacn.xyz/yuka_test/login/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -264,7 +247,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/logout/")
+                .url("https://yukacn.xyz/yuka_test/logout/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -278,7 +261,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/regist/")
+                .url("https://yukacn.xyz/yuka_test/regist/yuka_v1")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -291,7 +274,7 @@ public class HttpRequest {
                 .add("CDKEY", params[1])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/activate/")
+                .url("https://yukacn.xyz/yuka_test/activate/yuka_v1")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -303,7 +286,7 @@ public class HttpRequest {
                 .add("u_name", params[0])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/account/")
+                .url("https://yukacn.xyz/yuka_test/account/yuka_v1")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -313,7 +296,7 @@ public class HttpRequest {
     public static void checkUpdate(Callback callback) {
         RequestBody requestBody = new FormBody.Builder().build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka/latest_version/")
+                .url("https://yukacn.xyz/yuka_test/latest_version/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);

@@ -19,6 +19,9 @@ public class SharedPreferenceCollection {
     public static final String action_continuousModeInterval = "settings_continuousMode_interval";
 
 
+    public static final String normal_detect_model = "detect_modelset";
+
+
     public static final String FIRST_GuideActivity = "first_open_guideActivity";
     public static final String FIRST_MainActivity = "first_open_mainActivity";
     public static final String FIRST_LOGIN = "first_Login";

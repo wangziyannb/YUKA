@@ -6,33 +6,30 @@
             android:entries="@array/detect_model"
             android:entryValues="@array/detect_modelset"
             android:key="settings_detect_model"
-            android:summary="默认百度"
+            android:summary="谷歌（Google Cloud Vision）"
             android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
             android:summary="高性能要求，出现取词框消失请禁用"
             android:title="快速识别" />
-        <SeekBarPreference
-            app:showSeekBarValue="true"
-            android:key="settings_continuousMode_interval"
-            android:max="30"
-            android:title="持续模式的识别间隔（秒）"
-            app:adjustable="true"
-            app:defaultValue="6"
-            app:min="2"
-            app:seekBarIncrement="1" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="settings_baidu_HV"
-            android:summaryOff="横排文字识别"
-            android:summaryOn="竖排文字识别"
-            android:title="横竖排识别（仅百度）" />
+            android:key="settings_detect_punctuation"
+            android:summary="影响原文，如无标点可使用"
+            android:title="标点优化(仅百度)" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_detect_vertical"
+            android:summaryOff="横排"
+            android:summaryOn="竖排"
+            android:title="文字方向(仅百度)" />
     </PreferenceCategory>
     <PreferenceCategory android:title="翻译设置">
         <ListPreference
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
             android:key="settings_trans_translator"
+            android:summary="Google翻译"
             android:title="翻译器选择" />
         <SwitchPreference
             android:defaultValue="false"
@@ -42,22 +39,15 @@
             android:title="全半角转换（仅百度）" />
     </PreferenceCategory>
     <PreferenceCategory android:title="额外设置">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="settings_baidu_precise"
-            android:title="使用百度高精度识别" />
-        <SwitchPreference
-            android:dependency="settings_baidu_precise"
-            android:defaultValue="false"
-            android:key="settings_baidu_reverse"
-            android:summary="默认从左到右"
-            android:title="阅读顺序逆转" />
-        <SwitchPreference
-            android:dependency="settings_baidu_precise"
-            android:defaultValue="false"
-            android:key="settings_baidu_punctuation"
-            android:summary="影响原文，如无标点可使用"
-            android:title="标点优化" />
+        <SeekBarPreference
+            android:key="settings_continuousMode_interval"
+            android:max="30"
+            android:title="持续模式的识别间隔（秒）"
+            app:adjustable="true"
+            app:defaultValue="6"
+            app:min="2"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
     </PreferenceCategory>
 
 </PreferenceScreen>

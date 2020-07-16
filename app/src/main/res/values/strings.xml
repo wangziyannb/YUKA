@@ -36,7 +36,7 @@
     </string-array>
 
     <string-array name="translator_name">
-        <item>Google</item>
+        <item>Google翻译</item>
         <item>百度翻译</item>
         <item>有道翻译</item>
     </string-array>
