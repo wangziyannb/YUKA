@@ -64,11 +64,11 @@
     <fragment
         android:id="@+id/nav_settings_appearance"
         android:name="com.wzy.yuka.ui.setting.SettingsAppearance"
-        android:label="外观选项" />
+        android:label="外观设置" />
     <fragment
         android:id="@+id/nav_settings_detect"
         android:name="com.wzy.yuka.ui.setting.SettingsDetect"
-        android:label="识别选项" />
+        android:label="复数和持续翻译" />
     <fragment
         android:id="@+id/nav_settings_translator"
         android:name="com.wzy.yuka.ui.setting.SettingsTranslator"
@@ -76,11 +76,11 @@
     <fragment
         android:id="@+id/nav_settings_auto"
         android:name="com.wzy.yuka.ui.setting.SettingsAuto"
-        android:label="自动识别翻译选项" />
+        android:label="自动识别翻译" />
     <fragment
         android:id="@+id/nav_settings_sync"
         android:name="com.wzy.yuka.ui.setting.SettingsSync"
-        android:label="同传选项" />
+        android:label="内录同步字幕" />
     <fragment
         android:id="@+id/nav_settings_developer"
         android:name="com.wzy.yuka.ui.setting.SettingsDeveloper"
