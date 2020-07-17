@@ -3,18 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navhome">
+    app:startDestination="@+id/nav_home">
 
     <fragment
-        android:id="@+id/navhome"
-        android:name="com.wzy.yuka.ui.HomeFragment"
+        android:id="@+id/nav_home"
+        android:name="com.wzy.yuka.ui.home.HomeFragment"
         android:label="主页"
         tools:layout="@layout/home">
         <action
             android:id="@+id/action_nav_home_to_nav_settings"
             app:destination="@id/nav_settings" />
-    </fragment>
+        <action
+            android:id="@+id/action_nav_home_to_nav_login"
+            app:destination="@id/nav_login" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_user_service"
+            app:destination="@id/nav_user_service" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="com.wzy.yuka.ui.log.Login"
+        android:label="登陆"
+        tools:layout="@layout/log_login">
+
+        <action
+            android:id="@+id/action_nav_login_to_nav_register"
+            app:destination="@id/nav_register" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_register"
+        android:name="com.wzy.yuka.ui.log.Regist"
+        android:label="注册"
+        tools:layout="@layout/log_register">
+
+    </fragment>
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.wzy.yuka.ui.setting.SettingsFragment"
@@ -22,7 +45,42 @@
         <action
             android:id="@+id/action_nav_settings_to_nav_settings_developer"
             app:destination="@id/nav_settings_developer" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_appearance"
+            app:destination="@id/nav_settings_appearance" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_detect"
+            app:destination="@id/nav_settings_detect" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_translator"
+            app:destination="@id/nav_settings_translator" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_auto"
+            app:destination="@id/nav_settings_auto" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_sync"
+            app:destination="@id/nav_settings_sync" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_settings_appearance"
+        android:name="com.wzy.yuka.ui.setting.SettingsAppearance"
+        android:label="外观设置" />
+    <fragment
+        android:id="@+id/nav_settings_detect"
+        android:name="com.wzy.yuka.ui.setting.SettingsDetect"
+        android:label="复数和持续翻译" />
+    <fragment
+        android:id="@+id/nav_settings_translator"
+        android:name="com.wzy.yuka.ui.setting.SettingsTranslator"
+        android:label="翻译选项" />
+    <fragment
+        android:id="@+id/nav_settings_auto"
+        android:name="com.wzy.yuka.ui.setting.SettingsAuto"
+        android:label="自动识别翻译" />
+    <fragment
+        android:id="@+id/nav_settings_sync"
+        android:name="com.wzy.yuka.ui.setting.SettingsSync"
+        android:label="内录同步字幕" />
     <fragment
         android:id="@+id/nav_settings_developer"
         android:name="com.wzy.yuka.ui.setting.SettingsDeveloper"
@@ -46,6 +104,21 @@
             android:id="@+id/action_nav_help_to_nav_help_Future"
             app:destination="@id/nav_help_Future" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_user_profile"
+        android:name="com.wzy.yuka.ui.user.PersonalFragment"
+        android:label="个人信息" />
+    <fragment
+        android:id="@+id/nav_user_service"
+        android:name="com.wzy.yuka.ui.user.PersonalInfo"
+        android:label="激活状态">
+        <action
+            android:id="@+id/action_nav_user_service_to_nav_user_profile"
+            app:destination="@id/nav_user_profile" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/nav_help_QA"
         android:name="com.wzy.yuka.ui.help.HelpQA"
@@ -80,7 +153,15 @@
     <fragment
         android:id="@+id/nav_about_dev"
         android:name="com.wzy.yuka.ui.about.AboutDev"
-        android:label="关于开发者" />
+        android:label="关于开发者">
+        <action
+            android:id="@+id/action_nav_about_dev_to_nav_about_dev_function"
+            app:destination="@id/nav_about_dev_function" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_about_dev_function"
+        android:name="com.wzy.yuka.ui.about.AboutDevFunction"
+        android:label="功能介绍" />
     <fragment
         android:id="@+id/nav_about_opensource"
         android:name="com.wzy.yuka.ui.about.AboutOpenSource"
@@ -89,4 +170,5 @@
         android:id="@+id/nav_about_reference"
         android:name="com.wzy.yuka.ui.about.AboutReference"
         android:label="参考文献" />
+
 </navigation>

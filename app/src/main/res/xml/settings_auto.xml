@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="识别设置">
+        <ListPreference
+            android:entries="@array/auto_model"
+            android:entryValues="@array/auto_modelset"
+            android:key="settings_auto_model"
+            android:summary="谷歌（Google Cloud Vision）"
+            android:title="识别器选择" />
+        <SwitchPreference
+            android:key="settings_fastMode"
+            android:summary="高性能要求，出现取词框消失请禁用"
+            android:title="快速识别" />
+        <SeekBarPreference
+            android:key="settings_auto_toleration"
+            android:max="100"
+            android:summary="简单说就是间隔多少以内的行视作一段"
+            android:title="宽容度"
+            app:adjustable="true"
+            app:defaultValue="15"
+            app:min="0"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="settings_auto_punctuation"
+            android:summary="影响原文，如无标点可使用"
+            android:title="标点优化" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_auto_vertical"
+            android:summaryOff="横排"
+            android:summaryOn="竖排"
+            android:title="文字方向" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="翻译设置">
+        <ListPreference
+            android:entries="@array/translator_name"
+            android:entryValues="@array/translator"
+            android:key="settings_trans_translator"
+            android:summary="Google翻译"
+            android:title="翻译器选择" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换（仅百度）" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="额外设置">
+        <SwitchPreference
+            android:key="settings_auto_offset"
+            android:defaultValue="false"
+            android:summaryOff="需要识别的应用全屏，不计算任务栏高度"
+            android:summaryOn="需要识别的应用非全屏，计算任务栏高度"
+            android:title="现词窗位置偏移" />
+    </PreferenceCategory>
+</PreferenceScreen>

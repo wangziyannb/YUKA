@@ -6,17 +6,20 @@
             android:title="检查服务器运行情况" />
         <SwitchPreference
             android:defaultValue="true"
-            android:key="settings_debug_log"
-            android:summary="位于android/data/www.wzy.yuka内"
-            android:title="输出错误log" />
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="settings_debug_savePic"
             android:summary="位于android/data/www.wzy.yuka内"
             android:title="保存截下的图片" />
         <SwitchPreference
             android:defaultValue="true"
+            android:key="settings_debug_log"
+            android:summary="位于android/data/www.wzy.yuka内"
+            android:title="输出错误log" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="settings_debug_upload"
             android:title="上传错误信息（还没做）" />
+        <Preference
+            android:key="settings_debug_reset"
+            android:title="重置所有信息" />
     </PreferenceCategory>
 </PreferenceScreen>
