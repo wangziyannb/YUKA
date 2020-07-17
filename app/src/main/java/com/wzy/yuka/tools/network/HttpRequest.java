@@ -66,7 +66,7 @@ public class HttpRequest {
                 .add("uuid", UserManager.getUser()[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/yuka/yuka_v1")
+                .url("https://yukacn.xyz/yuka/yuka/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -149,7 +149,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/yuka/yuka_v1")
+                .url("https://yukacn.xyz/yuka/yuka/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -220,7 +220,7 @@ public class HttpRequest {
             return;
         }
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/yuka_advance/yuka_v1")
+                .url("https://yukacn.xyz/yuka/yuka_advance/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -234,7 +234,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/login/yuka_v1")
+                .url("https://yukacn.xyz/yuka/login/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -247,7 +247,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/logout/yuka_v1")
+                .url("https://yukacn.xyz/yuka/logout/yuka_v1")
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -261,7 +261,7 @@ public class HttpRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/regist/yuka_v1")
+                .url("https://yukacn.xyz/yuka/regist/yuka_v1")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -274,7 +274,7 @@ public class HttpRequest {
                 .add("CDKEY", params[1])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/activate/yuka_v1")
+                .url("https://yukacn.xyz/yuka/activate/yuka_v1")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -286,7 +286,7 @@ public class HttpRequest {
                 .add("u_name", params[0])
                 .build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/account/yuka_v1")
+                .url("https://yukacn.xyz/yuka/account/yuka_v1")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -296,7 +296,7 @@ public class HttpRequest {
     public static void checkUpdate(Callback callback) {
         RequestBody requestBody = new FormBody.Builder().build();
         Request request = new Request.Builder()
-                .url("https://yukacn.xyz/yuka_test/latest_version/")
+                .url("https://yukacn.xyz/yuka/latest_version/")
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
