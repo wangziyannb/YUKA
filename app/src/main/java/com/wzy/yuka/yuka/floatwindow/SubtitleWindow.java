@@ -6,8 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -35,13 +35,17 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
     private int mode = 1;
     private boolean isPlay = false;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+
     public SubtitleWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
         super(activity, index, tag);
         EasyFloat.with(activityWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
                     setView(view1);
+                    int[] size = GetParams.Screen();
+
                     ConstraintLayout rl = view1.findViewById(R.id.floatwindow_subtitle);
+
                     //改变悬浮框透明度
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
                     int a1 = (int) SharedPreferencesUtil.getInstance().getParam("settings_window_opacityBg", 50);
@@ -51,6 +55,10 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                         alpha_hex = "0" + alpha_hex;
                     }
                     drawable.setColor(Color.parseColor("#" + alpha_hex + "000000"));
+
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rl.getLayoutParams();
+                    params.width = (int) (size[0] * 0.7);
+                    rl.setLayoutParams(params);
 
                     view1.findViewById(R.id.sbw_close).setOnClickListener(this);
                     view1.findViewById(R.id.sbw_pap).setOnClickListener(this);
@@ -113,7 +121,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
 
     @Override
     public void showResults(String origin, String translation, double time) {
-        TextView ori = view.findViewById(R.id.sbw_originalText);
+        SubtitleFlowView ori = view.findViewById(R.id.sbw_originalText);
         SubtitleFlowView result = view.findViewById(R.id.sbw_translatedText);
 
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.window_textBlackBg, false)) {
