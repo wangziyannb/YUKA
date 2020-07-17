@@ -5,13 +5,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navhome"
+            android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="主页" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="设置" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_favorite"
+            android:title="收藏" />
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help"
