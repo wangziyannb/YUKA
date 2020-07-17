@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -113,8 +114,13 @@ public class AboutDev extends Fragment implements View.OnClickListener {
             PackageManager packageManager = getActivity().getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
             String versionName = packageInfo.versionName;
-            long versionCode = packageInfo.getLongVersionCode();
-
+            long versionCode = 0;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                versionCode = packageInfo.versionCode;
+            } else {
+                //P以下不能直接用，会报错
+                versionCode = packageInfo.getLongVersionCode();
+            }
             JSONObject jsonObject = new JSONObject(res);
             String version_name = jsonObject.getString("version_name");
             String version_code = jsonObject.getString("version_code");

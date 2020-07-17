@@ -42,7 +42,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
                     setView(view1);
-                    int[] size = GetParams.Screen();
+
 
                     ConstraintLayout rl = view1.findViewById(R.id.floatwindow_subtitle);
 
@@ -56,6 +56,8 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                     }
                     drawable.setColor(Color.parseColor("#" + alpha_hex + "000000"));
 
+                    //改变悬浮框宽度
+                    int[] size = GetParams.Screen();
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rl.getLayoutParams();
                     params.width = (int) (size[0] * 0.7);
                     rl.setLayoutParams(params);
