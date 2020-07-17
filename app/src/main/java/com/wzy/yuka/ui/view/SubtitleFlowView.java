@@ -10,7 +10,6 @@ import android.graphics.Camera;
 import android.graphics.Matrix;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -22,6 +21,9 @@ import android.widget.ViewSwitcher;
 
 import com.wzy.yuka.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class SubtitleFlowView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
@@ -30,6 +32,7 @@ public class SubtitleFlowView extends TextSwitcher implements
     private String mFirstText;
     private int mtextAlignment;
     private int mtextColor;
+    private int mbackGround;
     //mInUp,mOutUp分离构成向下翻页的进出动画
     private Rotate3dAnimation mInUp;
     private Rotate3dAnimation mOutUp;
@@ -43,21 +46,7 @@ public class SubtitleFlowView extends TextSwitcher implements
         // TODO Auto-generated constructor stub
     }
 
-    public SubtitleFlowView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        // TODO Auto-generated constructor stub
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SubtitleFlowView);
-        mHeight = a.getInteger(R.styleable.SubtitleFlowView_textSize, 15);
-        mFirstText = a.getString(R.styleable.SubtitleFlowView_firstText);
-        mtextAlignment = a.getInteger(R.styleable.SubtitleFlowView_textAlignment, 0);
-
-        mtextColor = a.getColor(R.styleable.SubtitleFlowView_textColor, getResources().getColor(R.color.text_color_DarkBg, null));
-
-        a.recycle();
-        mContext = context;
-        init();
-    }
+    private int page = 0;
 
     private void init() {
         // TODO Auto-generated method stub
@@ -75,9 +64,25 @@ public class SubtitleFlowView extends TextSwitcher implements
         super.setCurrentText(mFirstText);
     }
 
+    public SubtitleFlowView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        // TODO Auto-generated constructor stub
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SubtitleFlowView);
+        mHeight = a.getInteger(R.styleable.SubtitleFlowView_textSize, 15);
+        mFirstText = a.getString(R.styleable.SubtitleFlowView_firstText);
+        mtextAlignment = a.getInteger(R.styleable.SubtitleFlowView_textAlignment, 0);
+
+        mtextColor = a.getColor(R.styleable.SubtitleFlowView_textColor, getResources().getColor(R.color.text_color_DarkBg, null));
+        mbackGround = 0;
+        a.recycle();
+        mContext = context;
+        init();
+    }
+
     private Rotate3dAnimation createAnim(float start, float end, boolean turnIn, boolean turnUp) {
         final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end, turnIn, turnUp);
-        rotation.setDuration(800);
+        rotation.setDuration(500);
         rotation.setFillAfter(false);
         rotation.setInterpolator(new AccelerateInterpolator());
         return rotation;
@@ -91,44 +96,74 @@ public class SubtitleFlowView extends TextSwitcher implements
         t.setGravity(Gravity.CENTER);
         t.setTextSize(mHeight);
         t.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        t.setMaxLines(3);
+        t.setMaxLines(1);
         t.setTextAlignment(mtextAlignment);
         t.setTextColor(mtextColor);
+        t.setBackgroundResource(mbackGround);
         return t;
     }
 
     @Override
     public void setBackgroundResource(int resid) {
-        mtextColor = resid;
+        mbackGround = resid;
+        getCurrentView().setBackgroundResource(mbackGround);
     }
 
-    public void setText(CharSequence text, boolean next) {
+    private void checkText(CharSequence text) {
         TextView textView = (TextView) getCurrentView();
+
         TextPaint textPaint = textView.getPaint();
         float mWidth = textView.getWidth();
         float[] charWidths = new float[text.length()];
         textPaint.getTextWidths(text.toString(), charWidths);
+
         float total_width = 0f;
-        Log.d("TAG", "setText: " + mWidth);
+        List<Integer> breakpoint = new ArrayList<>();
+
         for (int i = 0; i < charWidths.length; i++) {
             total_width += charWidths[i];
-            Log.d("TAG", "setText: " + total_width);
-            if (total_width > mWidth * 3) {
-                text = text.subSequence(i, text.length());
-                setText(text, true);
-                return;
+            if (total_width > mWidth * 1) {
+                //加上这个字符的宽度，就超过了两行，要换行了
+                //记录breakpoint
+                total_width = charWidths[i];
+                breakpoint.add(i);
             }
         }
-        if (next) {
-            super.setText(text);
+
+
+        if (page == 0) {
+            if (breakpoint.size() == page) {
+                //不确定（当做接续吧）
+                //不翻页
+                super.setCurrentText(text);
+            } else {
+                //接续（新的页数要多）
+                //翻页
+                page = breakpoint.size();
+                super.setText(text.subSequence(breakpoint.get(breakpoint.size() - 1), text.length()));
+            }
         } else {
-            super.setCurrentText(text);
+            if (breakpoint.size() > page) {
+                //接续（新的页数要多）
+                //翻页
+                page = breakpoint.size();
+                super.setText(text.subSequence(breakpoint.get(breakpoint.size() - 1), text.length()));
+            } else if (breakpoint.size() == page) {
+                //接续（新的页数和原来一样）
+                //不翻页
+                super.setCurrentText(text.subSequence(breakpoint.get(breakpoint.size() - 1), text.length()));
+            } else {
+                //新的一段话
+                //翻页
+                page = 0;
+                super.setText(text);
+            }
         }
     }
 
     @Override
     public void setText(CharSequence text) {
-        setText(text, false);
+        checkText(text);
     }
 
     //定义动作，向下滚动翻页
