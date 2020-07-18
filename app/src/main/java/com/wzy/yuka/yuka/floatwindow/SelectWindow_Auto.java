@@ -1,7 +1,7 @@
 package com.wzy.yuka.yuka.floatwindow;
 
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -48,9 +48,9 @@ public class SelectWindow_Auto extends FloatWindow {
     private String[] Tags = new String[1];
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
-    public SelectWindow_Auto(Activity activity, int index, String tag) throws FloatWindowManagerException {
-        super(activity, index, tag);
-        EasyFloat.with(activity)
+    public SelectWindow_Auto(Application application, int index, String tag) throws FloatWindowManagerException {
+        super(application, index, tag);
+        EasyFloat.with(applicationWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
                     setView(view1);
@@ -87,8 +87,8 @@ public class SelectWindow_Auto extends FloatWindow {
                     view1.findViewById(R.id.sw_pap).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2,
-                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2)).setAppFloatAnimator(null)
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 250) / 2,
+                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 120) / 2)).setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
                     public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
@@ -157,7 +157,7 @@ public class SelectWindow_Auto extends FloatWindow {
                 String translationx = src.getString("translation");
                 JSONArray location = src.getJSONArray("location");
                 if (src.getString("location").equals("[0,0,0,0]")) {
-                    Toast.makeText(activityWeakReference.get(), "Yuka的ocr识别余额不足，请联系开发者QQ1269586767让他购买", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationWeakReference.get(), "Yuka的ocr识别余额不足，请联系开发者QQ1269586767让他购买", Toast.LENGTH_SHORT).show();
                 }
                 int[] location_json = new int[4];
                 for (int j = 0; j < location.length(); j++) {
@@ -165,13 +165,13 @@ public class SelectWindow_Auto extends FloatWindow {
                 }
                 initLittleWindows(words, translationx, location_json, index);
             }
-//            Toast.makeText(activityWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             try {
                 JSONObject jsono = new JSONObject(translation);
                 String origin_json = jsono.getString("origin");
                 if (origin_json.equals("602")) {
-                    Toast.makeText(activityWeakReference.get(), "剩余自动识别次数不足", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationWeakReference.get(), "剩余自动识别次数不足", Toast.LENGTH_SHORT).show();
                     shows();
                 }
             } catch (JSONException e1) {
@@ -183,9 +183,10 @@ public class SelectWindow_Auto extends FloatWindow {
 
 
     private void initLittleWindows(String origin, String translation, int[] locations, int index) {
-        boolean statusBar_offset = (boolean) SharedPreferencesUtil.getInstance().getParam("settings_auto_offset", false);
-        int statusBar = 0;
-        if (statusBar_offset) {
+        int statusBar;
+        if (floatWindowManager.isFullScreen()) {
+            statusBar = 0;
+        } else {
             statusBar = GetParams.Screen()[2];
         }
         int offset_L = location[0];
@@ -196,7 +197,7 @@ public class SelectWindow_Auto extends FloatWindow {
         locations[3] += offset_T - statusBar;
         String thisTag = "little" + index;
         Tags[index] = thisTag;
-        EasyFloat.with(activityWeakReference.get())
+        EasyFloat.with(applicationWeakReference.get())
                 .setTag(thisTag)
                 .setDragEnable(true)
                 .setLayout(R.layout.floatwindow_auto, v -> {
@@ -214,7 +215,7 @@ public class SelectWindow_Auto extends FloatWindow {
                     drawable.setColor(Color.parseColor("#" + alpha_hex + "000000"));
                     AppCompatTextView textView = v.findViewById(R.id.little_textView);
                     AppCompatTextView textView2 = v.findViewById(R.id.little_origin);
-                    textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
+                    textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
                     textView.setText(translation);
                     textView2.setText(origin);
 
@@ -234,12 +235,12 @@ public class SelectWindow_Auto extends FloatWindow {
                             String str_o = ((TextView) this.view.findViewById(R.id.little_origin)).getText() + "";
                             if ((!TextUtils.isEmpty(str_t)) && (!TextUtils.isEmpty(str_o))) {
                                 // 得到剪贴板管理器
-                                ClipboardManager cm = (ClipboardManager) activityWeakReference.get().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipboardManager cm = (ClipboardManager) applicationWeakReference.get().getSystemService(Context.CLIPBOARD_SERVICE);
                                 // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
                                 ClipData clipData = ClipData.newPlainText("yuka", "原文：" + str_o + "\r\n" + "译文：" + str_t);
                                 // 把数据集设置（复制）到剪贴板
                                 cm.setPrimaryClip(clipData);
-                                Toast.makeText(activityWeakReference.get(), "已复制选择的原文及译文至剪切板", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(applicationWeakReference.get(), "已复制选择的原文及译文至剪切板", Toast.LENGTH_SHORT).show();
                             }
                         }
                     };
@@ -319,7 +320,7 @@ public class SelectWindow_Auto extends FloatWindow {
 
     @Override
     public void show() {
-        Toast.makeText(activityWeakReference.get(), "目标图片已发送，请等待...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(applicationWeakReference.get(), "目标图片已发送，请等待...", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -336,13 +337,15 @@ public class SelectWindow_Auto extends FloatWindow {
         }
     }
 
-    private void showInitGuide() {
+    @Override
+    public void showInitGuide() {
         SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_SelectWindow_A, true)) {
-            Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
+            Intent intent = new Intent(applicationWeakReference.get(), CurtainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(CurtainActivity.name, "SWA");
             intent.putExtra(CurtainActivity.index, index);
-            activityWeakReference.get().startActivity(intent);
+            applicationWeakReference.get().startActivity(intent);
         }
     }
 }

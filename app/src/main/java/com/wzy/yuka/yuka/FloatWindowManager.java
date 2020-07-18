@@ -1,13 +1,17 @@
 package com.wzy.yuka.yuka;
 
-import android.app.Activity;
+import android.app.Application;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Build;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.wzy.yuka.tools.params.LengthUtil;
-import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.floatball.FloatBall;
 import com.wzy.yuka.yuka.floatwindow.FloatWindow;
 import com.wzy.yuka.yuka.floatwindow.SelectWindow_Auto;
@@ -17,6 +21,7 @@ import com.wzy.yuka.yuka.services.AudioService;
 import com.wzy.yuka.yuka.services.ScreenShotService_Auto;
 import com.wzy.yuka.yuka.services.ScreenShotService_Continue;
 import com.wzy.yuka.yuka.services.ScreenShotService_Single;
+import com.wzy.yuka.yuka.services.ScreenStatusService;
 import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import java.lang.ref.WeakReference;
@@ -26,30 +31,31 @@ import java.lang.ref.WeakReference;
  */
 public class FloatWindowManager {
     private static FloatWindowManager manager = null;
-    private WeakReference<Activity> mActivity_wr;
+    private WeakReference<Application> applicationWeakReference;
     private Intent mData;
     private int[][] mLocation;
     private FloatBall[] mFloatBalls;
     private FloatWindow[] mFloatWindows;
-    private Intent sssa;
-    private Intent sssc;
-    private Intent ssss;
-    private Intent as;
+    private Intent mScreenShotAutoService;
+    private Intent mScreenShotContinueService;
+    private Intent mScreenShotSingleService;
+    private Intent mAudioService;
+    private Intent mScreenStatusService;
     private int sum = 0;
     private String lastMode = "SWN_S";
-    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private ScreenStatusService.MyBinder binder;
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            binder = (ScreenStatusService.MyBinder) service;
+            binder.getService().setConfigurationListener(newConfig -> notifyConfigurationChanged(newConfig));
+        }
 
-    private FloatWindowManager(Activity activity) {
-        this.mActivity_wr = new WeakReference<>(activity);
-        this.sssa = new Intent(mActivity_wr.get(), ScreenShotService_Auto.class);
-        this.sssc = new Intent(mActivity_wr.get(), ScreenShotService_Continue.class);
-        this.ssss = new Intent(mActivity_wr.get(), ScreenShotService_Single.class);
-        this.as = new Intent(mActivity_wr.get(), AudioService.class);
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
 
-    public static void init(Activity Activity) {
-        manager = new FloatWindowManager(Activity);
-    }
+        }
+    };
 
     public static FloatWindowManager getInstance() throws FloatWindowManagerException {
         if (manager == null) {
@@ -105,8 +111,14 @@ public class FloatWindowManager {
         }
     }
 
-    public WeakReference<Activity> getActivityWeakRef() {
-        return mActivity_wr;
+    private FloatWindowManager(Application application) {
+        this.applicationWeakReference = new WeakReference<>(application);
+        this.mScreenShotAutoService = new Intent(applicationWeakReference.get(), ScreenShotService_Auto.class);
+        this.mScreenShotContinueService = new Intent(applicationWeakReference.get(), ScreenShotService_Continue.class);
+        this.mScreenShotSingleService = new Intent(applicationWeakReference.get(), ScreenShotService_Single.class);
+        this.mAudioService = new Intent(applicationWeakReference.get(), AudioService.class);
+        this.mScreenStatusService = new Intent(applicationWeakReference.get(), ScreenStatusService.class);
+        startScreenStatusService();
     }
 
     public void add_FloatBall(FloatBall floatBall) {
@@ -124,61 +136,8 @@ public class FloatWindowManager {
         }
     }
 
-    public void add_FloatWindow(String mode) throws FloatWindowManagerException {
-        int limit = 1;
-        sum += 1;
-        FloatWindow floatWindow;
-        switch (mode) {
-            case "SWN_S":
-                limit = 5;
-                if (getNumOfFloatWindows() >= limit) {
-                    Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (getNumOfFloatWindows() > 0) {
-                        if (!mFloatWindows[0].getClass().equals(SelectWindow_Normal.class)) {
-                            Toast.makeText(mActivity_wr.get(), "暂不支持其他模式的多悬浮窗识别！", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    floatWindow = new SelectWindow_Normal(mActivity_wr.get(), 0, "floatwindow" + sum, false);
-                    add_FloatWindow(floatWindow);
-                    lastMode = mode;
-                }
-                break;
-            case "SWN_C":
-                if (getNumOfFloatWindows() >= limit) {
-                    Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
-                } else {
-                    floatWindow = new SelectWindow_Normal(mActivity_wr.get(), 0, "floatwindow" + sum, true);
-                    add_FloatWindow(floatWindow);
-                    lastMode = mode;
-                }
-                break;
-            case "SWA":
-                if (getNumOfFloatWindows() >= limit) {
-                    Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
-                } else {
-                    floatWindow = new SelectWindow_Auto(mActivity_wr.get(), 0, "floatwindow" + sum);
-                    add_FloatWindow(floatWindow);
-                    lastMode = mode;
-                }
-                break;
-            case "SBW":
-                if (getNumOfFloatWindows() >= limit) {
-                    Toast.makeText(mActivity_wr.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                        Toast.makeText(mActivity_wr.get(), "需要安卓10才可使用同步字幕", Toast.LENGTH_SHORT).show();
-                    } else {
-                        floatWindow = new SubtitleWindow(mActivity_wr.get(), 0, "floatwindow" + sum);
-                        add_FloatWindow(floatWindow);
-                        lastMode = mode;
-                    }
-                }
-                break;
-            default:
-                throw new FloatWindowManagerException("unknown mode: " + mode);
-        }
-
+    public static void init(Application application) {
+        manager = new FloatWindowManager(application);
     }
 
     public FloatWindow get_FloatWindow(int index) throws FloatWindowManagerException {
@@ -261,23 +220,84 @@ public class FloatWindowManager {
         }
     }
 
+    public WeakReference<Application> getApplicationWeakReference() {
+        return applicationWeakReference;
+    }
+
+    public void add_FloatWindow(String mode) throws FloatWindowManagerException {
+        int limit = 1;
+        sum += 1;
+        FloatWindow floatWindow;
+        switch (mode) {
+            case "SWN_S":
+                limit = 5;
+                if (getNumOfFloatWindows() >= limit) {
+                    Toast.makeText(applicationWeakReference.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (getNumOfFloatWindows() > 0) {
+                        if (!mFloatWindows[0].getClass().equals(SelectWindow_Normal.class)) {
+                            Toast.makeText(applicationWeakReference.get(), "暂不支持其他模式的多悬浮窗识别！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    floatWindow = new SelectWindow_Normal(applicationWeakReference.get(), 0, "floatwindow" + sum, false);
+                    add_FloatWindow(floatWindow);
+                    lastMode = mode;
+                }
+                break;
+            case "SWN_C":
+                if (getNumOfFloatWindows() >= limit) {
+                    Toast.makeText(applicationWeakReference.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+                } else {
+                    floatWindow = new SelectWindow_Normal(applicationWeakReference.get(), 0, "floatwindow" + sum, true);
+                    add_FloatWindow(floatWindow);
+                    lastMode = mode;
+                }
+                break;
+            case "SWA":
+                if (getNumOfFloatWindows() >= limit) {
+                    Toast.makeText(applicationWeakReference.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+                } else {
+                    floatWindow = new SelectWindow_Auto(applicationWeakReference.get(), 0, "floatwindow" + sum);
+                    add_FloatWindow(floatWindow);
+                    lastMode = mode;
+                }
+                break;
+            case "SBW":
+                if (getNumOfFloatWindows() >= limit) {
+                    Toast.makeText(applicationWeakReference.get(), "已经有太多的悬浮窗啦！", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        Toast.makeText(applicationWeakReference.get(), "需要安卓10才可使用同步字幕", Toast.LENGTH_SHORT).show();
+                    } else {
+                        floatWindow = new SubtitleWindow(applicationWeakReference.get(), 0, "floatwindow" + sum);
+                        add_FloatWindow(floatWindow);
+                        lastMode = mode;
+                    }
+                }
+                break;
+            default:
+                throw new FloatWindowManagerException("unknown mode: " + mode);
+        }
+
+    }
+
     public void start_ScreenShotTrans_normal(boolean ifContinue, int index) {
         if (judgeTypeOfFloatWindow(SelectWindow_Normal.class, 0)) {
             if (ifContinue) {
                 //普通翻译-持续模式
                 mLocation = new int[1][4];
                 mLocation[0] = mFloatWindows[0].location;
-                startService(sssc);
+                startService(mScreenShotContinueService);
             } else {
-                ssss.putExtra("index", index);
+                mScreenShotSingleService.putExtra("index", index);
                 //普通翻译-多悬浮窗模式
                 if (index == 1000) {
                     //全部悬浮窗
-                    startService(ssss);
+                    startService(mScreenShotSingleService);
                 } else {
                     //单悬浮窗
-                    ssss.putExtra(ScreenShotService_Single.index, index);
-                    startService(ssss);
+                    mScreenShotSingleService.putExtra(ScreenShotService_Single.index, index);
+                    startService(mScreenShotSingleService);
                 }
             }
         }
@@ -287,7 +307,7 @@ public class FloatWindowManager {
         if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
             mLocation = new int[1][4];
             mLocation[0] = mFloatWindows[0].location;
-            startService(sssa);
+            startService(mScreenShotAutoService);
         }
     }
 
@@ -295,25 +315,17 @@ public class FloatWindowManager {
         if (judgeTypeOfFloatWindow(SubtitleWindow.class, 0)) {
             mLocation = new int[1][4];
             mLocation[0] = mFloatWindows[0].location;
-            startService(as);
+            startService(mAudioService);
         }
     }
 
     public void stop_ScreenShotTrans_normal(boolean ifContinue) {
         if (ifContinue) {
             ScreenShotService_Continue.stopScreenshot();
-            mActivity_wr.get().stopService(sssc);
+            applicationWeakReference.get().stopService(mScreenShotContinueService);
         } else {
-            mActivity_wr.get().stopService(ssss);
+            applicationWeakReference.get().stopService(mScreenShotSingleService);
         }
-    }
-
-    public void stop_ScreenShotTrans_auto() {
-        mActivity_wr.get().stopService(sssa);
-    }
-
-    public void stop_RecordingTrans() {
-        mActivity_wr.get().stopService(as);
     }
 
     public void show_result_normal(String origin, String translation, double time, int index) {
@@ -334,23 +346,8 @@ public class FloatWindowManager {
         }
     }
 
-    public void detect() {
-        try {
-            hide_all();
-            if (judgeTypeOfFloatWindow(SelectWindow_Normal.class, 0)) {
-                if (((SelectWindow_Normal) mFloatWindows[0]).isContinue) {
-                    start_ScreenShotTrans_normal(true, 1000);
-                } else {
-                    start_ScreenShotTrans_normal(false, 1000);
-                }
-            } else if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
-                start_ScreenShotTrans_auto();
-            } else if (judgeTypeOfFloatWindow(SubtitleWindow.class, 0)) {
-                start_RecordingTrans();
-            }
-        } catch (FloatWindowManagerException e) {
-            Toast.makeText(mActivity_wr.get(), "还没有悬浮窗初始化呢！", Toast.LENGTH_SHORT).show();
-        }
+    public void stop_ScreenShotTrans_auto() {
+        applicationWeakReference.get().stopService(mScreenShotAutoService);
     }
 
 
@@ -375,11 +372,61 @@ public class FloatWindowManager {
         return false;
     }
 
+    public void stop_RecordingTrans() {
+        applicationWeakReference.get().stopService(mAudioService);
+    }
+
+    public void detect() {
+        try {
+            hide_all();
+            if (judgeTypeOfFloatWindow(SelectWindow_Normal.class, 0)) {
+                if (((SelectWindow_Normal) mFloatWindows[0]).isContinue) {
+                    start_ScreenShotTrans_normal(true, 1000);
+                } else {
+                    start_ScreenShotTrans_normal(false, 1000);
+                }
+            } else if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
+                start_ScreenShotTrans_auto();
+            } else if (judgeTypeOfFloatWindow(SubtitleWindow.class, 0)) {
+                start_RecordingTrans();
+            }
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(applicationWeakReference.get(), "还没有悬浮窗初始化呢！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void startService(Intent intent) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            mActivity_wr.get().startService(intent);
+            applicationWeakReference.get().startService(intent);
         } else {
-            mActivity_wr.get().startForegroundService(intent);
+            applicationWeakReference.get().startForegroundService(intent);
         }
+    }
+
+    private void startScreenStatusService() {
+        applicationWeakReference.get().getApplicationContext().startService(mScreenStatusService);
+        applicationWeakReference.get().getApplicationContext().bindService(mScreenStatusService, connection, Service.BIND_AUTO_CREATE);
+    }
+
+    public void stopScreenStatusService() {
+        applicationWeakReference.get().getApplicationContext().unbindService(connection);
+        applicationWeakReference.get().getApplicationContext().stopService(mScreenStatusService);
+    }
+
+    private void notifyConfigurationChanged(Configuration newConfig) {
+        if (getNumOfFloatBalls() > 0) {
+            for (FloatBall fb : mFloatBalls) {
+                fb.onConfigurationChanged(newConfig);
+            }
+        }
+        if (getNumOfFloatWindows() > 0) {
+            for (FloatWindow fw : mFloatWindows) {
+                fw.onConfigurationChanged(newConfig);
+            }
+        }
+    }
+
+    public boolean isFullScreen() {
+        return binder.isFullscreen();
     }
 }

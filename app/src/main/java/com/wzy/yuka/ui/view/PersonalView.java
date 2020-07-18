@@ -30,6 +30,7 @@ public class PersonalView extends RelativeLayout {
         this(context, attrs, 0);
     }
 
+
     public PersonalView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(getContext()).inflate(R.layout.personal_view, this);

@@ -32,6 +32,7 @@ public class CurtainActivity extends FragmentActivity {
     public static final String index = "index";
     private Curtain curtain = null;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,10 +77,10 @@ public class CurtainActivity extends FragmentActivity {
                                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                     img.setImageResource(R.drawable.guide_floatwindow_normal);
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 335);
-                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 242);
-                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
-                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
+                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
+                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 242);
+                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
+                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
                                     img.setLayoutParams(params_img);
                                 }
 
@@ -108,10 +109,10 @@ public class CurtainActivity extends FragmentActivity {
                                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                     img.setImageResource(R.drawable.guide_floatwindow_continue);
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 335);
-                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 242);
-                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
-                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
+                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
+                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 242);
+                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
+                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
                                     img.setLayoutParams(params_img);
                                 }
 
@@ -141,11 +142,11 @@ public class CurtainActivity extends FragmentActivity {
                                     img.setImageResource(R.drawable.guide_floatwindow_auto);
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
-                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 335);
-                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 242);
+                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
+                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 242);
 
-                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
-                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
+                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
+                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
                                     img.setLayoutParams(params_img);
                                 }
 
@@ -174,11 +175,11 @@ public class CurtainActivity extends FragmentActivity {
                                     img.setImageResource(R.drawable.guide_floatwindow_subtitle);
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
-                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 335);
-                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 242);
+                                    params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
+                                    params_img.height = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 242);
 
-                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
-                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getActivityWeakRef().get(), 10);
+                                    params_img.topMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
+                                    params_img.rightMargin = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 10);
                                     img.setLayoutParams(params_img);
                                 }
 

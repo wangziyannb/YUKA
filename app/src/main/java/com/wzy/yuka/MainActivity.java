@@ -43,9 +43,7 @@ import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.yuka.FloatWindowManager;
 import com.wzy.yuka.yuka.user.UserManager;
-import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -75,12 +73,6 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         super.onCreate(savedInstanceState);
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
-
-        try {
-            FloatWindowManager.getInstance();
-        } catch (FloatWindowManagerException e) {
-            FloatWindowManager.init(this);
-        }
 
         setContentView(R.layout.main_activity);
 
@@ -263,6 +255,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                 break;
         }
     }
+
     private void showUpdate(String res) {
         try {
             PackageManager packageManager = getPackageManager();
@@ -304,6 +297,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             Toast.makeText(this, "服务器正忙...请稍后重试", Toast.LENGTH_SHORT).show();
         }
     }
+
     private CurtainFlowInterface curtainFlowInterface;
     private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
         @Override
@@ -357,7 +351,6 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                     }
                 });
     }
-
 
 }
 
