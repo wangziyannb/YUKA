@@ -10,7 +10,7 @@ public class GlobalHandler extends Handler {
 
     //使用单例模式创建GlobalHandler
     private GlobalHandler() {
-        Log.e(Tag, "GlobalHandler创建");
+        Log.d(Tag, "GlobalHandler创建");
     }
 
     public static GlobalHandler getInstance() {

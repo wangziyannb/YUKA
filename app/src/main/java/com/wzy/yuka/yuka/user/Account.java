@@ -31,7 +31,7 @@ class Account {
         } catch (JSONException e) {
             json = new JSONObject();
             e.printStackTrace();
-            Log.e("Account", "Account:load json failed");
+            Log.d("Account", "Account:load json failed");
         }
     }
 

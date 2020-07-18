@@ -81,9 +81,10 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     @Override
                     public void createdResult(boolean b, @Nullable String s, @Nullable View view) {
                         if (b) {
+                            floatWindowManager.startScreenStatusService();
                             handler.postDelayed(() -> {
                                 showInitGuide();
-                            }, 1000);
+                            }, 500);
 
                         }
                     }
