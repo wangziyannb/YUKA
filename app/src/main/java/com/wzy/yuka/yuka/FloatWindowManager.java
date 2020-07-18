@@ -118,7 +118,6 @@ public class FloatWindowManager {
         this.mScreenShotSingleService = new Intent(applicationWeakReference.get(), ScreenShotService_Single.class);
         this.mAudioService = new Intent(applicationWeakReference.get(), AudioService.class);
         this.mScreenStatusService = new Intent(applicationWeakReference.get(), ScreenStatusService.class);
-        startScreenStatusService();
     }
 
     public void add_FloatBall(FloatBall floatBall) {
@@ -403,7 +402,7 @@ public class FloatWindowManager {
         }
     }
 
-    private void startScreenStatusService() {
+    public void startScreenStatusService() {
         applicationWeakReference.get().getApplicationContext().startService(mScreenStatusService);
         applicationWeakReference.get().getApplicationContext().bindService(mScreenStatusService, connection, Service.BIND_AUTO_CREATE);
     }

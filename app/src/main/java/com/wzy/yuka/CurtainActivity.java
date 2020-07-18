@@ -45,15 +45,12 @@ public class CurtainActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        getWindow().setDimAmount(0f);
         setContentView(R.layout.guide_empty);
         Intent intent = getIntent();
         String type = intent.getStringExtra(name);
         int mIndex = intent.getIntExtra(index, 0);
-        Log.e("TAG", "CA: type= " + type + ", mIndex= " + mIndex);
         if (type == null) {
             finish();
         } else {

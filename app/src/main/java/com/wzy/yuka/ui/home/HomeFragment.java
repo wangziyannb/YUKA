@@ -29,6 +29,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.internal.NavigationMenuView;
+import com.lzf.easyfloat.permission.PermissionUtils;
 import com.qw.curtain.lib.CurtainFlow;
 import com.qw.curtain.lib.flow.CurtainFlowInterface;
 import com.qw.curtain.lib.shape.CircleShape;
@@ -61,11 +62,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private MainActivity mainActivity;
     private DrawerLayout drawer;
     private CurtainFlow guide2;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bot_nav_start:
                 if (UserManager.checkLogin()) {
+                    if (!PermissionUtils.checkPermission(getContext())) {
+                        PermissionUtils.requestPermission(getActivity(), b -> {
+                            if (!b) {
+                                Toast.makeText(getContext(), "用户未授权悬浮窗权限", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                     if (data == null) {
                         requestPermission();
                     }
@@ -124,6 +133,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
     }
 
     private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
@@ -212,9 +222,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             }
             this.data = data;
             button.setBackgroundResource(R.drawable.nav_start_checked);
+            if (!PermissionUtils.checkPermission(getContext())) {
+                PermissionUtils.requestPermission(getActivity(), b -> {
+                    if (!b) {
+                        Toast.makeText(getContext(), "用户未授权悬浮窗权限", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             try {
+
                 floatWindowManager.setData(data);
                 floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getApplicationWeakReference().get(), "mainFloatBall"));
+
             } catch (FloatWindowManagerException e) {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
