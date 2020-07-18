@@ -19,6 +19,7 @@ import com.lzf.easyfloat.EasyFloat;
 import com.lzf.easyfloat.enums.ShowPattern;
 import com.lzf.easyfloat.enums.SidePattern;
 import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
+import com.wzy.yuka.CurtainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
@@ -38,25 +39,12 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
     private String tag;
     private WeakReference<Application> mApplicationRef;
     private View FloatBallView;
-    private int index;
+    public boolean isInGuiding = false;
     private FloatWindowManager floatWindowManager;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     private boolean isInChoosing = false;
     private WindowManager windowManager;
-
-    private boolean isInGuiding = false;
-
-    public void show() {
-        EasyFloat.showAppFloat(tag);
-    }
-
-    public void hide() {
-        EasyFloat.hideAppFloat(tag);
-    }
-
-    public void dismiss() {
-        EasyFloat.dismissAppFloat(tag);
-    }
+    private int index = 0;
 
     public FloatBall(Application application, String tag) throws FloatWindowManagerException {
         this.mApplicationRef = new WeakReference<>(application);
@@ -75,7 +63,6 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setDragEnable(true)
                 .registerCallbacks(new OnFloatCallbacks() {
-
                     Handler handler = new Handler();
                     Runnable runnable = () -> {
                         int[] size = GetParams.Screen();
@@ -96,7 +83,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                         if (b) {
                             handler.postDelayed(() -> {
                                 showInitGuide();
-                            }, 500);
+                            }, 1000);
 
                         }
                     }
@@ -155,8 +142,28 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
         fb.show();
     }
 
+    @Nullable
+    public View getView() {
+        return FloatBallView;
+    }
 
-    private void removeOnClickListeners() {
+    public void show() {
+        EasyFloat.showAppFloat(tag);
+    }
+
+    public void hide() {
+        EasyFloat.hideAppFloat(tag);
+    }
+
+    public void dismiss() {
+        EasyFloat.dismissAppFloat(tag);
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void removeOnClickListeners() {
         FloatBallView.findViewById(R.id.floatball_main).setOnClickListener(null);
         try {
             FloatBallView.findViewById(R.id.floatball_top).setOnClickListener(null);
@@ -179,6 +186,10 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
             FloatBallView.findViewById(R.id.floatball_mid2).setOnLongClickListener(this);
         } catch (NullPointerException ignored) {
         }
+    }
+
+    public void setMainOnClickListeners() {
+        FloatBallView.findViewById(R.id.floatball_main).setOnClickListener(this);
     }
 
     @Override
@@ -283,7 +294,10 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
         ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) FloatBallView.getLayoutParams();
         int[] size = GetParams.Screen();
-        if (floatBallLayout.isDeployed) {
+        if (isInGuiding) {
+            removeOnClickListeners();
+            floatBallLayout.fold();
+        } else if (floatBallLayout.isDeployed) {
             //展开则关闭
             removeOnClickListeners();
             floatBallLayout.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
@@ -307,6 +321,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
             });
             floatBallLayout.fold();
         }
+
     }
 
     private void expandFloatBall() {
@@ -360,7 +375,12 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                 }
             }
             floatBallLayout.expand(imageButtons);
-            setOnClickListeners();
+            if (!isInGuiding) {
+                setOnClickListeners();
+            } else {
+                removeOnClickListeners();
+            }
+
         }, 30);
     }
 
@@ -421,102 +441,14 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
     }
 
     private void showInitGuide() {
-//        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_FloatBall, true)) {
-//            isInGuiding = true;
-//            GuideManager guideManager = new GuideManager((FragmentActivity) mApplicationRef.get());
-//            CurtainFlow cf = new CurtainFlow.Builder()
-//                    .with(11, guideManager.weaveCurtain(FloatBallView, new CircleShape(), 0, R.layout.guide_interpret).setCancelBackPressed(false))
-//                    .with(12, guideManager.weaveCurtain(FloatBallView, (canvas, paint, info) -> {
-//                    }, 0, R.layout.guide_interpret).setCancelBackPressed(false))
-//                    .create();
-//            cf.start(new CurtainFlow.CallBack() {
-//                ConstraintLayout layout;
-//                FloatBallLayout fbl = FloatBallView.findViewById(R.id.floatball_layout);
-//
-//                private void setImg(ConstraintLayout layout, int imageResource, int width, int height, int top, int left) {
-//                    ImageView img = layout.findViewById(R.id.guide_interpret_img);
-//                    img.setImageResource(imageResource);
-//                    img.setScaleType(ImageView.ScaleType.FIT_START);
-//                    ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-//
-//                    int statusBarHeight = GetParams.Screen()[2];
-//                    int[] params_floatBall = new int[2];
-//                    FloatBallView.getLocationOnScreen(params_floatBall);
-//                    params_floatBall[1] -= statusBarHeight;
-//                    params_img.width = SizeUtil.dp2px(mApplicationRef.get(), width);
-//                    params_img.height = SizeUtil.dp2px(mApplicationRef.get(), height);
-//                    if (top > 0) {
-//                        params_img.topMargin = SizeUtil.dp2px(mApplicationRef.get(), top) + params_floatBall[1];
-//                    } else {
-//                        params_img.topMargin = params_floatBall[1] - SizeUtil.dp2px(mApplicationRef.get(), Math.abs(top));
-//                    }
-//                    params_img.leftMargin = SizeUtil.dp2px(mApplicationRef.get(), left) + params_floatBall[0];
-//
-//                    img.setLayoutParams(params_img);
-//
-//                    ConstraintSet set = new ConstraintSet();
-//                    set.clone(layout);
-//                    set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
-//                    set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
-//                    set.applyTo(layout);
-//                }
-//
-//                @Override
-//                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-//                    switch (currentId) {
-//                        case 11:
-//                            EasyFloat.appFloatDragEnable(false, tag);
-//                            fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
-//                                @Override
-//                                public void deployed() {
-//                                    setOnClickListeners();
-//                                    curtainFlow.push();
-//                                }
-//
-//                                @Override
-//                                public void folded() {
-//                                    ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
-//                                    WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) FloatBallView.getLayoutParams();
-//                                    int[] size = GetParams.Screen();
-//                                    imageButton.setBackgroundResource(R.drawable.main);
-//                                    layoutParams.y = layoutParams.y + SizeUtil.dp2px(FloatBallView.getContext(), 52);
-//                                    if (layoutParams.x > size[0] / 2) {
-//                                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
-//                                    }
-//                                    windowManager.updateViewLayout(FloatBallView, layoutParams);
-//                                    setOnClickListeners();
-//                                    EasyFloat.appFloatDragEnable(true, tag);
-//                                    curtainFlow.finish();
-//                                }
-//                            });
-//                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-//                            layout.setOnClickListener(v -> {
-//                                v.setOnClickListener(null);
-//                                fbl.findViewById(R.id.floatball_main).performClick();
-//                            });
-//                            setImg(layout, R.drawable.guide_floatball_folded, 192, 27, 44, 44);
-//                            break;
-//                        case 12:
-//                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-//                            layout.setOnClickListener(v -> {
-//                                fbl.fold();
-//                                v.setOnClickListener(null);
-//                            });
-//                            setImg(layout, R.drawable.guide_floatball_deployed, 320, 220, -33, 22);
-//                            break;
-//                    }
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    EasyFloat.appFloatDragEnable(true, tag);
-//                    fbl.removeFloatBallLayoutListener();
-//                    isInGuiding = false;
-//                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, false);
-//                }
-//            });
-//
-//        }
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_FloatBall, true)) {
+            isInGuiding = true;
+            Intent intent = new Intent(mApplicationRef.get(), CurtainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(CurtainActivity.name, "FB");
+            intent.putExtra(CurtainActivity.index, index);
+            mApplicationRef.get().startActivity(intent);
+        }
     }
 
     public void onConfigurationChanged(Configuration newConfig) {

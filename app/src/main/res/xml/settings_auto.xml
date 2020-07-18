@@ -49,11 +49,9 @@
             android:title="全半角转换（仅百度）" />
     </PreferenceCategory>
     <PreferenceCategory android:title="额外设置">
-        <SwitchPreference
+        <Preference
             android:key="settings_auto_offset"
-            android:defaultValue="false"
-            android:summaryOff="需要识别的应用全屏，不计算任务栏高度"
-            android:summaryOn="需要识别的应用非全屏，计算任务栏高度"
+            android:summary="目前是自动判断，不需要手动调整"
             android:title="现词窗位置偏移" />
     </PreferenceCategory>
 </PreferenceScreen>
