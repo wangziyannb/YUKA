@@ -1,7 +1,7 @@
 package com.wzy.yuka.yuka.floatwindow;
 
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -45,10 +45,10 @@ public class SelectWindow_Normal extends FloatWindow {
     public boolean isContinue = false;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
-    public SelectWindow_Normal(Activity activity, int index, String tag, boolean isContinue) throws FloatWindowManagerException {
-        super(activity, index, tag);
+    public SelectWindow_Normal(Application application, int index, String tag, boolean isContinue) throws FloatWindowManagerException {
+        super(application, index, tag);
         this.isContinue = isContinue;
-        EasyFloat.with(activity)
+        EasyFloat.with(applicationWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_main, view1 -> {
                     setView(view1);
@@ -86,8 +86,8 @@ public class SelectWindow_Normal extends FloatWindow {
                     view1.findViewById(R.id.sw_addwindows).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 250) / 2,
-                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(activityWeakReference.get(), 120) / 2))
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 250) / 2,
+                        (int) ((GetParams.Screen()[1] + 1.5 * GetParams.Screen()[2]) / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 120) / 2))
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     Handler handler = new Handler();
@@ -97,12 +97,12 @@ public class SelectWindow_Normal extends FloatWindow {
                             String str_t = ((TextView) this.view.findViewById(R.id.translatedText)).getText() + "";
                             if ((!TextUtils.isEmpty(str_t)) && (!str_t.equals("选取目标位置后点识别")) && (!str_t.equals("等待选取..."))) {
                                 // 得到剪贴板管理器
-                                ClipboardManager cm = (ClipboardManager) activityWeakReference.get().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipboardManager cm = (ClipboardManager) applicationWeakReference.get().getSystemService(Context.CLIPBOARD_SERVICE);
                                 // 创建一个剪贴数据集，包含一个普通文本数据条目（需要复制的数据）
                                 ClipData clipData = ClipData.newPlainText("yuka", str_t);
                                 // 把数据集设置（复制）到剪贴板
                                 cm.setPrimaryClip(clipData);
-                                Toast.makeText(activityWeakReference.get(), "已复制选择的文本至剪切板", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(applicationWeakReference.get(), "已复制选择的文本至剪切板", Toast.LENGTH_SHORT).show();
                             }
                         }
                     };
@@ -175,12 +175,12 @@ public class SelectWindow_Normal extends FloatWindow {
 
         if (origin.equals("yuka error")) {
             textView.setText(translation);
-            textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.colorError, null));
+            textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.colorError, null));
             return;
         }
         if (origin.equals("before response")) {
             textView.setText(translation);
-            textView.setTextColor(activityWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
+            textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
             return;
         }
 
@@ -253,7 +253,8 @@ public class SelectWindow_Normal extends FloatWindow {
         }
     }
 
-    private void showInitGuide() {
+    @Override
+    public void showInitGuide() {
         if (!isGuiding) {
             SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
             isGuiding = true;
@@ -264,10 +265,11 @@ public class SelectWindow_Normal extends FloatWindow {
                 str = "SWN_C";
             }
             if (!str.equals("")) {
-                Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
+                Intent intent = new Intent(applicationWeakReference.get(), CurtainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(CurtainActivity.name, str);
                 intent.putExtra(CurtainActivity.index, index);
-                activityWeakReference.get().startActivity(intent);
+                applicationWeakReference.get().startActivity(intent);
             }
         }
     }

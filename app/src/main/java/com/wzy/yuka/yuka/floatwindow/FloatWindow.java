@@ -1,6 +1,7 @@
 package com.wzy.yuka.yuka.floatwindow;
 
-import android.app.Activity;
+import android.app.Application;
+import android.content.res.Configuration;
 import android.view.View;
 
 import com.lzf.easyfloat.EasyFloat;
@@ -14,14 +15,14 @@ import java.lang.ref.WeakReference;
  */
 public class FloatWindow implements View.OnClickListener {
     protected String tag;
-    WeakReference<Activity> activityWeakReference;
+    WeakReference<Application> applicationWeakReference;
     protected View view;
     public int[] location;
     FloatWindowManager floatWindowManager;
     int index;
 
-    FloatWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
-        this.activityWeakReference = new WeakReference<>(activity);
+    FloatWindow(Application application, int index, String tag) throws FloatWindowManagerException {
+        this.applicationWeakReference = new WeakReference<>(application);
         this.tag = tag;
         this.index = index;
         location = new int[4];
@@ -64,6 +65,11 @@ public class FloatWindow implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+    }
 
+    public void showInitGuide() {
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
     }
 }

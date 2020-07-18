@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -59,11 +58,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     private GuideManager guideManager;
     private FloatWindowManager floatWindowManager;
-    private ImageButton NavButton;
     private MainActivity mainActivity;
     private DrawerLayout drawer;
     private CurtainFlow guide2;
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -75,7 +72,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     if (data != null) {
                         if (floatWindowManager.getNumOfFloatBalls() == 0) {
                             try {
-                                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getActivityWeakRef().get(), "mainFloatBall"));
+                                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getApplicationWeakReference().get(), "mainFloatBall"));
                             } catch (FloatWindowManagerException e) {
                                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
@@ -170,10 +167,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.home, container, false);
-        bottomNavigationView = root.findViewById(R.id.bottomNavigationView);
+        return inflater.inflate(R.layout.home, container, false);
+    }
 
-        mainActivity = (MainActivity) getActivity();
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
+
+        mainActivity = (MainActivity) view.getContext();
         drawer = mainActivity.drawer;
         guideManager = new GuideManager(this);
         button = bottomNavigationView.findViewById(R.id.bot_nav_start);
@@ -182,13 +183,19 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         nav_home.setOnClickListener(this);
         View nav_history = bottomNavigationView.findViewById(R.id.bot_nav_history);
         nav_history.setOnClickListener(this);
-
-        navController = Navigation.findNavController(root.findViewById(R.id.fragment));
+        try {
+            floatWindowManager = FloatWindowManager.getInstance();
+            if (floatWindowManager.getData() != null) {
+                this.data = floatWindowManager.getData();
+                button.setBackgroundResource(R.drawable.nav_start_checked);
+            }
+        } catch (FloatWindowManagerException e) {
+            e.printStackTrace();
+        }
+        navController = Navigation.findNavController(view.findViewById(R.id.fragment));
         showInitGuide();
-
-        return root;
+        super.onViewCreated(view, savedInstanceState);
     }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         String TAG = "HomeFragment";
@@ -206,10 +213,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             this.data = data;
             button.setBackgroundResource(R.drawable.nav_start_checked);
             try {
-                Log.e(TAG, "onActivityResult: ");
-                floatWindowManager = FloatWindowManager.getInstance();
                 floatWindowManager.setData(data);
-                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getActivityWeakRef().get(), "mainFloatBall"));
+                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getApplicationWeakReference().get(), "mainFloatBall"));
             } catch (FloatWindowManagerException e) {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -282,5 +287,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
 
 }

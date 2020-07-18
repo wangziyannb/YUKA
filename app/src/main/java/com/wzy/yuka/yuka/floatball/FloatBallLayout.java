@@ -28,6 +28,11 @@ public class FloatBallLayout extends ViewGroup {
 
     }
 
+    @Override
+    public void onWindowSystemUiVisibilityChanged(int visible) {
+        super.onWindowSystemUiVisibilityChanged(visible);
+    }
+
     public FloatBallLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray floatBallArray = context.obtainStyledAttributes(attrs, R.styleable.FloatBallLayout);
@@ -75,6 +80,7 @@ public class FloatBallLayout extends ViewGroup {
         if (mListener != null) {
             mListener.folded();
         }
+        isDeployed = false;
     }
 
     public void expand(View[] views) {

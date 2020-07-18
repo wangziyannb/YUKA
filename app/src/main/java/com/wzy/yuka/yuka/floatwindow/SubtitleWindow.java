@@ -1,7 +1,8 @@
 package com.wzy.yuka.yuka.floatwindow;
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.MotionEvent;
@@ -36,16 +37,13 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
     private boolean isPlay = false;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
-    public SubtitleWindow(Activity activity, int index, String tag) throws FloatWindowManagerException {
-        super(activity, index, tag);
-        EasyFloat.with(activityWeakReference.get())
+    public SubtitleWindow(Application application, int index, String tag) throws FloatWindowManagerException {
+        super(application, index, tag);
+        EasyFloat.with(applicationWeakReference.get())
                 .setTag(tag)
                 .setLayout(R.layout.floatwindow_subtitle, (view1) -> {
                     setView(view1);
-                    int[] size = GetParams.Screen();
-
                     ConstraintLayout rl = view1.findViewById(R.id.floatwindow_subtitle);
-
                     //改变悬浮框透明度
                     GradientDrawable drawable = (GradientDrawable) rl.getBackground();
                     int a1 = (int) SharedPreferencesUtil.getInstance().getParam("settings_window_opacityBg", 50);
@@ -55,10 +53,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                         alpha_hex = "0" + alpha_hex;
                     }
                     drawable.setColor(Color.parseColor("#" + alpha_hex + "000000"));
-
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rl.getLayoutParams();
-                    params.width = (int) (size[0] * 0.7);
-                    rl.setLayoutParams(params);
+                    changeWidth();
 
                     view1.findViewById(R.id.sbw_close).setOnClickListener(this);
                     view1.findViewById(R.id.sbw_pap).setOnClickListener(this);
@@ -66,7 +61,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                     view1.findViewById(R.id.sbw_hide).setOnClickListener(this);
                 })
                 .setShowPattern(ShowPattern.ALL_TIME)
-                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 300) / 2, GetParams.Screen()[1] / 2 - SizeUtil.dp2px(activityWeakReference.get(), 100) / 2)
+                .setLocation(GetParams.Screen()[0] / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 300) / 2, GetParams.Screen()[1] / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 100) / 2)
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
                     @Override
@@ -110,7 +105,15 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                     }
                 })
                 .show();
+    }
 
+    private void changeWidth() {
+        //改变悬浮框宽度
+        ConstraintLayout rl = view.findViewById(R.id.floatwindow_subtitle);
+        int[] size = GetParams.Screen();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) rl.getLayoutParams();
+        params.width = (int) (size[0] * 0.7);
+        rl.setLayoutParams(params);
     }
 
     @Override
@@ -136,9 +139,6 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
         result.setText(translation);
     }
 
-    private View getView() {
-        return EasyFloat.getAppFloatView(tag);
-    }
 
     @Override
     public void onClick(View v) {
@@ -159,7 +159,6 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                 break;
             case R.id.sbw_change:
                 ConstraintSet constraintSet = new ConstraintSet();
-                View view = getView();
                 ConstraintLayout constraintLayout = view.findViewById(R.id.floatwindow_subtitle);
                 constraintSet.clone(constraintLayout);
                 TransitionManager.beginDelayedTransition(constraintLayout);
@@ -189,7 +188,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
                 }
                 break;
             case R.id.sbw_hide:
-                View view1 = getView();
+                View view1 = view;
                 view1.findViewById(R.id.sbw_close).setVisibility(View.GONE);
                 view1.findViewById(R.id.sbw_pap).setVisibility(View.GONE);
                 view1.findViewById(R.id.sbw_change).setVisibility(View.GONE);
@@ -198,13 +197,22 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
         }
     }
 
-    private void showInitGuide() {
-
+    @Override
+    public void showInitGuide() {
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_SubtitleWindow, true)) {
-            Intent intent = new Intent(activityWeakReference.get(), CurtainActivity.class);
+            Intent intent = new Intent(applicationWeakReference.get(), CurtainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(CurtainActivity.name, "SBW");
             intent.putExtra(CurtainActivity.index, index);
-            activityWeakReference.get().startActivity(intent);
+            applicationWeakReference.get().startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        //改变悬浮框宽度
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT || newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            changeWidth();
         }
     }
 }

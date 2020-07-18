@@ -8,6 +8,7 @@ import com.lzf.easyfloat.EasyFloat;
 import com.wzy.yuka.tools.debug.CrashManager;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.yuka.FloatWindowManager;
 import com.wzy.yuka.yuka.user.UserManager;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class MainApplication extends Application {
         GetParams.init(this);
         UserManager.init(this);
         SharedPreferencesUtil.init(this);
+        FloatWindowManager.init(this);
         check();
     }
 
