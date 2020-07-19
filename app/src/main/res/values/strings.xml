@@ -2,26 +2,131 @@
     <string name="app_name">YUKA</string>
     <string name="True">1</string>
     <string name="False">0</string>
+    <string name="id">账号</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="action_sign_in">登录</string>
+    <string name="avatar">用户头像</string>
+
     <string-array name="mode">
         <item>ocr</item>
         <item>translate</item>
         <item>yuka</item>
+        <item>auto</item>
     </string-array>
-    <string-array name="model">
+
+    <string-array name="detect_modelset">
         <item>google</item>
+        <item>baidu</item>
     </string-array>
-    <string-array name="detect_languages">
-        <item>自动（Google Cloud Vision）</item>
+
+    <string-array name="detect_model">
+        <item>谷歌（Google Cloud Vision）</item>
+        <item>百度（百度AI开放平台）</item>
     </string-array>
+
+    <string-array name="auto_modelset">
+        <item>google</item>
+        <item>baidu</item>
+    </string-array>
+
+    <string-array name="auto_model">
+        <item>谷歌（Google Cloud Vision）</item>
+        <item>百度（百度AI开放平台）</item>
+    </string-array>
+
     <string-array name="translator_name">
-        <item>Google</item>
+        <item>Google翻译</item>
         <item>百度翻译</item>
         <item>有道翻译</item>
     </string-array>
+
+    <string-array name="translator_mode">
+        <item>经典同传模式</item>
+        <item>流式声传模式</item>
+    </string-array>
+
+    <string-array name="translator_modeset">
+        <item>classic</item>
+        <item>flowtype</item>
+    </string-array>
+
     <string-array name="translator">
         <item>google</item>
         <item>baidu</item>
         <item>youdao</item>
     </string-array>
 
+    <string-array name="sex_selecter">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+
+    <string-array name="age_selecter">
+        <item>工作</item>
+        <item>大学</item>
+        <item>高中</item>
+        <item>初中</item>
+        <item>小学</item>
+    </string-array>
+
+    <string-array name="sync_provider">
+        <item>有道</item>
+    </string-array>
+    <string-array name="sync_providerset">
+        <item>youdao</item>
+    </string-array>
+
+    <string-array name="sync_o_language">
+        <item>简体中文</item>
+        <item>通用英文</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+    <string-array name="sync_o_languageset">
+        <item>zh-CHS</item>
+        <item>en</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>fr</item>
+        <item>ru</item>
+        <item>de</item>
+    </string-array>
+
+    <string-array name="sync_t_language">
+        <item>简体中文</item>
+        <item>通用英文</item>
+        <item>中英混合</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+    <string-array name="sync_t_languageset">
+        <item>zh-CHS</item>
+        <item>en</item>
+        <item>enzh</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>fr</item>
+        <item>ru</item>
+        <item>de</item>
+    </string-array>
+    <string-array name="sync_mode">
+        <item>整句模式</item>
+        <item>实时模式</item>
+    </string-array>
+
+    <string-array name="sync_modeset">
+        <item>sentence</item>
+        <item>stream</item>
+    </string-array>
+
+    <string name="register">注册</string>
+    <string name="mb_mid_4250_name">伊莉雅</string>
+    <string name="sync_HowToModifyTargetSdk">一般来说，TargetSdk为29（即安卓Q）的App默认支持本功能。低于29的App默认不支持本功能。如要强制支持，请用MT管理器修改该App中的AndroidManifest.xml中的android:targetSdkVersion值为29即可</string>
 </resources>
