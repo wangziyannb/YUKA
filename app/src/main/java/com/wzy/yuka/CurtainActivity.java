@@ -284,7 +284,8 @@ public class CurtainActivity extends FragmentActivity {
                     case 12:
                         layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
                         Log.e("TAG", "onProcess: ");
-                        setImg(layout, R.drawable.guide_floatball_deployed, 320, 220, -33, 22);
+                        setImg(layout, R.drawable.guide_floatball_deployed, 320, 340, -42, -1);
+                        //setImg(layout,R.drawable.guide_floatball_close,320,19,0,0);
                         break;
                 }
             }

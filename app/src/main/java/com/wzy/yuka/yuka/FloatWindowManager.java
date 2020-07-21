@@ -390,7 +390,7 @@ public class FloatWindowManager {
                 start_RecordingTrans();
             }
         } catch (FloatWindowManagerException e) {
-            Toast.makeText(applicationWeakReference.get(), "还没有悬浮窗初始化呢！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationWeakReference.get(), "需要点击重置先初始化悬浮窗哦！", Toast.LENGTH_SHORT).show();
         }
     }
 
