@@ -6,7 +6,7 @@
             android:entries="@array/detect_model"
             android:entryValues="@array/detect_modelset"
             android:key="settings_detect_model"
-            android:summary="谷歌（Google Cloud Vision）"
+            android:summary="默认有道"
             android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
@@ -16,7 +16,7 @@
             android:defaultValue="false"
             android:key="settings_detect_punctuation"
             android:summary="影响原文，如无标点可使用"
-            android:title="标点优化(仅百度)" />
+            android:title="标点优化" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_detect_vertical"

@@ -54,10 +54,17 @@ public class GetParams {
             case "SWN_C":
                 //以上的三种mode是普通模式
                 switch (preferences.getString("settings_detect_model", resources.getStringArray(R.array.detect_modelset)[0])) {
+                    case "youdao":
+                        if (preferences.getBoolean("settings_detect_punctuation", false)) {
+                            //竖排标点优化
+                            params.put("punctuation", resources.getString(R.string.True));
+                        }
+                        break;
                     case "google":
+                        params.put("model", resources.getStringArray(R.array.detect_modelset)[1]);
                         break;
                     case "baidu":
-                        params.put("model", resources.getStringArray(R.array.detect_modelset)[1]);
+                        params.put("model", resources.getStringArray(R.array.detect_modelset)[2]);
                         if (preferences.getBoolean("settings_detect_punctuation", false)) {
                             //竖排标点优化
                             params.put("punctuation", resources.getString(R.string.True));
@@ -83,10 +90,13 @@ public class GetParams {
                     params.put("vertical", resources.getString(R.string.True));
                 }
                 switch (preferences.getString("settings_auto_model", resources.getStringArray(R.array.auto_modelset)[0])) {
+                    case "youdao":
+                        break;
                     case "google":
+                        params.put("model", resources.getStringArray(R.array.auto_modelset)[1]);
                         break;
                     case "baidu":
-                        params.put("model", resources.getStringArray(R.array.auto_modelset)[1]);
+                        params.put("model", resources.getStringArray(R.array.auto_modelset)[2]);
                         break;
                 }
                 break;
