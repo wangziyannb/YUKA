@@ -6,7 +6,7 @@
             android:entries="@array/auto_model"
             android:entryValues="@array/auto_modelset"
             android:key="settings_auto_model"
-            android:summary="谷歌（Google Cloud Vision）"
+            android:summary="默认有道"
             android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
@@ -14,7 +14,7 @@
             android:title="快速识别" />
         <SeekBarPreference
             android:key="settings_auto_toleration"
-            android:max="100"
+            android:max="50"
             android:summary="简单说就是间隔多少以内的行视作一段"
             android:title="宽容度"
             app:adjustable="true"

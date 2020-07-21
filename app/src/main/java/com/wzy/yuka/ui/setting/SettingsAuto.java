@@ -31,7 +31,6 @@ public class SettingsAuto extends PreferenceFragmentCompat {
             preference.setSummary(listPreference2.getEntry());
             return false;
         });
-
     }
 
     @Nullable
