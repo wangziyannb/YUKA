@@ -2,6 +2,9 @@ package com.wzy.yuka.ui.log;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,27 +31,61 @@ import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.user.UserManager;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Response;
+
+
+public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener, TextWatcher {
     private GlobalHandler globalHandler;
     private TableLayout tableLayout;
+    private EditText un_t;
     private String[] params;
+    private Runnable r = () -> HttpRequest.check_username(un_t.getText(), new okhttp3.Callback() {
+        @Override
+        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            Message message = Message.obtain();
+            message.what = 400;
+            globalHandler.sendMessage(message);
+        }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.log_register, container, false);
-        tableLayout = root.findViewById(R.id.tableLayout);
-        globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
-        root.findViewById(R.id.register_button).setOnClickListener(this);
-        showDialog();
-        return root;
-    }
+        @Override
+        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            String res = response.body().string();
+            Message message = Message.obtain();
+            try {
+                JSONObject resultJson = new JSONObject(res);
+                String origin = resultJson.getString("origin");
+                if (origin.equals("200")) {
+                    message.what = 200;
+                    Log.e("tag", "onResponse: " + res);
+                    globalHandler.sendMessage(message);
+                }
+                if (origin.equals("605")) {
+                    message.what = 605;
+                    Log.e("tag", "onResponse: " + res);
+                    globalHandler.sendMessage(message);
+                }
+                if (origin.equals("400")) {
+                    onFailure(call, new IOException());
+                }
+            } catch (JSONException e) {
+                Log.e("tag", "onResponse: " + res);
+                e.printStackTrace();
+                onFailure(call, new IOException());
+            }
+        }
+    });
 
     private void showDialog() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.policy, null, false);
@@ -90,10 +127,37 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         alert.show();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.log_register, container, false);
+        tableLayout = root.findViewById(R.id.tableLayout);
+        globalHandler = GlobalHandler.getInstance();
+        globalHandler.setHandleMsgListener(this);
+        un_t = tableLayout.findViewById(R.id.username_regist);
+        root.findViewById(R.id.register_button).setOnClickListener(this);
+        showDialog();
+        un_t.addTextChangedListener(this);
+        return root;
+    }
+
+    @Nullable
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (enter) {
+            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_open_enter);
+        } else {
+            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_close_exit);
+        }
+    }
+
     @Override
     public void onClick(View v) {
-        EditText un_t = tableLayout.findViewById(R.id.username_regist);
         EditText pwd_t = tableLayout.findViewById(R.id.password_regist);
+        if (un_t.getText().length() != un_t.getText().length() || !un_t.getText().toString().equals(un_t.getText() + "")) {
+            Toast.makeText(getContext(), "用户名已被注册，请重新输入", Toast.LENGTH_SHORT).show();
+            return;
+        }
         switch (v.getId()) {
             case R.id.register_button:
                 params = new String[3];
@@ -120,19 +184,12 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         }
     }
 
-    @Nullable
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter) {
-            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_open_enter);
-        } else {
-            return AnimationUtils.loadAnimation(getActivity(), R.anim.scene_close_exit);
-        }
-    }
-
     @Override
     public void handleMsg(Message msg) {
         switch (msg.what) {
+            case 200:
+                Toast.makeText(getContext(), "用户名检查通过", Toast.LENGTH_SHORT).show();
+                break;
             case 202:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
@@ -140,12 +197,32 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
                 break;
             case 600:
                 LoadingViewManager.dismiss();
-                Toast.makeText(getContext(), "注册失败，用户名或账号与他人相同", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "注册失败，用户名与他人相同或本机已注册", Toast.LENGTH_SHORT).show();
+                break;
+            case 605:
+                LoadingViewManager.dismiss();
+                Toast.makeText(getContext(), "用户名与他人相同", Toast.LENGTH_SHORT).show();
                 break;
             case 400:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        globalHandler.removeCallbacks(r);
+        globalHandler.postDelayed(r, 2000);
     }
 }
