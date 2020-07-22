@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="YuKa"
+        android:text="@string/about_dev_yuka"
         android:textColor="@android:color/black"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="Version 1.0"
+        android:text="@string/about_dev_version_1_0"
         android:textColor="@android:color/tertiary_text_dark"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,6 +72,7 @@
         tools:ignore="MissingConstraints"
         yuka:left_icon="@drawable/ic_check"
         yuka:show_bottom_line="true"
+        android:focusable="true"
         yuka:show_left_icon="true" />
 
     <com.wzy.yuka.ui.view.PersonalView
@@ -93,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:text="Copyright © YuKa . All Rights Reserved"
+        android:text="@string/about_dev_copyright"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

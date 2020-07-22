@@ -97,19 +97,9 @@
         android:id="@+id/nav_help"
         android:name="com.wzy.yuka.ui.help.HelpFragment"
         android:label="帮助">
-
-        <action
-            android:id="@+id/action_nav_help_to_nav_help_Advance"
-            app:destination="@id/nav_help_Advance" />
-        <action
-            android:id="@+id/action_nav_help_to_nav_help_QA"
-            app:destination="@id/nav_help_QA" />
         <action
             android:id="@+id/action_nav_help_to_nav_help_Example"
             app:destination="@id/nav_help_Example" />
-        <action
-            android:id="@+id/action_nav_help_to_nav_help_Future"
-            app:destination="@id/nav_help_Future" />
     </fragment>
 
     <fragment
@@ -125,23 +115,10 @@
             app:destination="@id/nav_user_profile" />
     </fragment>
 
-
-    <fragment
-        android:id="@+id/nav_help_QA"
-        android:name="com.wzy.yuka.ui.help.HelpQA"
-        android:label="Q&amp;A" />
     <fragment
         android:id="@+id/nav_help_Example"
         android:name="com.wzy.yuka.ui.help.HelpExample"
         android:label="翻译示例" />
-    <fragment
-        android:id="@+id/nav_help_Advance"
-        android:name="com.wzy.yuka.ui.help.HelpAdvance"
-        android:label="进阶操作" />
-    <fragment
-        android:id="@+id/nav_help_Future"
-        android:name="com.wzy.yuka.ui.help.HelpFuture"
-        android:label="敬请期待" />
 
     <fragment
         android:id="@+id/nav_about"

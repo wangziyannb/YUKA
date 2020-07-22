@@ -53,7 +53,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="110dp"
             android:layout_marginTop="70dp"
-            android:text="注册ID:"
+            android:text="@string/personal_service_id"
             android:textSize="18sp"
             android:textStyle="italic" />
 
@@ -77,7 +77,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="26dp"
             android:layout_marginBottom="85dp"
-            android:text="过期时间：" />
+            android:text="@string/personal_service_date" />
 
         <TextView
             android:id="@+id/member_expiry"
@@ -97,7 +97,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="26dp"
             android:layout_marginBottom="65dp"
-            android:text="剩余普通翻译次数：" />
+            android:text="@string/personal_service_last_1" />
 
         <TextView
             android:id="@+id/member_times"
@@ -117,7 +117,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="26dp"
             android:layout_marginBottom="45dp"
-            android:text="剩余自动识别翻译次数：" />
+            android:text="@string/personal_service_last_2" />
 
         <TextView
             android:id="@+id/member_times_auto"
@@ -137,7 +137,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="26dp"
             android:layout_marginBottom="25dp"
-            android:text="剩余同传时间：" />
+            android:text="@string/personal_service_last_3" />
 
         <TextView
             android:id="@+id/member_times_sync"
@@ -157,7 +157,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="24dp"
             android:layout_marginBottom="105dp"
-            android:text="超级月卡"
+            android:text="@string/personal_service_last_4"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -169,7 +169,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginBottom="105dp"
             android:layout_toEndOf="@id/member_type"
-            android:text="多捞哦"
+            android:text="@string/personal_service_last_5"
             android:textSize="5sp" />
 
     </RelativeLayout>
@@ -193,7 +193,7 @@
             android:background="@drawable/key_input_button"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:hint="请输入激活码" />
+            android:hint="@string/personal_service_cdkey_1" />
 
         <Button
             android:id="@+id/personal_button1"
@@ -202,7 +202,7 @@
             android:layout_weight="1"
             android:background="@drawable/key_button_style"
             android:layoutDirection="inherit"
-            android:text="获取激活码" />
+            android:text="@string/personal_service_cdkey_2" />
     </LinearLayout>
 
     <Button
@@ -212,17 +212,6 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/radius_style"
-        android:text="立即激活" />
-
-    <Button
-        android:id="@+id/personal_button3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/radius_style"
-        android:text="更多信息"
-        android:visibility="gone" />
+        android:text="@string/personal_service_cdkey_3" />
 
 </LinearLayout>

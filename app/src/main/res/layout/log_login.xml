@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:text="忘记密码"
+        android:text="@string/log_login_forgetpwd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password" />
 
@@ -116,25 +116,25 @@
             android:id="@+id/textView18"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已阅读并同意" />
+            android:text="@string/log_login_notification_1" />
 
         <TextView
             android:id="@+id/textViewx1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="隐私协议"
+            android:text="@string/log_login_notification_2"
             android:textColor="@color/colorAccent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="及" />
+            android:text="@string/log_login_notification_3" />
 
         <TextView
             android:id="@+id/textViewx2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="用户协议"
+            android:text="@string/log_login_notification_4"
             android:textColor="@color/colorAccent" />
     </LinearLayout>
 

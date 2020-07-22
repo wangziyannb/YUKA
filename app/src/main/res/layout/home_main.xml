@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:hint="输入您想要翻译的句子"
+            android:hint="@string/home_main_input"
             android:inputType="text"
             android:textColorHint="@color/text_color_LightBg" />
 
@@ -42,7 +42,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/background_light"
         android:padding="10dp"
-        android:text="译文：\n"
+        android:text="@string/home_main_translated"
         android:visibility="gone"
         app:lineHeight="16sp" />
 
@@ -75,7 +75,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="这里空空如也 . . . " />
+            android:text="@string/home_main_nothing" />
 
     </LinearLayout>
 </LinearLayout>

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:text="Yuka隐私协议"
+            android:text="@string/policy_title"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -46,7 +46,7 @@
         android:layout_marginBottom="4dp"
         android:background="@drawable/radius_window"
         android:scaleType="centerCrop"
-        android:text="取消"
+        android:text="@string/policy_cancel"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,7 +63,7 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/radius_style"
         android:scaleType="centerCrop"
-        android:text="我同意本协议"
+        android:text="@string/policy_agree"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

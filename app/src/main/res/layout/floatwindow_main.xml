@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="选取目标位置后点识别"
+        android:text="@string/floatwindow_main_info"
         android:textColor="@color/text_color_DarkBg" />
 
     <com.wzy.yuka.ui.view.ScaleImageView

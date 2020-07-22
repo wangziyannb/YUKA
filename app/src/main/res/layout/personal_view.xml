@@ -23,7 +23,7 @@
         android:layout_toEndOf="@id/left_icon"
         android:background="#00FFFFFF"
         android:gravity="center_vertical"
-        android:text="用户名"
+        android:text="@string/personal_view_username"
         android:textColor="#050000"
         android:textSize="16sp" />
 
@@ -38,7 +38,7 @@
         android:layout_marginBottom="6dp"
         android:layout_toStartOf="@id/right_arrow"
         android:gravity="center_vertical"
-        android:text="Thomsen"
+        android:text="@string/personal_view_username_2"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp" />
 

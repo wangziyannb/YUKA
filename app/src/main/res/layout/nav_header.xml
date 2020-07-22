@@ -37,14 +37,14 @@
                 android:layout_width="81dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
-                android:text="Yuka" />
+                android:text="@string/nav_header_yuka" />
 
             <TextView
                 android:id="@+id/username"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
-                android:text="绯绯色欠片" />
+                android:text="@string/nav_header_username" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="#0003A9F4"
-                android:text="登录" />
+                android:text="@string/nav_header_login" />
 
             <Button
                 android:id="@+id/logout_nav_header"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="#0003A9F4"
-                android:text="登出" />
+                android:text="@string/nav_header_logout" />
         </LinearLayout>
     </LinearLayout>
 
