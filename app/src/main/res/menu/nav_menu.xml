@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navhome"
-        android:icon="@drawable/home_no"
+        android:id="@+id/bot_nav_home"
+        android:icon="@drawable/nav_home_checked"
+        android:iconTint="#F06292"
         android:title="主页" />
     <item
-        android:id="@+id/navstart"
-        android:icon="@drawable/nav_colse"
-        app:showAsAction="never" />
+        android:enabled="false"
+        android:title="" />
     <item
-        android:id="@+id/navboutique"
-        android:icon="@drawable/boutique_no"
-        android:title="精选" />
+        android:id="@+id/bot_nav_history"
+        android:icon="@drawable/nav_history_unchecked"
+        android:iconTint="#F06292"
+        android:title="历史" />
 </menu>
