@@ -82,6 +82,8 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         root.findViewById(R.id.register).setOnClickListener(this);
         View view = root.findViewById(R.id.login_checkboxlayout);
 
+        root.findViewById(R.id.forget_password).setOnClickListener(this);
+
         view.findViewById(R.id.textView18).setOnClickListener(this);
         checkBox = view.findViewById(R.id.checkBox);
 
@@ -130,6 +132,9 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 break;
             case R.id.textViewx2:
                 showDialog(1);
+                break;
+            case R.id.forget_password:
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_login_to_nav_forgetpassword);
                 break;
         }
     }
