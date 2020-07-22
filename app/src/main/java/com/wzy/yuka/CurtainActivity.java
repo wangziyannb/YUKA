@@ -3,7 +3,6 @@ package com.wzy.yuka;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -234,11 +233,7 @@ public class CurtainActivity extends FragmentActivity {
                 params_floatBall[1] -= statusBarHeight;
                 params_img.width = SizeUtil.dp2px(getApplicationContext(), width);
                 params_img.height = SizeUtil.dp2px(getApplicationContext(), height);
-                if (top > 0) {
-                    params_img.topMargin = SizeUtil.dp2px(getApplicationContext(), top) + params_floatBall[1];
-                } else {
-                    params_img.topMargin = params_floatBall[1] - SizeUtil.dp2px(getApplicationContext(), Math.abs(top));
-                }
+                params_img.topMargin = SizeUtil.dp2px(getApplicationContext(), top) + params_floatBall[1];
                 params_img.leftMargin = SizeUtil.dp2px(getApplicationContext(), left) + params_floatBall[0];
 
                 img.setLayoutParams(params_img);
@@ -283,9 +278,7 @@ public class CurtainActivity extends FragmentActivity {
                         break;
                     case 12:
                         layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-                        Log.e("TAG", "onProcess: ");
                         setImg(layout, R.drawable.guide_floatball_deployed, 320, 340, -42, -1);
-                        //setImg(layout,R.drawable.guide_floatball_close,320,19,0,0);
                         break;
                 }
             }

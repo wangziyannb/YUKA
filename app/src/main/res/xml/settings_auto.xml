@@ -14,15 +14,15 @@
             android:title="快速识别" />
         <SeekBarPreference
             android:key="settings_auto_toleration"
-            android:max="50"
-            android:summary="简单说就是间隔多少以内的行视作一段"
+            android:max="4"
+            android:summary="简单说就是间隔(n*15px)以内的行视作一段"
             android:title="宽容度"
             app:adjustable="true"
-            app:defaultValue="15"
+            app:defaultValue="1"
             app:min="0"
             app:seekBarIncrement="1"
             app:showSeekBarValue="true" />
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="false"
             android:key="settings_auto_punctuation"
             android:summary="影响原文，如无标点可使用"
@@ -39,14 +39,14 @@
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
             android:key="settings_trans_translator"
-            android:summary="Google翻译"
+            android:summary="有道翻译"
             android:title="翻译器选择" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="settings_baidu_SBCS"
             android:summaryOff="翻译英文等"
             android:summaryOn="翻译日韩文等"
-            android:title="全半角转换（仅百度）" />
+            android:title="全半角转换" />
     </PreferenceCategory>
     <PreferenceCategory android:title="额外设置">
         <Preference

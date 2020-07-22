@@ -227,7 +227,7 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void Login(String[] params, Callback callback) {
+    public static void login(String[] params, Callback callback) {
         RequestBody body = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
@@ -241,7 +241,7 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void Logout(String[] params, Callback callback) {
+    public static void logout(String[] params, Callback callback) {
         RequestBody body = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("uuid", params[2])
@@ -254,7 +254,7 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void Register(String[] params, Callback callback) {
+    public static void register(String[] params, Callback callback) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
@@ -268,11 +268,11 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void Password(String[] params, Callback callback) {
+    public static void forget_password(String[] params, Callback callback) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("u_name", params[0])
                 .add("pwd", Encrypt.md5(params[1], params[0]))
-                .add("uuid", params[3])
+                .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
                 .url("https://yukacn.xyz/yuka/forget_pwd/yuka_v1")

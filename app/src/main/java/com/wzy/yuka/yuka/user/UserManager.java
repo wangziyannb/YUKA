@@ -78,7 +78,7 @@ public class UserManager {
 
         String[] params = getUser();
 
-        HttpRequest.Login(params, new okhttp3.Callback() {
+        HttpRequest.login(params, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("TAG", "onFailure: " + e.toString());
@@ -134,7 +134,7 @@ public class UserManager {
 
         String[] params = getUser();
 
-        HttpRequest.Logout(params, new okhttp3.Callback() {
+        HttpRequest.logout(params, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = Message.obtain();
@@ -174,7 +174,7 @@ public class UserManager {
      * @param params the params
      */
     public static void register(String[] params) {
-        HttpRequest.Register(params, new okhttp3.Callback() {
+        HttpRequest.register(params, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = Message.obtain();
@@ -210,8 +210,8 @@ public class UserManager {
         });
     }
 
-    public static void password(String[] params) {
-        HttpRequest.Password(params, new okhttp3.Callback() {
+    public static void forget_password(String[] params) {
+        HttpRequest.forget_password(params, new okhttp3.Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Message message = Message.obtain();
@@ -227,17 +227,14 @@ public class UserManager {
                     JSONObject resultJson = new JSONObject(res);
                     String origin = resultJson.getString("origin");
                     String result = resultJson.getString("results");
-                    if (origin.equals("200")) {
+                    if (!origin.equals("400")) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("id", result);
-                        addUser(params[0], params[1], result);
-                        message.what = 202;
+                        bundle.putString("results", result);
+                        message.what = Integer.parseInt(origin);
                         message.setData(bundle);
                         globalHandler.sendMessage(message);
-                    }
-                    if (origin.equals("600")) {
-                        message.what = 600;
-                        globalHandler.sendMessage(message);
+                    } else {
+                        onFailure(call, new IOException());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
