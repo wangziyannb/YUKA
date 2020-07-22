@@ -2,6 +2,8 @@ package com.wzy.yuka.ui.log;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +32,34 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
         GlobalHandler globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.password_commit).setOnClickListener(this);
+        EditText password_confirm = tableLayout.findViewById(R.id.password_confirm);
+        password_confirm.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //    Log.e("TextWatcher","输入之前");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //   Log.e("TextWatcher","正在输入");
+                EditText password_enter = tableLayout.findViewById(R.id.password_enter);
+                String[] params = new String[1];
+                params[0] = password_enter.getText() + "";
+                if (params[0].equals(password_confirm.getText() + "")) {
+                    Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "两次输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //   Log.e("TextWatcher","输入之后，一般就用这个！！！");
+            }
+        });
         return root;
     }
-
 
     @Override
     public void onClick(View v) {
@@ -47,23 +74,17 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
 
         switch (v.getId()) {
             case R.id.password_commit:
-                if (params[1].equals(password_confirm.getText() + "")) {
-                    Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
-                    UserManager.forget_password(params);
-                    LoadingViewManager
-                            .with(getActivity())
-                            .setHintText("重置密码中...")
-                            .setAnimationStyle("BallScaleIndicator")
-                            .setShowInnerRectangle(true)
-                            .setOutsideAlpha(0.3f)
-                            .setLoadingContentMargins(50, 50, 50, 50)
-                            .build();
-                } else {
-                    Toast.makeText(getContext(), "两次输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
-                }
+                UserManager.forget_password(params);
+                LoadingViewManager
+                        .with(getActivity())
+                        .setHintText("重置密码中...")
+                        .setAnimationStyle("BallScaleIndicator")
+                        .setShowInnerRectangle(true)
+                        .setOutsideAlpha(0.3f)
+                        .setLoadingContentMargins(50, 50, 50, 50)
+                        .build();
                 break;
         }
-
     }
 
     @Override
