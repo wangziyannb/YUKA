@@ -23,39 +23,39 @@ import com.wzy.yuka.yuka.user.UserManager;
 
 public class Password extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private TableLayout tableLayout;
+    private EditText password_confirm;
+    private EditText password_enter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.log_forgetpassword, container, false);
         tableLayout = root.findViewById(R.id.change_password);
+        password_confirm = tableLayout.findViewById(R.id.password_confirm);
+        password_enter = tableLayout.findViewById(R.id.password_enter);
         GlobalHandler globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.password_commit).setOnClickListener(this);
-        EditText password_confirm = tableLayout.findViewById(R.id.password_confirm);
         password_confirm.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //    Log.e("TextWatcher","输入之前");
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //   Log.e("TextWatcher","正在输入");
-                EditText password_enter = tableLayout.findViewById(R.id.password_enter);
-                String[] params = new String[1];
-                params[0] = password_enter.getText() + "";
-                if (params[0].equals(password_confirm.getText() + "")) {
-                    Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "两次输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
-                }
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                //   Log.e("TextWatcher","输入之后，一般就用这个！！！");
+                if (s.length() != password_enter.getText().length()) {
+                    return;
+                }
+                if (s.toString().equals(password_confirm.getText() + "")) {
+                    Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return root;
@@ -64,14 +64,14 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
     @Override
     public void onClick(View v) {
         EditText username = tableLayout.findViewById(R.id.pwd_user_name);
-        EditText password_enter = tableLayout.findViewById(R.id.password_enter);
-        EditText password_confirm = tableLayout.findViewById(R.id.password_confirm);
         String[] params = new String[3];
-
         params[0] = username.getText() + "";
         params[1] = password_enter.getText() + "";
         params[2] = UserManager.getUser()[2];
-
+        if (password_confirm.getText().length() != password_enter.getText().length() || !password_confirm.getText().toString().equals(password_confirm.getText() + "")) {
+            Toast.makeText(getContext(), "两次输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
+            return;
+        }
         switch (v.getId()) {
             case R.id.password_commit:
                 UserManager.forget_password(params);
