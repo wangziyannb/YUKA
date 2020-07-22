@@ -268,6 +268,20 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
+    public static void Password(String[] params, Callback callback) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("u_name", params[0])
+                .add("pwd", Encrypt.md5(params[1], params[0]))
+                .add("uuid", params[3])
+                .build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/forget_pwd/yuka_v1")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
     public static void activate(String[] params, Callback callback) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("u_name", params[0])

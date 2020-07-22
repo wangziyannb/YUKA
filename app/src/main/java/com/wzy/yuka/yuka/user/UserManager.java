@@ -210,6 +210,43 @@ public class UserManager {
         });
     }
 
+    public static void password(String[] params) {
+        HttpRequest.Password(params, new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Message message = Message.obtain();
+                message.what = 400;
+                globalHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String res = response.body().string();
+                Message message = Message.obtain();
+                try {
+                    JSONObject resultJson = new JSONObject(res);
+                    String origin = resultJson.getString("origin");
+                    String result = resultJson.getString("results");
+                    if (origin.equals("200")) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("id", result);
+                        addUser(params[0], params[1], result);
+                        message.what = 202;
+                        message.setData(bundle);
+                        globalHandler.sendMessage(message);
+                    }
+                    if (origin.equals("600")) {
+                        message.what = 600;
+                        globalHandler.sendMessage(message);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    onFailure(call, new IOException());
+                }
+            }
+        });
+    }
+
     public static void activate(String cdkey) {
         String[] params = new String[2];
         params[0] = getUser()[0];
