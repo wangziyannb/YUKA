@@ -71,7 +71,7 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.about, rootKey);
         globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
+
         try {
             PackageManager packageManager = getActivity().getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
@@ -107,9 +107,6 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
             case "about_about_dev":
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_about_to_nav_about_dev);
                 break;
-            case "about_about_version":
-                // TODO: 2020/4/10  检查更新
-                break;
             case "about_about_repository":
                 Uri uri = Uri.parse("https://github.com/wangziyannb/Yuka");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -122,6 +119,7 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_about_to_nav_about_reference);
                 break;
             case "about_about_server":
+                globalHandler.setHandleMsgListener(this);
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("mode", "yuka");
                 HttpRequest.yuka(hashMap, "", new Callback() {

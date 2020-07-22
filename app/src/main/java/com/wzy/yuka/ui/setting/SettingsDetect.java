@@ -21,9 +21,11 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
         setPreferencesFromResource(R.xml.settings_detect, rootKey);
 
         ListPreference model = getPreferenceScreen().findPreference("settings_detect_model");
+        model.setValue(model.getValue() != null ? model.getValue() : model.getEntryValues()[0] + "");
         model.setSummary(model.getEntry() != null ? model.getEntry() : model.getEntries()[0]);
         model.setOnPreferenceChangeListener(this);
         ListPreference translator = getPreferenceScreen().findPreference("settings_trans_translator");
+        translator.setValue(translator.getValue() != null ? translator.getValue() : translator.getEntryValues()[0] + "");
         translator.setSummary(translator.getEntry() != null ? translator.getEntry() : translator.getEntries()[0]);
         translator.setOnPreferenceChangeListener(this);
         preferenceVisibilityChange();
@@ -38,6 +40,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
         ListPreference translator = getPreferenceScreen().findPreference("settings_trans_translator");
 
         if (vertical != null && model != null && punctuation != null) {
+
             switch (model.getValue()) {
                 case "youdao":
                     vertical.setVisible(false);

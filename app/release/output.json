@@ -6,7 +6,7 @@
     "apkData": {
       "type": "MAIN",
       "splits": [],
-      "versionCode": 4204,
+      "versionCode": 4205,
       "versionName": "1.0",
       "enabled": true,
       "outputFile": "app-release.apk",
