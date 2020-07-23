@@ -27,7 +27,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
     private EditText password_confirm;
     private EditText password_enter;
     private CircleTickView circleTickView;
-
+    private CircleTickView circleTickView2;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,6 +36,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
         password_confirm = tableLayout.findViewById(R.id.password_confirm);
         password_enter = tableLayout.findViewById(R.id.password_enter);
         circleTickView = tableLayout.findViewById(R.id.ct_success);
+        circleTickView2 = tableLayout.findViewById(R.id.ct_pwd);
         GlobalHandler globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.password_commit).setOnClickListener(this);
@@ -55,10 +56,28 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
                 if (s.length() != password_enter.getText().length()) {
                     return;
                 }
-                if (s.toString().equals(password_confirm.getText() + "")) {
-                    Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
+                if (s.toString().equals(password_enter.getText() + "")) {
                     circleTickView.setVisibility(View.VISIBLE);
                     circleTickView.animation();
+                }
+            }
+        });
+        password_enter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                circleTickView2.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() >= 6 && s.length() <= 16) {
+                    circleTickView2.setVisibility(View.VISIBLE);
+                    circleTickView2.animation();
                 }
             }
         });
@@ -72,22 +91,20 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
         params[0] = username.getText() + "";
         params[1] = password_enter.getText() + "";
         params[2] = UserManager.getUser()[2];
-        if (password_confirm.getText().length() != password_enter.getText().length() || !password_confirm.getText().toString().equals(password_confirm.getText() + "")) {
+        if (password_confirm.getText().length() != password_enter.getText().length() || !password_confirm.getText().toString().equals(password_enter.getText() + "")) {
             Toast.makeText(getContext(), "两次输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
-        switch (v.getId()) {
-            case R.id.password_commit:
-                UserManager.forget_password(params);
-                LoadingViewManager
-                        .with(getActivity())
-                        .setHintText("重置密码中...")
-                        .setAnimationStyle("BallScaleIndicator")
-                        .setShowInnerRectangle(true)
-                        .setOutsideAlpha(0.3f)
-                        .setLoadingContentMargins(50, 50, 50, 50)
-                        .build();
-                break;
+        if (v.getId() == R.id.password_commit) {
+            UserManager.forget_password(params);
+            LoadingViewManager
+                    .with(getActivity())
+                    .setHintText("重置密码中...")
+                    .setAnimationStyle("BallScaleIndicator")
+                    .setShowInnerRectangle(true)
+                    .setOutsideAlpha(0.3f)
+                    .setLoadingContentMargins(50, 50, 50, 50)
+                    .build();
         }
     }
 

@@ -41,7 +41,7 @@ public class CircleTickView extends View {
     private float[] index;
     private int sweepAngle;
     private boolean isDrawArc;    //画弧结束
-    private boolean drawArcEnd;
+    public boolean drawArcEnd;
     private boolean cherry;    //设置圆切头部尾部实现圆圆感觉
     private Paint mMinCirclePaint;
     private int[] mMinColors = {R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary};
@@ -91,6 +91,16 @@ public class CircleTickView extends View {
         mCircleColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary, null));
         mHookColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary, null));
     }
+
+    public void setmCircleRadiu(int v) {
+        mCircleRadiu = v;
+    }
+
+    public void setmStrokeWidth(int v) {
+        mStrokeWidth = v;
+    }
+
+
 
     /**
      * @return void
@@ -259,9 +269,6 @@ public class CircleTickView extends View {
      */
     public void animation() {
 
-        /**
-         * 绘制圆弧
-         */
         //圆弧动画（蓝色渐变色圆环）  创建了一个值从0到300的动画，动画时长是1s
         ValueAnimator animator = ValueAnimator.ofInt(0, 360);
         animator.setDuration(1000);
@@ -273,7 +280,6 @@ public class CircleTickView extends View {
                 invalidate();
             }
         });
-
         //圆弧（圆环）绘制结束后，开始后面的绘制
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -283,7 +289,6 @@ public class CircleTickView extends View {
 
             }
         });
-
         animator.start();
     }
 

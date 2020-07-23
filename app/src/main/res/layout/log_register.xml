@@ -48,7 +48,7 @@
                 android:layout_height="20dp"
                 android:layout_marginTop="12dp"
                 app:circleRadius="8dp"
-                app:circle_width="2dp"></com.wzy.yuka.ui.view.CircleTickView>
+                app:circle_width="2dp" />
 
         </TableRow>
 
@@ -76,6 +76,14 @@
                 android:textColor="#999999"
                 android:textColorHint="#a3a3a3"
                 android:textSize="12sp" />
+
+            <com.wzy.yuka.ui.view.CircleTickView
+                android:id="@+id/pwd_success"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="12dp"
+                app:circleRadius="8dp"
+                app:circle_width="2dp" />
         </TableRow>
     </TableLayout>
 

@@ -40,8 +40,9 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     private GlobalHandler globalHandler;
     private TableLayout tableLayout;
     private CircleTickView circleTickView;
+    private CircleTickView circleTickView2;
     private EditText un_t;
-    private String[] params;
+    private EditText pwd_t;
     private Runnable r = () -> UserManager.check_feasibility("u_name", un_t.getText().toString());
 
     private void showDialog() {
@@ -73,8 +74,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         alert.setTitle("注册说明");
         alert.setMessage("感谢使用Yuka注册服务！以下为注册说明：\n" +
                 "1、每台设备只能注册一次！\n" +
-                "2、本注册界面只有账号密码会提交至服务器！\n" +
-                "3、注册账号后将会附送普通模式和自动模式各20次使用次数，后续使用请参考账号信息进行购买激活");
+                "2、注册账号后将会附送普通模式和自动模式各20次使用次数，后续使用请进入账号信息进行购买激活");
         alert.setPositiveButton("知道惹，我要注册！", (dialog, which) -> {
 
         });
@@ -92,10 +92,31 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         un_t = tableLayout.findViewById(R.id.username_regist);
-
+        pwd_t = tableLayout.findViewById(R.id.password_regist);
+        circleTickView = tableLayout.findViewById(R.id.user_success);
+        circleTickView2 = tableLayout.findViewById(R.id.pwd_success);
         root.findViewById(R.id.register_button).setOnClickListener(this);
         showDialog();
         un_t.addTextChangedListener(this);
+        pwd_t.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                circleTickView2.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() >= 6 && s.length() <= 16) {
+                    circleTickView2.setVisibility(View.VISIBLE);
+                    circleTickView2.animation();
+                }
+            }
+        });
         return root;
     }
 
@@ -111,34 +132,25 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
 
     @Override
     public void onClick(View v) {
-        EditText pwd_t = tableLayout.findViewById(R.id.password_regist);
-        if (un_t.getText().length() != un_t.getText().length() || !un_t.getText().toString().equals(un_t.getText() + "")) {
-            Toast.makeText(getContext(), "用户名已被注册，请重新输入", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        switch (v.getId()) {
-            case R.id.register_button:
-                params = new String[3];
-
-                params[0] = un_t.getText() + "";
-                params[1] = pwd_t.getText() + "";
-                params[2] = UserManager.getUser()[2];
-
-                UserManager.register(params);
-                LoadingViewManager
-                        .with(getActivity())
-                        .setHintText("注册中...")
-                        .setAnimationStyle("BallScaleIndicator")
-                        .setShowInnerRectangle(true)
-                        .setOutsideAlpha(0.3f)
-                        .setLoadingContentMargins(50, 50, 50, 50)
-                        .build();
-                final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-                final MutableLiveData<String> user_n = (MutableLiveData<String>) mainViewModel.getuser_n();
-                final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
-                user_n.setValue(params[0]);
-                pwd.setValue(params[1]);
-                break;
+        if (v.getId() == R.id.register_button) {
+            String[] params = new String[3];
+            params[0] = un_t.getText() + "";
+            params[1] = pwd_t.getText() + "";
+            params[2] = UserManager.getUser()[2];
+            UserManager.register(params);
+            LoadingViewManager
+                    .with(getActivity())
+                    .setHintText("注册中...")
+                    .setAnimationStyle("BallScaleIndicator")
+                    .setShowInnerRectangle(true)
+                    .setOutsideAlpha(0.3f)
+                    .setLoadingContentMargins(50, 50, 50, 50)
+                    .build();
+            final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+            final MutableLiveData<String> user_n = (MutableLiveData<String>) mainViewModel.getuser_n();
+            final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
+            user_n.setValue(params[0]);
+            pwd.setValue(params[1]);
         }
     }
 
@@ -176,13 +188,12 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        circleTickView = tableLayout.findViewById(R.id.user_success);
         circleTickView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
         globalHandler.removeCallbacks(r);
-        globalHandler.postDelayed(r, 2000);
+        globalHandler.postDelayed(r, 3000);
     }
 }

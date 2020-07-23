@@ -150,9 +150,9 @@
     <string name="log_forgetpwd_username">用 户 名 ：</string>
     <string name="log_forgetpwd_input_1">请输入用户名</string>
     <string name="log_forgetpwd_pwd">输入密码 ：</string>
-    <string name="log_forgetpwd_input_2">6-16位,由字母(区分大小写),数字,符号组成</string>
+    <string name="log_forgetpwd_input_2">6–16位,由字母(区分大小写),数字,符号组成</string>
     <string name="log_forgetpwd_confirm">确认密码 ：</string>
-    <string name="log_forgetpwd_input_3">请确认密码</string>
+    <string name="log_forgetpwd_input_3">请再次输入密码</string>
     <string name="log_forgetpwd_commit">确认修改</string>
     <string name="log_login_forgetpwd">忘记密码</string>
     <string name="log_login_notification_1">已阅读并同意</string>
@@ -162,7 +162,7 @@
     <string name="log_register_username_1">用户名*</string>
     <string name="log_register_username_2">请输入用户名</string>
     <string name="log_register_pwd_1">密  码*</string>
-    <string name="log_register_pwd_2">6-16位,由字母(区分大小写),数字,符号组成</string>
+    <string name="log_register_pwd_2">6–16位,由字母(区分大小写),数字,符号组成</string>
     <string name="log_register_commit">注册</string>
     <string name="nav_header_yuka">Yuka</string>
     <string name="nav_header_username">绯绯色欠片</string>
