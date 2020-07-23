@@ -32,12 +32,14 @@ import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.ui.view.CircleTickView;
 import com.wzy.yuka.yuka.user.UserManager;
 
 
 public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener, TextWatcher {
     private GlobalHandler globalHandler;
     private TableLayout tableLayout;
+    private CircleTickView circleTickView;
     private EditText un_t;
     private String[] params;
     private Runnable r = () -> UserManager.check_feasibility("u_name", un_t.getText().toString());
@@ -90,6 +92,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         un_t = tableLayout.findViewById(R.id.username_regist);
+
         root.findViewById(R.id.register_button).setOnClickListener(this);
         showDialog();
         un_t.addTextChangedListener(this);
@@ -144,6 +147,8 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         switch (msg.what) {
             case 209:
                 Toast.makeText(getContext(), "用户名检查通过", Toast.LENGTH_SHORT).show();
+                circleTickView = tableLayout.findViewById(R.id.user_success);
+                circleTickView.animation();
                 break;
             case 202:
                 LoadingViewManager.dismiss();

@@ -19,12 +19,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.ui.view.CircleTickView;
 import com.wzy.yuka.yuka.user.UserManager;
 
 public class Password extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private TableLayout tableLayout;
     private EditText password_confirm;
     private EditText password_enter;
+    private CircleTickView circleTickView;
 
     @Nullable
     @Override
@@ -33,11 +35,11 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
         tableLayout = root.findViewById(R.id.change_password);
         password_confirm = tableLayout.findViewById(R.id.password_confirm);
         password_enter = tableLayout.findViewById(R.id.password_enter);
+        circleTickView = tableLayout.findViewById(R.id.ct_success);
         GlobalHandler globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         root.findViewById(R.id.password_commit).setOnClickListener(this);
         password_confirm.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -55,6 +57,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
                 }
                 if (s.toString().equals(password_confirm.getText() + "")) {
                     Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
+                    circleTickView.animation();
                 }
             }
         });
