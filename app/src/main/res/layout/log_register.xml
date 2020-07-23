@@ -46,6 +46,14 @@
                 android:textColorHint="#a3a3a3"
                 android:textSize="12sp" />
 
+            <com.wzy.yuka.ui.view.CircleTickView
+                android:id="@+id/user_success"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="6dp"
+                app:circleRadius="8dp"
+                app:circle_width="2dp"></com.wzy.yuka.ui.view.CircleTickView>
+
         </TableRow>
 
         <TableRow
@@ -63,9 +71,10 @@
 
             <EditText
                 android:id="@+id/password_regist"
-                android:layout_width="267dp"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
+                android:inputType="textPassword"
                 android:hint="@string/log_register_pwd_2"
                 android:paddingLeft="8dp"
                 android:textColor="#999999"
