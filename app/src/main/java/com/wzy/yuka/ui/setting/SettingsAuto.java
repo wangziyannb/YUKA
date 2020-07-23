@@ -58,6 +58,7 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
         if (SBCS != null && translator != null) {
             switch (translator.getValue()) {
                 case "youdao":
+                case "tencent":
                 case "google":
                     SBCS.setVisible(false);
                     break;

@@ -114,8 +114,11 @@ public class GetParams {
                     params.put("SBCS", resources.getString(R.string.True));
                 }
                 break;
-            case "google":
+            case "tencent":
                 params.put("translator", resources.getStringArray(R.array.translator)[2]);
+                break;
+            case "google":
+                params.put("translator", resources.getStringArray(R.array.translator)[3]);
                 break;
         }
         return params;

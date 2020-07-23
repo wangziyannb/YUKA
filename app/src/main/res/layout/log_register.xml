@@ -79,6 +79,7 @@
         </TableRow>
     </TableLayout>
 
+
     <Button
         android:id="@+id/register_button"
         android:layout_width="144dp"
