@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="识别设置">
+        <ListPreference
+            android:entries="@array/detect_model"
+            android:entryValues="@array/detect_modelset"
+            android:key="settings_detect_model"
+            android:summary="默认有道"
+            android:title="识别器选择" />
+        <SwitchPreference
+            android:key="settings_fastMode"
+            android:summary="高性能要求，出现取词框消失请禁用"
+            android:title="快速识别" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_detect_punctuation"
+            android:summary="影响原文，如无标点可使用"
+            android:title="标点优化" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_detect_vertical"
+            android:summaryOff="横排"
+            android:summaryOn="竖排"
+            android:title="文字方向" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="翻译设置">
+        <ListPreference
+            android:entries="@array/translator_name"
+            android:entryValues="@array/translator"
+            android:key="settings_trans_translator"
+            android:summary="Google翻译"
+            android:title="翻译器选择" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_baidu_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="额外设置">
+        <SeekBarPreference
+            android:key="settings_continuousMode_interval"
+            android:max="30"
+            android:title="持续模式的识别间隔（秒）"
+            app:adjustable="true"
+            app:defaultValue="6"
+            app:min="2"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

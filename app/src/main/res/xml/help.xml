@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:iconSpaceReserved="false"
         android:title="说明">
         <Preference
-            android:iconSpaceReserved="false"
-            android:key="help_instruction_QA"
-            android:title="Q&amp;A" />
-        <Preference
-            android:iconSpaceReserved="false"
             android:key="help_instruction_example_translate"
             android:summary="为了理解炸鸡小姐的话语"
             android:title="翻译示例" />
-        <Preference
-            android:iconSpaceReserved="false"
-            android:key="help_instruction_advance"
-            android:summary="我也是想了好久才发现的"
-            android:title="进阶用法" />
-        <Preference
-            android:iconSpaceReserved="false"
-            android:key="help_instruction_future"
-            android:summary="敬请期待"
-            android:title="暂未实装的秘技" />
     </PreferenceCategory>
 </PreferenceScreen>

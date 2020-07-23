@@ -7,13 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="示例"
+            android:text="@string/help_example_title"
             android:textColor="@color/colorAccent"
             android:textSize="20sp" />
 
@@ -30,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="在下图中，可爱的炸鸡准备去打工。我们希望通过Yuka来得知炸鸡说的是什么。" />
+                android:text="@string/help_example_first" />
 
             <ImageView
                 android:layout_width="370dp"
@@ -51,13 +53,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="通过各种方法将Yuka选词窗的框完全套住对话框，最后按下对勾来完成操作。" />
+                android:text="@string/help_example_seconde" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="如果你的手机出现了类似下图的权限申请，上帝保佑，Yuka正常运行了！
-点击确认，大约还有半秒你就有机会明白炸鸡的意思了！" />
+                android:text="@string/help_example_third" />
 
             <ImageView
                 android:layout_width="370dp"
@@ -78,7 +79,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="经过翻译，看来炸鸡想去甜品店！还不陪她去？" />
+                android:text="@string/help_example_fourth" />
 
             <ImageView
                 android:layout_width="370dp"

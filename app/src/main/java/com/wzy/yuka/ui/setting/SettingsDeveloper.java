@@ -11,14 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.handler.GlobalHandler;
+import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.network.HttpRequest;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
+import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.yuka.user.UserManager;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,10 +58,9 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
         globalHandler = GlobalHandler.getInstance();
         globalHandler.setHandleMsgListener(this);
         getPreferenceScreen().findPreference("settings_debug_server").setOnPreferenceClickListener(preference -> {
-            HttpRequest.requestTowardsYukaServer(
-                    new String[]{getContext().getResources().getStringArray(R.array.mode)[2]},
-                    "",
-                    new Callback() {
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("mode", "yuka");
+            HttpRequest.yuka(hashMap, "", new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
                             Log.e("settingsFragment", "服务器检查失败");
@@ -80,6 +83,21 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
                         }
                     });
             return false;
+        });
+        getPreferenceScreen().findPreference("settings_debug_reset").setOnPreferenceClickListener(preference -> {
+            SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_GuideActivity, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_MainActivity, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SubtitleWindow, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_1, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_2, true);
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_A, true);
+            UserManager.logout();
+            UserManager.removeUser();
+            Toast.makeText(getContext(), "已经重置所有用户引导并退出账号", Toast.LENGTH_SHORT).show();
+            return true;
         });
     }
 

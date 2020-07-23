@@ -2,26 +2,183 @@
     <string name="app_name">YUKA</string>
     <string name="True">1</string>
     <string name="False">0</string>
+    <string name="id">账号</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="action_sign_in">登录</string>
+    <string name="avatar">用户头像</string>
+
     <string-array name="mode">
         <item>ocr</item>
         <item>translate</item>
         <item>yuka</item>
+        <item>auto</item>
     </string-array>
-    <string-array name="model">
-        <item>google</item>
-    </string-array>
-    <string-array name="detect_languages">
-        <item>自动（Google Cloud Vision）</item>
-    </string-array>
-    <string-array name="translator_name">
-        <item>Google</item>
-        <item>百度翻译</item>
-        <item>有道翻译</item>
-    </string-array>
-    <string-array name="translator">
-        <item>google</item>
+
+    <string-array name="detect_modelset">
+        <item>youdao</item>
         <item>baidu</item>
+        <item>google</item>
+    </string-array>
+
+    <string-array name="detect_model">
+        <item>有道（有道智云）</item>
+        <item>百度（百度AI开放平台）</item>
+        <item>谷歌（Google Cloud Vision）</item>
+    </string-array>
+
+    <string-array name="auto_modelset">
+        <item>youdao</item>
+        <item>baidu</item>
+        <item>google</item>
+    </string-array>
+
+    <string-array name="auto_model">
+        <item>有道（有道智云）</item>
+        <item>百度（百度AI开放平台）</item>
+        <item>谷歌（Google Cloud Vision）</item>
+    </string-array>
+
+    <string-array name="translator_name">
+        <item>有道翻译</item>
+        <item>百度翻译</item>
+        <item>Google翻译</item>
+    </string-array>
+
+    <string-array name="translator">
+        <item>youdao</item>
+        <item>baidu</item>
+        <item>google</item>
+    </string-array>
+
+    <string-array name="translator_mode">
+        <item>经典同传模式</item>
+        <item>流式声传模式</item>
+    </string-array>
+
+    <string-array name="translator_modeset">
+        <item>classic</item>
+        <item>flowtype</item>
+    </string-array>
+
+    <string-array name="sex_selecter">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+
+    <string-array name="age_selecter">
+        <item>工作</item>
+        <item>大学</item>
+        <item>高中</item>
+        <item>初中</item>
+        <item>小学</item>
+    </string-array>
+
+    <string-array name="sync_provider">
+        <item>有道</item>
+    </string-array>
+    <string-array name="sync_providerset">
         <item>youdao</item>
     </string-array>
 
+    <string-array name="sync_o_language">
+        <item>简体中文</item>
+        <item>通用英文</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+    <string-array name="sync_o_languageset">
+        <item>zh-CHS</item>
+        <item>en</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>fr</item>
+        <item>ru</item>
+        <item>de</item>
+    </string-array>
+
+    <string-array name="sync_t_language">
+        <item>简体中文</item>
+        <item>通用英文</item>
+        <item>中英混合</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+    <string-array name="sync_t_languageset">
+        <item>zh-CHS</item>
+        <item>en</item>
+        <item>enzh</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>fr</item>
+        <item>ru</item>
+        <item>de</item>
+    </string-array>
+    <string-array name="sync_mode">
+        <item>整句模式</item>
+        <item>实时模式</item>
+    </string-array>
+
+    <string-array name="sync_modeset">
+        <item>sentence</item>
+        <item>stream</item>
+    </string-array>
+
+    <string name="register">注册</string>
+    <string name="mb_mid_4250_name">伊莉雅</string>
+    <string name="sync_HowToModifyTargetSdk">一般来说，TargetSdk为29（即安卓Q）的App默认支持本功能。低于29的App默认不支持本功能。如要强制支持，请用MT管理器修改该App中的AndroidManifest.xml中的android:targetSdkVersion值为29即可</string>
+    <string name="about_dev_yuka">YuKa</string>
+    <string name="about_dev_version_1_0">Version 1.0</string>
+    <string name="about_dev_copyright">Copyright © YuKa . All Rights Reserved</string>
+    <string name="floatwindow_main_info">选取目标位置后点识别</string>
+    <string name="help_example_title">示例</string>
+    <string name="help_example_first">在下图中，可爱的炸鸡准备去打工。我们希望通过Yuka来得知炸鸡说的是什么。</string>
+    <string name="help_example_seconde">通过各种方法将Yuka选词窗的框完全套住对话框，最后按下对勾来完成操作。</string>
+    <string name="help_example_third">如果你的手机出现了类似下图的权限申请，上帝保佑，Yuka正常运行了！ 点击确认，大约还有半秒你就有机会明白炸鸡的意思了！</string>
+    <string name="help_example_fourth">经过翻译，看来炸鸡想去甜品店！还不陪她去？</string>
+    <string name="home_main_input">输入您想要翻译的句子</string>
+    <string name="home_main_translated">译文：\n</string>
+    <string name="home_main_nothing">这里空空如也 . . .</string>
+    <string name="log_forgetpwd_username">用 户 名 ：</string>
+    <string name="log_forgetpwd_input_1">请输入用户名</string>
+    <string name="log_forgetpwd_pwd">输入密码 ：</string>
+    <string name="log_forgetpwd_input_2">6-16位,由字母(区分大小写),数字,符号组成</string>
+    <string name="log_forgetpwd_confirm">确认密码 ：</string>
+    <string name="log_forgetpwd_input_3">请确认密码</string>
+    <string name="log_forgetpwd_commit">确认修改</string>
+    <string name="log_login_forgetpwd">忘记密码</string>
+    <string name="log_login_notification_1">已阅读并同意</string>
+    <string name="log_login_notification_2">隐私协议</string>
+    <string name="log_login_notification_3">及</string>
+    <string name="log_login_notification_4">用户协议</string>
+    <string name="log_register_username_1">用户名*</string>
+    <string name="log_register_username_2">请输入用户名</string>
+    <string name="log_register_pwd_1">密码*</string>
+    <string name="log_register_pwd_2">6-16位,由字母(区分大小写),数字,符号组成</string>
+    <string name="log_register_commit">注册</string>
+    <string name="nav_header_yuka">Yuka</string>
+    <string name="nav_header_username">绯绯色欠片</string>
+    <string name="nav_header_login">登录</string>
+    <string name="nav_header_logout">登出</string>
+    <string name="personal_service_id">注册ID:</string>
+    <string name="personal_service_date">过期时间：</string>
+    <string name="personal_service_last_1">剩余普通翻译次数：</string>
+    <string name="personal_service_last_2">剩余自动识别翻译次数：</string>
+    <string name="personal_service_last_3">剩余同传时间：</string>
+    <string name="personal_service_last_4">超级月卡</string>
+    <string name="personal_service_last_5">多捞哦</string>
+    <string name="personal_service_cdkey_1">请输入激活码</string>
+    <string name="personal_service_cdkey_2">获取激活码</string>
+    <string name="personal_service_cdkey_3">立即激活</string>
+    <string name="personal_view_username">用户名</string>
+    <string name="personal_view_username_2">Thomsen</string>
+    <string name="policy_title">Yuka隐私协议</string>
+    <string name="policy_cancel">取消</string>
+    <string name="policy_agree">我同意本协议</string>
 </resources>
