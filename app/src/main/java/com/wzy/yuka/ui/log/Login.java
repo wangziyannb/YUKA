@@ -38,6 +38,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
     private GlobalHandler globalHandler;
     private CheckBox checkBox;
 
+
     @Override
     public void handleMsg(Message msg) {
         switch (msg.what) {
@@ -46,9 +47,17 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                 Toast.makeText(getContext(), "登陆成功", Toast.LENGTH_SHORT).show();
                 NavHostFragment.findNavController(this).navigateUp();
                 break;
+            case 209:
+                LoadingViewManager.dismiss();
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_login_to_nav_register);
+                break;
             case 601:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "用户名或密码错误", Toast.LENGTH_SHORT).show();
+                break;
+            case 605:
+                LoadingViewManager.dismiss();
+                Toast.makeText(getContext(), "本机已注册，如遗忘用户名请前往关于查看如何找回账户", Toast.LENGTH_SHORT).show();
                 break;
             case 400:
                 LoadingViewManager.dismiss();
@@ -100,7 +109,16 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         View view = (View) v.getParent();
         switch (v.getId()) {
             case R.id.register:
-                Navigation.findNavController(getView()).navigate(R.id.action_nav_login_to_nav_register);
+                globalHandler.setHandleMsgListener(this);
+                LoadingViewManager
+                        .with(getActivity())
+                        .setHintText("请等待...")
+                        .setAnimationStyle("BallScaleIndicator")
+                        .setShowInnerRectangle(true)
+                        .setOutsideAlpha(0.3f)
+                        .setLoadingContentMargins(50, 50, 50, 50)
+                        .build();
+                UserManager.check_feasibility("uuid", UserManager.getUser()[2]);
                 break;
             case R.id.login:
                 if (checkBox.isChecked()) {

@@ -331,6 +331,42 @@ public class UserManager {
         return Boolean.parseBoolean(hashMap.get("isLogin"));
     }
 
+    public static void check_feasibility(String mode, String param) {
+        HttpRequest.check_feasibility(param, mode, new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Message message = Message.obtain();
+                message.what = 400;
+                globalHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String res = response.body().string();
+                Message message = Message.obtain();
+                try {
+                    JSONObject resultJson = new JSONObject(res);
+                    String origin = resultJson.getString("origin");
+                    if (origin.equals("200")) {
+                        message.what = 209;
+                        globalHandler.sendMessage(message);
+                    }
+                    if (origin.equals("600")) {
+                        message.what = 605;
+                        globalHandler.sendMessage(message);
+                    }
+                    if (origin.equals("400")) {
+                        onFailure(call, new IOException());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    onFailure(call, new IOException());
+                }
+            }
+        });
+    }
+
+
     public static HashMap<String, String> get() {
         hashMap = account.get();
         return hashMap;

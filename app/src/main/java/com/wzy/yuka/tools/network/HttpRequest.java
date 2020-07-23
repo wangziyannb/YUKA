@@ -2,7 +2,6 @@ package com.wzy.yuka.tools.network;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.text.Editable;
 import android.util.Log;
 
 import com.wzy.yuka.tools.message.GlobalHandler;
@@ -269,11 +268,17 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
-    public static void check_username(Editable params, Callback callback) {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("u_name", params + "")
-                .add("mode", "u_name")
-                .build();
+    public static void check_feasibility(String params, String mode, Callback callback) {
+        FormBody.Builder formBody = new FormBody.Builder().add("mode", mode);
+        switch (mode) {
+            case "u_name":
+                formBody.add("u_name", params);
+                break;
+            case "uuid":
+                formBody.add("uuid", params);
+                break;
+        }
+        RequestBody requestBody = formBody.build();
         Request request = new Request.Builder()
                 .url("https://yukacn.xyz/yuka/check/yuka_v1")
                 .post(requestBody)

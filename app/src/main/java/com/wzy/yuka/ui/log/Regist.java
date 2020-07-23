@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,19 +30,9 @@ import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.yuka.user.UserManager;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 
 public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener, TextWatcher {
@@ -51,41 +40,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     private TableLayout tableLayout;
     private EditText un_t;
     private String[] params;
-    private Runnable r = () -> HttpRequest.check_username(un_t.getText(), new okhttp3.Callback() {
-        @Override
-        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-            Message message = Message.obtain();
-            message.what = 400;
-            globalHandler.sendMessage(message);
-        }
-
-        @Override
-        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-            String res = response.body().string();
-            Message message = Message.obtain();
-            try {
-                JSONObject resultJson = new JSONObject(res);
-                String origin = resultJson.getString("origin");
-                if (origin.equals("200")) {
-                    message.what = 200;
-                    Log.e("tag", "onResponse: " + res);
-                    globalHandler.sendMessage(message);
-                }
-                if (origin.equals("605")) {
-                    message.what = 605;
-                    Log.e("tag", "onResponse: " + res);
-                    globalHandler.sendMessage(message);
-                }
-                if (origin.equals("400")) {
-                    onFailure(call, new IOException());
-                }
-            } catch (JSONException e) {
-                Log.e("tag", "onResponse: " + res);
-                e.printStackTrace();
-                onFailure(call, new IOException());
-            }
-        }
-    });
+    private Runnable r = () -> UserManager.check_feasibility("u_name", un_t.getText().toString());
 
     private void showDialog() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.policy, null, false);
@@ -187,7 +142,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     @Override
     public void handleMsg(Message msg) {
         switch (msg.what) {
-            case 200:
+            case 209:
                 Toast.makeText(getContext(), "用户名检查通过", Toast.LENGTH_SHORT).show();
                 break;
             case 202:
@@ -200,7 +155,6 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
                 Toast.makeText(getContext(), "注册失败，用户名与他人相同或本机已注册", Toast.LENGTH_SHORT).show();
                 break;
             case 605:
-                LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "用户名与他人相同", Toast.LENGTH_SHORT).show();
                 break;
             case 400:
