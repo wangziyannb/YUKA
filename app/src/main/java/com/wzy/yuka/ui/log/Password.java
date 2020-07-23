@@ -47,7 +47,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                circleTickView.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -57,6 +57,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
                 }
                 if (s.toString().equals(password_confirm.getText() + "")) {
                     Toast.makeText(getContext(), "两次输入的密码一致", Toast.LENGTH_SHORT).show();
+                    circleTickView.setVisibility(View.VISIBLE);
                     circleTickView.animation();
                 }
             }

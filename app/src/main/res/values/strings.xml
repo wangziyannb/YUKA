@@ -161,7 +161,7 @@
     <string name="log_login_notification_4">用户协议</string>
     <string name="log_register_username_1">用户名*</string>
     <string name="log_register_username_2">请输入用户名</string>
-    <string name="log_register_pwd_1">密码*</string>
+    <string name="log_register_pwd_1">密  码*</string>
     <string name="log_register_pwd_2">6-16位,由字母(区分大小写),数字,符号组成</string>
     <string name="log_register_commit">注册</string>
     <string name="nav_header_yuka">Yuka</string>

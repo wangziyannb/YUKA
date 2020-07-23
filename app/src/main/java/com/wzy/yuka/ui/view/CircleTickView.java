@@ -46,6 +46,7 @@ public class CircleTickView extends View {
     private Paint mMinCirclePaint;
     private int[] mMinColors = {R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary, R.color.colorPrimary};
     private double maxCount = 100;
+
     /**
      * 填充色主要参数：
      * mMinColors[]
@@ -285,6 +286,5 @@ public class CircleTickView extends View {
 
         animator.start();
     }
-
 
 }

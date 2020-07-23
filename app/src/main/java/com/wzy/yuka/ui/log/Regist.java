@@ -147,7 +147,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         switch (msg.what) {
             case 209:
                 Toast.makeText(getContext(), "用户名检查通过", Toast.LENGTH_SHORT).show();
-                circleTickView = tableLayout.findViewById(R.id.user_success);
+                circleTickView.setVisibility(View.VISIBLE);
                 circleTickView.animation();
                 break;
             case 202:
@@ -176,7 +176,8 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        circleTickView = tableLayout.findViewById(R.id.user_success);
+        circleTickView.setVisibility(View.INVISIBLE);
     }
 
     @Override
