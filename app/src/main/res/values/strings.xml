@@ -42,12 +42,14 @@
     <string-array name="translator_name">
         <item>有道翻译</item>
         <item>百度翻译</item>
+        <item>腾讯翻译</item>
         <item>Google翻译</item>
     </string-array>
 
     <string-array name="translator">
         <item>youdao</item>
         <item>baidu</item>
+        <item>tencent</item>
         <item>google</item>
     </string-array>
 
