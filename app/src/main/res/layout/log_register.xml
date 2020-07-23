@@ -45,7 +45,6 @@
                 android:textColor="#999999"
                 android:textColorHint="#a3a3a3"
                 android:textSize="12sp" />
-
         </TableRow>
 
         <TableRow
@@ -73,6 +72,7 @@
                 android:textSize="12sp" />
         </TableRow>
     </TableLayout>
+
 
     <Button
         android:id="@+id/register_button"

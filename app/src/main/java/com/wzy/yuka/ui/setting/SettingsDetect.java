@@ -60,6 +60,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
             switch (translator.getValue()) {
                 case "youdao":
                 case "google":
+                case "tencent":
                     SBCS.setVisible(false);
                     break;
                 case "baidu":
