@@ -11,17 +11,13 @@
 
     <TableLayout
         android:id="@+id/tableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="96dp"
+        android:layout_width="334dp"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.085">
 
         <TableRow
             android:layout_width="match_parent"
@@ -50,7 +46,7 @@
                 android:id="@+id/user_success"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="12dp"
                 app:circleRadius="8dp"
                 app:circle_width="2dp"></com.wzy.yuka.ui.view.CircleTickView>
 
@@ -74,8 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:inputType="textPassword"
                 android:hint="@string/log_register_pwd_2"
+                android:inputType="textPassword"
                 android:paddingLeft="8dp"
                 android:textColor="#999999"
                 android:textColorHint="#a3a3a3"
