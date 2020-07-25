@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/account"
+        android:contentDescription="重置"
         android:icon="@drawable/ic_account_balance_wallet_black_24dp"
         android:title="账户信息"
         app:showAsAction="always" />

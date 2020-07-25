@@ -3,6 +3,7 @@
 
     <item
         android:id="@+id/bot_nav_home"
+        android:contentDescription="主页"
         android:icon="@drawable/nav_home_checked"
         android:iconTint="#F06292"
         android:title="主页" />
@@ -11,6 +12,7 @@
         android:title="" />
     <item
         android:id="@+id/bot_nav_history"
+        android:contentDescription="历史"
         android:icon="@drawable/nav_history_unchecked"
         android:iconTint="#F06292"
         android:title="历史" />
