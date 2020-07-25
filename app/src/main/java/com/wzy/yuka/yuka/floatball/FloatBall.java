@@ -210,10 +210,10 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     isInChoosing = false;
                     if (floatBallLayout.isDeployed) {
                         //取消二级面板
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_settings);
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_detect);
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_reset);
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_exit);
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_settings,"设置");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_detect,"识别");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_reset,"初始化悬浮窗");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_exit,"退出");
                     }
                 } else {
                     if (floatBallLayout.isDeployed) {
@@ -312,6 +312,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     floatBallLayout.removeFloatBallLayoutListener();
                     EasyFloat.appFloatDragEnable(true, tag);
                     imageButton.setBackgroundResource(R.drawable.main);
+                    imageButton.setContentDescription("Yuka悬浮球");
                     layoutParams.y = layoutParams.y + SizeUtil.dp2px(FloatBallView.getContext(), 52);
                     if (layoutParams.x > size[0] / 2) {
                         layoutParams.x = layoutParams.x + SizeUtil.dp2px(FloatBallView.getContext(), (float) (52 / 2 * Math.sqrt(3)));
@@ -345,6 +346,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
         handler.postDelayed(() -> {
             imageButton.setVisibility(View.VISIBLE);
             imageButton.setBackgroundResource(R.drawable.floatmenu_close);
+            imageButton.setContentDescription("关闭展开的悬浮球");
             ImageButton[] imageButtons = new ImageButton[4];
             for (int i = 0; i < imageButtons.length; i++) {
                 imageButtons[i] = new ImageButton(mApplicationRef.get());
@@ -355,22 +357,26 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     case 0:
                         imageButtons[i].setId(R.id.floatball_top);
                         imageButtons[i].setBackgroundResource(R.drawable.floatmenu_settings);
+                        imageButtons[i].setContentDescription("设置");
                         imageButtons[i].setOnClickListener(this);
                         break;
                     case 1:
                         imageButtons[i].setId(R.id.floatball_mid1);
                         imageButtons[i].setBackgroundResource(R.drawable.floatmenu_detect);
+                        imageButtons[i].setContentDescription("识别");
                         imageButtons[i].setOnClickListener(this);
                         break;
                     case 2:
                         imageButtons[i].setId(R.id.floatball_mid2);
                         imageButtons[i].setBackgroundResource(R.drawable.floatmenu_reset);
+                        imageButtons[i].setContentDescription("初始化悬浮窗");
                         imageButtons[i].setOnClickListener(this);
                         imageButtons[i].setOnLongClickListener(this);
                         break;
                     case 3:
                         imageButtons[i].setId(R.id.floatball_bottom);
                         imageButtons[i].setBackgroundResource(R.drawable.floatmenu_exit);
+                        imageButtons[i].setContentDescription("退出");
                         imageButtons[i].setOnClickListener(this);
                         break;
                 }
@@ -394,21 +400,21 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
             case R.id.floatball_mid2:
                 isInChoosing = true;
                 FloatBallLayout floatBallLayout = FloatBallView.findViewById(R.id.floatball_layout);
-                flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_auto);
+                flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_auto,"自动模式悬浮窗初始化");
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
-                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_continue);
-                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_subtitle);
+                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_continue,"持续模式悬浮窗初始化");
+                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_subtitle,"同步字幕模式悬浮窗初始化");
                 }, 100);
                 handler.postDelayed(() -> {
-                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_normal);
+                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_normal,"单/多悬浮窗初始化");
                 }, 250);
                 break;
         }
         return true;
     }
 
-    private void flipAnimation(View view, long time, int new_background) {
+    private void flipAnimation(View view, long time, int new_background,CharSequence charSequence) {
         ObjectAnimator objectAnimator1 = ObjectAnimator
                 .ofFloat(view, "rotationY", 0, 90);
         objectAnimator1.setDuration(time)
@@ -421,6 +427,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         view.setBackgroundResource(new_background);
+                        view.setContentDescription(charSequence);
                         ObjectAnimator
                                 .ofFloat(view, "rotationY", -90, 0)
                                 .setDuration(time)

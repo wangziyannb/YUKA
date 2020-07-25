@@ -80,6 +80,7 @@ public class CurtainActivity extends FragmentActivity {
                                     });
                                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                     img.setImageResource(R.drawable.guide_floatwindow_normal);
+                                    img.setContentDescription("左上角关闭悬浮窗，右上角增加悬浮窗和启动翻译，右下角调整大小");
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
                                     params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
                                     params_img.height = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 242);
@@ -112,6 +113,7 @@ public class CurtainActivity extends FragmentActivity {
                                     });
                                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                     img.setImageResource(R.drawable.guide_floatwindow_continue);
+                                    img.setContentDescription("左上角关闭悬浮窗，右上角开始或暂停持续翻译，右下角调整大小");
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
                                     params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
                                     params_img.height = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 242);
@@ -144,6 +146,7 @@ public class CurtainActivity extends FragmentActivity {
                                     });
                                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                     img.setImageResource(R.drawable.guide_floatwindow_auto);
+                                    img.setContentDescription("左上角关闭悬浮窗，右上角启动自动翻译，右下角调整大小");
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
                                     params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
@@ -177,6 +180,8 @@ public class CurtainActivity extends FragmentActivity {
                                     });
                                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                     img.setImageResource(R.drawable.guide_floatwindow_subtitle);
+                                    img.setContentDescription("左上角关闭悬浮窗，右上角切换字幕显示方式和隐藏菜单按钮，右下角开始或暂停同步字幕翻译");
+
                                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
                                     params_img.width = SizeUtil.dp2px(floatWindowManager.getApplicationWeakReference().get(), 335);
@@ -224,6 +229,16 @@ public class CurtainActivity extends FragmentActivity {
             private void setImg(ConstraintLayout layout, int imageResource, int width, int height, int top, int left) {
                 ImageView img = layout.findViewById(R.id.guide_interpret_img);
                 img.setImageResource(imageResource);
+                if(imageResource==R.drawable.guide_floatball_folded){
+                    img.setContentDescription("点击悬浮球打开菜单");
+                }else if(imageResource==R.drawable.guide_floatball_deployed){
+                    img.setContentDescription("最上方为设置按钮，在二级面板下为单或多悬浮窗翻译。主要效果为进入悬浮窗、悬浮球、各种模式的设置页面。\n" +
+                            "右上为识别按钮，在二级面板下为初始化持续翻译悬浮窗按钮。主要效果为启动所有已经存在的悬浮窗的识别。\n" +
+                            "右下为初始化按钮，在二级面板下为自动识别翻译悬浮窗按钮。主要效果为初始化上一个使用过的类型的悬浮窗。初次打开app时，默认单/多悬浮窗模式。长按此按钮进入二级面板。\n" +
+                            "下方为退出按钮，在二级面板下为视频同步字幕悬浮窗按钮。主要效果为退出app。\n"+
+                            "点击左中关闭按钮继续。");
+                }
+
                 img.setScaleType(ImageView.ScaleType.FIT_START);
                 ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
@@ -264,6 +279,7 @@ public class CurtainActivity extends FragmentActivity {
                                 WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) floatBall.getView().getLayoutParams();
                                 int[] size = GetParams.Screen();
                                 imageButton.setBackgroundResource(R.drawable.main);
+                                imageButton.setContentDescription("Yuka悬浮球");
                                 layoutParams.y = layoutParams.y + SizeUtil.dp2px(floatBall.getView().getContext(), 52);
                                 if (layoutParams.x > size[0] / 2) {
                                     layoutParams.x = layoutParams.x + SizeUtil.dp2px(floatBall.getView().getContext(), (float) (52 / 2 * Math.sqrt(3)));

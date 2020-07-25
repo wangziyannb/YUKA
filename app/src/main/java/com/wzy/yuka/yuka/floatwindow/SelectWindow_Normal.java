@@ -205,10 +205,12 @@ public class SelectWindow_Normal extends FloatWindow {
         if (isContinue) {
             //持续模式
             ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_start);
+            view.findViewById(R.id.sw_pap).setContentDescription("启动持续模式");
             view.findViewById(R.id.sw_addwindows).setVisibility(View.GONE);
         } else {
             //普通模式
             ((ImageView) view.findViewById(R.id.sw_pap)).setImageResource(R.drawable.floatwindow_translate);
+            view.findViewById(R.id.sw_pap).setContentDescription("启动单次翻译");
             view.findViewById(R.id.sw_addwindows).setVisibility(View.VISIBLE);
         }
         showInitGuide();
@@ -227,10 +229,12 @@ public class SelectWindow_Normal extends FloatWindow {
                         floatWindowManager.start_ScreenShotTrans_normal(true, index);
                         isPlay = true;
                         ((ImageView) v).setImageResource(R.drawable.floatwindow_stop);
+                        view.findViewById(R.id.sw_pap).setContentDescription("停止持续模式");
                     } else {
                         floatWindowManager.stop_ScreenShotTrans_normal(true);
                         isPlay = false;
                         ((ImageView) v).setImageResource(R.drawable.floatwindow_start);
+                        view.findViewById(R.id.sw_pap).setContentDescription("启动持续模式");
                     }
                 } else {
                     isPlay = false;

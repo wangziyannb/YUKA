@@ -1,6 +1,7 @@
 package com.wzy.yuka;
 
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.MenuItem;
@@ -109,7 +110,9 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
         getMenuInflater().inflate(R.menu.main, amv.getMenu());
         MenuItem menuItem = amv.getMenu().getItem(0);
-
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            menuItem.setContentDescription("账户按钮");
+        }
         menuItem.setOnMenuItemClickListener(item -> {
             if (UserManager.checkLogin()) {
                 if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_user_service) {
@@ -135,6 +138,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             Field field = clazz.getDeclaredField("mNavButtonView");
             field.setAccessible(true);
             NavButton = (ImageButton) field.get(toolbar);
+            NavButton.setContentDescription("侧边导航栏按钮");
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -248,6 +252,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                                 });
                                 ImageView img = layout.findViewById(R.id.guide_interpret_img);
                                 img.setImageResource(R.drawable.guide_firstopen_menu);
+                                img.setContentDescription("点击左上角菜单按钮，打开侧边菜单栏。完成登录、设置等操作。双击以继续");
                                 img.setScaleType(ImageView.ScaleType.FIT_START);
                                 ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) img.getLayoutParams();
                                 layoutParams.width = SizeUtil.dp2px(MainActivity.this, 350);
@@ -259,6 +264,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
                                 set.applyTo(layout);
                                 break;
                             case 2:
+                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setContentDescription("菜单栏已展开，请点击屏幕上方中间位置登录按钮。双击以结束引导");
                                 curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
                                     drawer.removeDrawerListener(listener);
                                     curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(null);

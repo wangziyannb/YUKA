@@ -264,6 +264,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             });
 
                             img.setImageResource(R.drawable.guide_afterlogin_main);
+                            img.setContentDescription("点击屏幕下方中间的启动按钮，启动悬浮球。双击以继续");
                             img.setScaleType(ImageView.ScaleType.FIT_END);
 
                             params_img.width = SizeUtil.dp2px(requireContext(), 180);
@@ -283,6 +284,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             });
 
                             img.setImageResource(R.drawable.guide_afterlogin_charge);
+                            img.setContentDescription("点击屏幕右上角钱包按钮，进入充值页面。双击以结束引导");
                             img.setScaleType(ImageView.ScaleType.FIT_START);
 
                             params_img.width = SizeUtil.dp2px(requireContext(), 230);
