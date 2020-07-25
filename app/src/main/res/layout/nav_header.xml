@@ -59,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="#0003A9F4"
+                android:contentDescription="登录"
                 android:text="@string/nav_header_login" />
 
             <Button
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="#0003A9F4"
+                android:contentDescription="登出"
                 android:text="@string/nav_header_logout" />
         </LinearLayout>
     </LinearLayout>

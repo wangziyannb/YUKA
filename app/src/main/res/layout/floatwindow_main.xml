@@ -13,6 +13,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
+        android:contentDescription="关闭"
         android:padding="5dp"
         android:src="@drawable/floatwindow_close" />
 
@@ -23,6 +24,7 @@
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="36dp"
+        android:contentDescription="增加悬浮窗"
         android:padding="5dp"
         android:src="@drawable/floatwindow_add" />
 
@@ -31,6 +33,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
+        android:contentDescription="翻译"
         android:padding="5dp"
         android:src="@drawable/floatwindow_translate" />
 
@@ -50,6 +53,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
+        android:contentDescription="调整大小"
         android:padding="0dp"
         android:src="@drawable/floatwindow_scale" />
 

@@ -31,7 +31,8 @@
             android:layout_gravity="right|center_vertical"
             android:layout_marginTop="-36dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/home_search" />
+            android:background="@drawable/home_search"
+            android:contentDescription="搜索" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
