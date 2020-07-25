@@ -178,6 +178,10 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
                 break;
+            case 429:
+                LoadingViewManager.dismiss();
+                Toast.makeText(getContext(), "固定时间间隔内注册太多次，请等等再注册吧", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

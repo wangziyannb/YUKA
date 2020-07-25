@@ -8,11 +8,11 @@
             android:key="about_about_policy1"
             android:title="用户协议" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="关于我们">
+    <PreferenceCategory android:title="关于Yuka">
         <Preference
             android:key="about_about_dev"
-            android:summary="Yuka开发团队"
-            android:title="关于开发者" />
+            android:summary="畅快淋漓的玩转翻译"
+            android:title="关于Yuka" />
         <Preference
             android:key="about_about_version"
             android:title="Yuka版本" />
@@ -39,7 +39,7 @@
     <PreferenceCategory android:title="本机信息">
         <Preference
             android:key="about_this_1"
-            android:summary="忘记账号或密码时请提交本id至管理员qq 1269586767处进行信息修改。务必保证此设备为账号注册设备，且apk的签名未改动，否则会导致本id与注册id不匹配"
+            android:summary="忘记用户名时请提交本id至管理员qq 1269586767处进行信息修改。务必保证此设备为账号注册设备，且apk的签名未改动，否则会导致本id与注册id不匹配"
             android:title="本机ID" />
     </PreferenceCategory>
 </PreferenceScreen>

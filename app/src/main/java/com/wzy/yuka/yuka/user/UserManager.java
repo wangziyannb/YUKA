@@ -204,7 +204,19 @@ public class UserManager {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    onFailure(call, new IOException());
+                    if (!res.equals("")) {
+                        try {
+                            JSONObject resultJson = new JSONObject(res);
+                            String error_code = resultJson.getString("error_code");
+                            if (error_code.equals("429")) {
+                                message.what = 429;
+                                globalHandler.sendMessage(message);
+                            }
+                        } catch (JSONException ex) {
+                            onFailure(call, new IOException());
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         });
