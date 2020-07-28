@@ -56,7 +56,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                 .setLayout(R.layout.float_ball, v -> {
                     FloatBallView = v;
                     ImageButton imageButton = v.findViewById(R.id.floatball_main);
-                    imageButton.getBackground().setAlpha(50);
+                    imageButton.getBackground().setAlpha(255);
                     v.findViewById(R.id.floatball_main).setOnClickListener(this);
                 })
                 .setSidePattern(SidePattern.RESULT_HORIZONTAL)
@@ -68,12 +68,14 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                         int[] size = GetParams.Screen();
                         View view = EasyFloat.getAppFloatView(tag);
                         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+                        ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
+                        imageButton.getBackground().setAlpha(140);
                         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                         if (layoutParams.x > size[0] / 2) {
                             //右边
-                            layoutParams.x += 70;
+                            layoutParams.x += 80;
                         } else {
-                            layoutParams.x = -70;
+                            layoutParams.x = -80;
                         }
                         windowManager.updateViewLayout(view, layoutParams);
                     };
@@ -114,13 +116,21 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
 
                     @Override
                     public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
-
+                        handler.postDelayed(() -> {
+                            ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
+                            imageButton.getBackground().setAlpha(255);
+                        }, 0);
                     }
 
                     @Override
                     public void dragEnd(@NotNull View view) {
                         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoHide, true) && !isInGuiding) {
                             handler.postDelayed(runnable, 3000);
+                        } else {
+                            handler.postDelayed(() -> {
+                                ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
+                                imageButton.getBackground().setAlpha(140);
+                            }, 3000);
                         }
                     }
                 })
