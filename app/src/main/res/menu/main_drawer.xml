@@ -15,10 +15,10 @@
             android:icon="@drawable/ic_settings"
             android:title="设置" />
         <item
-            android:id="@+id/nav_favorite"
+            android:id="@+id/nav_guide"
             android:contentDescription="引导"
             android:icon="@drawable/ic_favorite"
-            android:title="收藏" />
+            android:title="引导" />
         <item
             android:id="@+id/nav_help"
             android:contentDescription="帮助"
