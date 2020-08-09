@@ -4,6 +4,8 @@ package com.wzy.yuka.tools.params;
  * Created by Ziyan on 2020/7/8.
  */
 public class SharedPreferenceCollection {
+    public static final String application_touchExplorationEnabled = "application_touchExplorationEnabled";
+
     public static final String ball_autoHide = "settings_ball_autoHide";
     public static final String ball_autoClose = "settings_ball_autoClose";
     public static final String ball_safeMode = "settings_ball_safeMode";

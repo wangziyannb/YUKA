@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Camera;
 import android.graphics.Matrix;
+import android.os.Build;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -73,7 +74,13 @@ public class SubtitleFlowView extends TextSwitcher implements
         mFirstText = a.getString(R.styleable.SubtitleFlowView_firstText);
         mtextAlignment = a.getInteger(R.styleable.SubtitleFlowView_textAlignment, 0);
 
-        mtextColor = a.getColor(R.styleable.SubtitleFlowView_textColor, getResources().getColor(R.color.text_color_DarkBg, null));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mtextColor = a.getColor(R.styleable.SubtitleFlowView_textColor, getResources().getColor(R.color.text_color_DarkBg));
+        } else {
+            mtextColor = a.getColor(R.styleable.SubtitleFlowView_textColor, getResources().getColor(R.color.text_color_DarkBg, null));
+        }
+
+
         mbackGround = 0;
         a.recycle();
         mContext = context;

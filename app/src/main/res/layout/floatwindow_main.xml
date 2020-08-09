@@ -5,6 +5,7 @@
     android:layout_width="250dp"
     android:layout_height="120dp"
     android:background="@drawable/radius_shape"
+    android:contentDescription="Yuka取词窗"
     android:orientation="vertical">
 
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -215,7 +216,14 @@ public class SelectWindow_Auto extends FloatWindow {
                     drawable.setColor(Color.parseColor("#" + alpha_hex + "000000"));
                     AppCompatTextView textView = v.findViewById(R.id.little_textView);
                     AppCompatTextView textView2 = v.findViewById(R.id.little_origin);
-                    textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
+
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg));
+                    } else {
+                        textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
+                    }
+
+
                     textView.setText(translation);
                     textView2.setText(origin);
 

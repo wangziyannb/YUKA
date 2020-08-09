@@ -2,11 +2,12 @@ package com.wzy.yuka;
 
 import android.app.Application;
 import android.provider.Settings;
-import android.util.Log;
+import android.view.accessibility.AccessibilityManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.wzy.yuka.tools.debug.CrashManager;
 import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka.FloatWindowManager;
 import com.wzy.yuka.yuka.user.UserManager;
@@ -30,19 +31,21 @@ public class MainApplication extends Application {
     private void check() {
         HashMap<String, String> hashMap = UserManager.get();
         if (!hashMap.containsKey("uuid")) {
-            //String uuid = UUID.randomUUID().toString();
             String uuid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            Log.d("Init", "初次安装,uuid:" + uuid);
             hashMap.put("uuid", uuid);
-        } else {
-            Log.d("Init", "已初始化uuid");
         }
         if (!hashMap.containsKey("isLogin")) {
-            Log.d("Init", "初次安装,无登录状态");
             hashMap.put("isLogin", "false");
-        } else {
-            Log.d("Init", "有登陆状态");
         }
+        SharedPreferencesUtil util = SharedPreferencesUtil.getInstance();
+        try {
+            AccessibilityManager manager = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
+            assert manager != null;
+            util.saveParam(SharedPreferenceCollection.application_touchExplorationEnabled, manager.isTouchExplorationEnabled());
+        } catch (NullPointerException ignored) {
+            util.saveParam(SharedPreferenceCollection.application_touchExplorationEnabled, false);
+        }
+
         UserManager.update(hashMap);
     }
 }

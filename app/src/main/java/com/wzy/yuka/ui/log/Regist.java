@@ -114,6 +114,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
                 if (s.length() >= 6 && s.length() <= 16) {
                     circleTickView2.setVisibility(View.VISIBLE);
                     circleTickView2.animation();
+                    Toast.makeText(getContext(), "密码检查通过", Toast.LENGTH_SHORT).show();
                 }
             }
         });

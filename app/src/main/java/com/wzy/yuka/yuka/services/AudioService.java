@@ -66,7 +66,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                 bundle = msg.getData();
                 json = bundle.getString("syncMessage");
                 resolver = new YoudaoAsrResolver(json);
-                Toast.makeText(this, "使用时间：" + resolver.getTotal_time(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "同步字幕结束\n" + "使用时间：" + resolver.getTotal_time(), Toast.LENGTH_SHORT).show();
                 break;
             case 253:
                 bundle = msg.getData();
@@ -79,7 +79,11 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                     case "602":
                         floatWindowManager.show_result_subtitle("本机未登录", "本机未登录");
                         break;
+                    case "603":
+                        floatWindowManager.show_result_subtitle("同传次数已经用尽，请返回充值", "同传次数已经用尽，请返回充值");
+                        break;
                 }
+                floatWindowManager.stop_RecordingTrans();
                 break;
 
         }

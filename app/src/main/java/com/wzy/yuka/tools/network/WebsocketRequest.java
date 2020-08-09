@@ -89,7 +89,7 @@ public class WebsocketRequest {
             Message message = Message.obtain();
             Bundle bundle = new Bundle();
 
-            if (text.contains("\"errorCode\":\"602\"") || text.contains("\"errorCode\":\"601\"")) {
+            if (text.contains("\"errorCode\":\"603\"") || text.contains("\"errorCode\":\"602\"") || text.contains("\"errorCode\":\"601\"")) {
                 onClosed(webSocket, 600, "");
                 bundle.putString("syncMessage", text);
                 message.what = 253;

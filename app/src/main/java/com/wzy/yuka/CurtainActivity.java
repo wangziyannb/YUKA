@@ -1,12 +1,16 @@
 package com.wzy.yuka;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -217,97 +221,186 @@ public class CurtainActivity extends FragmentActivity {
 
     private void guideFloatBall(FloatBall floatBall) {
         GuideManager guideManager = new GuideManager(this);
-        CurtainFlow cf = new CurtainFlow.Builder()
-                .with(11, guideManager.weaveCurtain(floatBall.getView(), new CircleShape(), 0, R.layout.guide_interpret).setCancelBackPressed(false))
-                .with(12, guideManager.weaveCurtain(floatBall.getView(), (canvas, paint, info) -> {
-                }, 0, R.layout.guide_interpret).setCancelBackPressed(false))
-                .create();
-        cf.start(new CurtainFlow.CallBack() {
-            ConstraintLayout layout;
-            FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            CurtainFlow cf = new CurtainFlow.Builder()
+                    .with(11, guideManager.weaveCurtain(floatBall.getView(), new CircleShape(), 0, R.layout.guide_touchexploration).setCancelBackPressed(false))
+                    .with(12, guideManager.weaveCurtain(floatBall.getView(), (canvas, paint, info) -> {
+                    }, 0, R.layout.guide_touchexploration).setCancelBackPressed(false))
+                    .create();
+            cf.start(new CurtainFlow.CallBack() {
+                ConstraintLayout layout;
+                TextView textView;
+                Button button;
+                FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
 
-            private void setImg(ConstraintLayout layout, int imageResource, int width, int height, int top, int left) {
-                ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                img.setImageResource(imageResource);
-                if(imageResource==R.drawable.guide_floatball_folded){
-                    img.setContentDescription("点击悬浮球打开菜单");
-                }else if(imageResource==R.drawable.guide_floatball_deployed){
-                    img.setContentDescription("最上方为设置按钮，在二级面板下为单或多悬浮窗翻译。主要效果为进入悬浮窗、悬浮球、各种模式的设置页面。\n" +
-                            "右上为识别按钮，在二级面板下为初始化持续翻译悬浮窗按钮。主要效果为启动所有已经存在的悬浮窗的识别。\n" +
-                            "右下为初始化按钮，在二级面板下为自动识别翻译悬浮窗按钮。主要效果为初始化上一个使用过的类型的悬浮窗。初次打开app时，默认单/多悬浮窗模式。长按此按钮进入二级面板。\n" +
-                            "下方为退出按钮，在二级面板下为视频同步字幕悬浮窗按钮。主要效果为退出app。\n"+
-                            "点击左中关闭按钮继续。");
-                }
-
-                img.setScaleType(ImageView.ScaleType.FIT_START);
-                ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-
-                int statusBarHeight = GetParams.Screen()[2];
-                int[] params_floatBall = new int[2];
-                floatBall.getView().getLocationOnScreen(params_floatBall);
-                params_floatBall[1] -= statusBarHeight;
-                params_img.width = SizeUtil.dp2px(getApplicationContext(), width);
-                params_img.height = SizeUtil.dp2px(getApplicationContext(), height);
-                params_img.topMargin = SizeUtil.dp2px(getApplicationContext(), top) + params_floatBall[1];
-                params_img.leftMargin = SizeUtil.dp2px(getApplicationContext(), left) + params_floatBall[0];
-
-                img.setLayoutParams(params_img);
-
-                ConstraintSet set = new ConstraintSet();
-                set.clone(layout);
-                set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
-                set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
-                set.applyTo(layout);
-            }
-
-            @Override
-            public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                switch (currentId) {
-                    case 11:
-                        layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-                        EasyFloat.appFloatDragEnable(false, floatBall.getTag());
-                        fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
-                            @Override
-                            public void deployed() {
-                                floatBall.setMainOnClickListeners();
-                                curtainFlow.push();
-                            }
-
-                            @Override
-                            public void folded() {
-                                ImageButton imageButton = floatBall.getView().findViewById(R.id.floatball_main);
-                                WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) floatBall.getView().getLayoutParams();
-                                int[] size = GetParams.Screen();
-                                imageButton.setBackgroundResource(R.drawable.main);
-                                imageButton.setContentDescription("Yuka悬浮球");
-                                layoutParams.y = layoutParams.y + SizeUtil.dp2px(floatBall.getView().getContext(), 52);
-                                if (layoutParams.x > size[0] / 2) {
-                                    layoutParams.x = layoutParams.x + SizeUtil.dp2px(floatBall.getView().getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                @Override
+                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                    switch (currentId) {
+                        case 11:
+                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_te_layout);
+                            EasyFloat.appFloatDragEnable(false, floatBall.getTag());
+                            button = layout.findViewById(R.id.guide_te_b1);
+                            textView = layout.findViewById(R.id.guide_te_t1);
+                            textView.setText(R.string.guide_te_string6);
+                            button.setOnClickListener(v1 -> {
+                                fbl.findViewById(R.id.floatball_main).performClick();
+                            });
+                            fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
+                                @Override
+                                public void deployed() {
+                                    textView.setText(R.string.guide_te_string7);
+                                    Toast.makeText(CurtainActivity.this, R.string.guide_te_string7, Toast.LENGTH_SHORT).show();
+                                    Resources resources = getResources();
+                                    ImageButton top = fbl.findViewById(R.id.floatball_top);
+                                    top.setContentDescription(resources.getString(R.string.guide_te_string8));
+                                    ImageButton right1 = fbl.findViewById(R.id.floatball_mid1);
+                                    right1.setContentDescription(resources.getString(R.string.guide_te_string9));
+                                    ImageButton right2 = fbl.findViewById(R.id.floatball_mid2);
+                                    right2.setContentDescription(resources.getString(R.string.guide_te_string10));
+                                    ImageButton bottom = fbl.findViewById(R.id.floatball_bottom);
+                                    bottom.setContentDescription(resources.getString(R.string.guide_te_string11));
+                                    ImageButton mid = fbl.findViewById(R.id.floatball_main);
+                                    mid.setContentDescription(resources.getString(R.string.guide_te_string12));
+                                    floatBall.setMainOnClickListeners();
                                 }
-                                getWindowManager().updateViewLayout(floatBall.getView(), layoutParams);
-                                floatBall.setMainOnClickListeners();
-                                EasyFloat.appFloatDragEnable(true, floatBall.getTag());
-                                curtainFlow.finish();
-                            }
-                        });
-                        setImg(layout, R.drawable.guide_floatball_folded, 192, 27, 44, 44);
-                        break;
-                    case 12:
-                        layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-                        setImg(layout, R.drawable.guide_floatball_deployed, 320, 340, -42, -1);
-                        break;
-                }
-            }
 
-            @Override
-            public void onFinish() {
-                EasyFloat.appFloatDragEnable(true, floatBall.getTag());
-                fbl.removeFloatBallLayoutListener();
-                floatBall.isInGuiding = false;
-                sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, false);
-                finish();
-            }
-        });
+                                @Override
+                                public void folded() {
+                                    ImageButton imageButton = floatBall.getView().findViewById(R.id.floatball_main);
+                                    WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) floatBall.getView().getLayoutParams();
+                                    int[] size = GetParams.Screen();
+                                    imageButton.setBackgroundResource(R.drawable.main);
+                                    imageButton.setContentDescription("Yuka悬浮球");
+                                    layoutParams.y = layoutParams.y + SizeUtil.dp2px(floatBall.getView().getContext(), 52);
+                                    if (layoutParams.x > size[0] / 2) {
+                                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(floatBall.getView().getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                                    }
+                                    getWindowManager().updateViewLayout(floatBall.getView(), layoutParams);
+                                    floatBall.setMainOnClickListeners();
+                                    curtainFlow.push();
+                                }
+                            });
+                            break;
+                        case 12:
+                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_te_layout);
+                            textView = layout.findViewById(R.id.guide_te_t1);
+                            textView.setText(R.string.guide_te_string13);
+                            Toast.makeText(CurtainActivity.this, R.string.guide_te_string13, Toast.LENGTH_SHORT).show();
+                            fbl.removeFloatBallLayoutListener();
+                            floatBall.removeOnClickListeners();
+                            button = layout.findViewById(R.id.guide_te_b1);
+                            button.setOnClickListener(v -> {
+                                curtainFlow.finish();
+                            });
+                            break;
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    EasyFloat.appFloatDragEnable(true, floatBall.getTag());
+                    floatBall.setMainOnClickListeners();
+                    floatBall.isInGuiding = false;
+                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, false);
+                    finish();
+                }
+            });
+        } else {
+            CurtainFlow cf = new CurtainFlow.Builder()
+                    .with(11, guideManager.weaveCurtain(floatBall.getView(), new CircleShape(), 0, R.layout.guide_interpret).setCancelBackPressed(false))
+                    .with(12, guideManager.weaveCurtain(floatBall.getView(), (canvas, paint, info) -> {
+                    }, 0, R.layout.guide_interpret).setCancelBackPressed(false))
+                    .create();
+            cf.start(new CurtainFlow.CallBack() {
+                ConstraintLayout layout;
+                FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
+
+                private void setImg(ConstraintLayout layout, int imageResource, int width, int height, int top, int left) {
+                    ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                    img.setImageResource(imageResource);
+                    if (imageResource == R.drawable.guide_floatball_folded) {
+                        img.setContentDescription("点击悬浮球打开菜单");
+                    } else if (imageResource == R.drawable.guide_floatball_deployed) {
+                        Resources resources = getResources();
+                        img.setContentDescription(resources.getString(R.string.guide_te_string7)
+                                + resources.getString(R.string.guide_te_string8)
+                                + resources.getString(R.string.guide_te_string9)
+                                + resources.getString(R.string.guide_te_string10)
+                                + resources.getString(R.string.guide_te_string11)
+                                + resources.getString(R.string.guide_te_string12));
+                    }
+
+                    img.setScaleType(ImageView.ScaleType.FIT_START);
+                    ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+
+                    int statusBarHeight = GetParams.Screen()[2];
+                    int[] params_floatBall = new int[2];
+                    floatBall.getView().getLocationOnScreen(params_floatBall);
+                    params_floatBall[1] -= statusBarHeight;
+                    params_img.width = SizeUtil.dp2px(getApplicationContext(), width);
+                    params_img.height = SizeUtil.dp2px(getApplicationContext(), height);
+                    params_img.topMargin = SizeUtil.dp2px(getApplicationContext(), top) + params_floatBall[1];
+                    params_img.leftMargin = SizeUtil.dp2px(getApplicationContext(), left) + params_floatBall[0];
+
+                    img.setLayoutParams(params_img);
+
+                    ConstraintSet set = new ConstraintSet();
+                    set.clone(layout);
+                    set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
+                    set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
+                    set.applyTo(layout);
+                }
+
+                @Override
+                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                    switch (currentId) {
+                        case 11:
+                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
+                            EasyFloat.appFloatDragEnable(false, floatBall.getTag());
+                            fbl.setFloatBallLayoutListener(new FloatBallLayout.FloatBallLayoutListener() {
+                                @Override
+                                public void deployed() {
+                                    floatBall.setMainOnClickListeners();
+                                    curtainFlow.push();
+                                }
+
+                                @Override
+                                public void folded() {
+                                    ImageButton imageButton = floatBall.getView().findViewById(R.id.floatball_main);
+                                    WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) floatBall.getView().getLayoutParams();
+                                    int[] size = GetParams.Screen();
+                                    imageButton.setBackgroundResource(R.drawable.main);
+                                    imageButton.setContentDescription("Yuka悬浮球");
+                                    layoutParams.y = layoutParams.y + SizeUtil.dp2px(floatBall.getView().getContext(), 52);
+                                    if (layoutParams.x > size[0] / 2) {
+                                        layoutParams.x = layoutParams.x + SizeUtil.dp2px(floatBall.getView().getContext(), (float) (52 / 2 * Math.sqrt(3)));
+                                    }
+                                    getWindowManager().updateViewLayout(floatBall.getView(), layoutParams);
+                                    floatBall.setMainOnClickListeners();
+                                    EasyFloat.appFloatDragEnable(true, floatBall.getTag());
+                                    curtainFlow.finish();
+                                }
+                            });
+                            setImg(layout, R.drawable.guide_floatball_folded, 192, 27, 44, 44);
+                            break;
+                        case 12:
+                            layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
+                            setImg(layout, R.drawable.guide_floatball_deployed, 320, 340, -42, -1);
+                            break;
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    EasyFloat.appFloatDragEnable(true, floatBall.getTag());
+                    fbl.removeFloatBallLayoutListener();
+                    floatBall.isInGuiding = false;
+                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_FloatBall, false);
+                    finish();
+                }
+            });
+        }
+
 
     }
 }

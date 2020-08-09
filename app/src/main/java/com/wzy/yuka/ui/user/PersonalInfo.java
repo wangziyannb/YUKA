@@ -122,6 +122,7 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
                 break;
             case R.id.personal_button2:
                 //todo: 输入cdkey
+                globalHandler.setHandleMsgListener(this);
                 LoadingViewManager
                         .with(getActivity())
                         .setHintText("激活中...")
@@ -141,11 +142,10 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
         alert.setTitle("关于购买");
         alert.setMessage("感谢使用Yuka！以下为购买说明：\n" +
-                "1、注册账号后将会分别附送20次普通翻译和自动翻译次数，请确保已体验足够再进行购买。即使有月卡，也会优先扣除普通翻译次数！\n" +
-                "2、购买月卡的价格是每月3元，后续可能改变价格，购买后将本月内无限使用普通翻译。自动翻译的价格为5元100次，独立计费（一次完整屏幕自动取词翻译将使用一次）。系统内录视频或游戏同传单次最多1小时，一小时收费13元\n" +
+                "1、注册账号后将会分别附送20次普通翻译和自动翻译次数，请确保已体验足够再进行购买。即使有月卡，也会优先翻译次数！\n" +
+                "2、购买月卡的价格是每月4元，后续可能改变价格，购买后将本月内无限使用普通和自动翻译。系统内录视频或游戏同传单次最多1小时，一小时收费14元\n" +
                 "3、点击起飞会跳转到商店页面，购买后自动发激活码，填于空位即可根据购买的类型获得充值。购买并不需要下载微店app！\n" +
-                "4、没有网银支付宝微信钱包的学生党可以联系作者或加群781666001，PY获得月卡。加群参与测试版本将不定期发放各种福利（不包括女装）\n" +
-                "5、测试群员请勿购买月卡，过期请联系群主或管理员增加时间");
+                "4、加群781666001，PY获得月卡。加群参与测试版本将不定期发放各种福利（不包括女装）\n");
         alert.setPositiveButton("起飞！", (dialog, which) -> {
             Uri uri = Uri.parse("https://weidian.com/?userid=1871665924");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

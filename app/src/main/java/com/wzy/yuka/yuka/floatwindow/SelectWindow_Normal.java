@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -175,12 +176,22 @@ public class SelectWindow_Normal extends FloatWindow {
 
         if (origin.equals("yuka error")) {
             textView.setText(translation);
-            textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.colorError, null));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.colorError));
+            } else {
+                textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.colorError, null));
+            }
+
             return;
         }
         if (origin.equals("before response")) {
             textView.setText(translation);
-            textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg));
+            } else {
+                textView.setTextColor(applicationWeakReference.get().getResources().getColor(R.color.text_color_DarkBg, null));
+            }
+
             return;
         }
 

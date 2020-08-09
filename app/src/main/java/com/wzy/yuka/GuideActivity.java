@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -42,6 +43,10 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         initView();
         initViewPager();
         initDots();
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            Toast.makeText(this, "因为辅助功能中，语音助手已开启，功能特性页面已经跳过", Toast.LENGTH_SHORT).show();
+            showDialog();
+        }
     }
 
     private void initDots() {

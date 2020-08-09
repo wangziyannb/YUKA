@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -110,7 +111,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
         getMenuInflater().inflate(R.menu.main, amv.getMenu());
         MenuItem menuItem = amv.getMenu().getItem(0);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             menuItem.setContentDescription("账户按钮");
         }
         menuItem.setOnMenuItemClickListener(item -> {
@@ -234,51 +235,100 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     };
 
     private void showInitGuide_First() {
-        new CurtainFlow.Builder()
-                .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 0, R.layout.guide_interpret))
-                .with(2, guideManager.weaveCurtain(login, new RoundShape(12), 0, R.layout.guide))
-                .create()
-                .start(new CurtainFlow.CallBack() {
-                    @Override
-                    public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                        curtainFlowInterface = curtainFlow;
-                        switch (currentId) {
-                            case 1:
-                                drawer.addDrawerListener(listener);
-                                ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-                                layout.setOnClickListener(v -> {
-                                    drawer.openDrawer(GravityCompat.START, true);
-                                    v.setOnClickListener(null);
-                                });
-                                ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                                img.setImageResource(R.drawable.guide_firstopen_menu);
-                                img.setContentDescription("点击左上角菜单按钮，打开侧边菜单栏。完成登录、设置等操作。双击以继续");
-                                img.setScaleType(ImageView.ScaleType.FIT_START);
-                                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-                                layoutParams.width = SizeUtil.dp2px(MainActivity.this, 350);
-                                layoutParams.height = SizeUtil.dp2px(MainActivity.this, 200);
-                                ConstraintSet set = new ConstraintSet();
-                                set.clone(layout);
-                                set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
-                                set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
-                                set.applyTo(layout);
-                                break;
-                            case 2:
-                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setContentDescription("菜单栏已展开，请点击屏幕上方中间位置登录按钮。双击以结束引导");
-                                curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
-                                    drawer.removeDrawerListener(listener);
-                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(null);
-                                    curtainFlow.finish();
-                                });
-                                break;
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            new CurtainFlow.Builder()
+                    .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 0, R.layout.guide_touchexploration))
+                    .with(2, guideManager.weaveCurtain(login, new RoundShape(12), 0, R.layout.guide_touchexploration))
+                    .create()
+                    .start(new CurtainFlow.CallBack() {
+                        @Override
+                        public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                            curtainFlowInterface = curtainFlow;
+                            ConstraintLayout layout;
+                            TextView textView;
+                            Button button;
+                            switch (currentId) {
+                                case 1:
+                                    drawer.addDrawerListener(listener);
+                                    layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_te_layout);
+                                    textView = layout.findViewById(R.id.guide_te_t1);
+                                    textView.setText(R.string.guide_te_string1);
+                                    button = layout.findViewById(R.id.guide_te_b1);
+                                    button.setOnClickListener(v -> {
+                                        textView.setText(R.string.guide_te_string2);
+                                        Toast.makeText(MainActivity.this, R.string.guide_te_string2, Toast.LENGTH_SHORT).show();
+                                        button.setOnClickListener(v1 -> {
+                                            drawer.openDrawer(GravityCompat.START, true);
+                                            v.setOnClickListener(null);
+                                        });
+                                    });
+                                    break;
+                                case 2:
+                                    layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_te_layout);
+                                    textView = layout.findViewById(R.id.guide_te_t1);
+                                    textView.setText(R.string.guide_te_string3);
+                                    Toast.makeText(MainActivity.this, R.string.guide_te_string3, Toast.LENGTH_SHORT).show();
+                                    button = layout.findViewById(R.id.guide_te_b1);
+                                    button.setOnClickListener(v -> {
+                                        drawer.removeDrawerListener(listener);
+                                        curtainFlow.finish();
+                                    });
+                                    break;
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFinish() {
-                        sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_MainActivity, false);
-                    }
-                });
+                        @Override
+                        public void onFinish() {
+                            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_MainActivity, false);
+                        }
+                    });
+        } else {
+            new CurtainFlow.Builder()
+                    .with(1, guideManager.weaveCurtain(NavButton, new CircleShape(), 0, R.layout.guide_interpret))
+                    .with(2, guideManager.weaveCurtain(login, new RoundShape(12), 0, R.layout.guide))
+                    .create()
+                    .start(new CurtainFlow.CallBack() {
+                        @Override
+                        public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                            curtainFlowInterface = curtainFlow;
+                            switch (currentId) {
+                                case 1:
+                                    drawer.addDrawerListener(listener);
+                                    ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
+                                    layout.setOnClickListener(v -> {
+                                        drawer.openDrawer(GravityCompat.START, true);
+                                        v.setOnClickListener(null);
+                                    });
+                                    ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                                    img.setImageResource(R.drawable.guide_firstopen_menu);
+                                    img.setContentDescription("点击左上角菜单按钮，打开侧边菜单栏。完成登录、设置等操作。双击以继续");
+                                    img.setScaleType(ImageView.ScaleType.FIT_START);
+                                    ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+                                    layoutParams.width = SizeUtil.dp2px(MainActivity.this, 350);
+                                    layoutParams.height = SizeUtil.dp2px(MainActivity.this, 200);
+                                    ConstraintSet set = new ConstraintSet();
+                                    set.clone(layout);
+                                    set.clear(R.id.guide_interpret_img, ConstraintSet.RIGHT);
+                                    set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
+                                    set.applyTo(layout);
+                                    break;
+                                case 2:
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setContentDescription("菜单栏已展开，请点击屏幕上方中间位置登录按钮。双击以结束引导");
+                                    curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(v -> {
+                                        drawer.removeDrawerListener(listener);
+                                        curtainFlow.findViewInCurrentCurtain(R.id.test_guide1).setOnClickListener(null);
+                                        curtainFlow.finish();
+                                    });
+                                    break;
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_MainActivity, false);
+                        }
+                    });
+        }
     }
 
 }

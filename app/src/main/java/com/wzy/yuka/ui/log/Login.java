@@ -135,7 +135,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                             .build();
                     UserManager.login();
                 } else {
-                    Toast.makeText(getContext(), "请勾选同意隐私协议与用户协议后再登陆", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "请勾选屏幕下方正中间的同意隐私协议与用户协议后再登陆", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.textView18:

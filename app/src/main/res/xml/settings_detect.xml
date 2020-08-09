@@ -6,7 +6,7 @@
             android:entries="@array/detect_model"
             android:entryValues="@array/detect_modelset"
             android:key="settings_detect_model"
-            android:summary="默认有道"
+            android:summary="默认百度"
             android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
@@ -29,7 +29,7 @@
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
             android:key="settings_trans_translator"
-            android:summary="Google翻译"
+            android:summary="默认有道"
             android:title="翻译器选择" />
         <SwitchPreference
             android:defaultValue="false"

@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -88,8 +89,16 @@ public class CircleTickView extends View {
         if (mStrokeWidth == 0) {
             mStrokeWidth = 2;
         }
-        mCircleColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary, null));
-        mHookColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary, null));
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            mCircleColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary));
+            mHookColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary));
+        } else {
+            mCircleColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary, null));
+            mHookColor = typedArray.getColor(R.styleable.TickView_circle_color, getResources().getColor(R.color.colorPrimary, null));
+        }
+
+
     }
 
     public void setmCircleRadiu(int v) {
@@ -99,7 +108,6 @@ public class CircleTickView extends View {
     public void setmStrokeWidth(int v) {
         mStrokeWidth = v;
     }
-
 
 
     /**

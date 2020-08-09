@@ -16,14 +16,14 @@
     </string-array>
 
     <string-array name="detect_modelset">
-        <item>youdao</item>
         <item>baidu</item>
+        <item>youdao</item>
         <item>google</item>
     </string-array>
 
     <string-array name="detect_model">
-        <item>有道（有道智云）</item>
         <item>百度（百度AI开放平台）</item>
+        <item>有道（有道智云）</item>
         <item>谷歌（Google Cloud Vision）</item>
     </string-array>
 
@@ -183,4 +183,19 @@
     <string name="policy_title">Yuka隐私协议</string>
     <string name="policy_cancel">取消</string>
     <string name="policy_agree">我同意本协议</string>
+    <string name="guide_touchexploration_next">下一步</string>
+    <string name="guide_te_string1">现在对Yuka的使用进行说明。说明文字永远固定在屏幕的正中间，下一步按钮永远固定在屏幕最下边位置。现在，请尝试寻找并记忆这两个位置。点击下一步继续</string>
+    <string name="guide_te_string2">通过点击左上角菜单按钮，可以打开侧边菜单栏。完成登录、设置等操作。点击下一步继续，不用担心，我们会帮你打开它的</string>
+    <string name="guide_te_string3">菜单栏已展开，请点击下一步结束引导，稍后，你可以自行通过屏幕上方中间位置的登录按钮进行账户登录</string>
+    <string name="guide_te_string4">欢迎回来。登录成功后，你可以通过点击屏幕下方正中间，即下一步的位置的启动按钮来启动悬浮球。点击下一步继续</string>
+    <string name="guide_te_string5">点击屏幕右上角钱包按钮，进入充值页面。点击下一步结束引导。此外，你随时可以通过侧边栏的设置选项卡中，开发者选项内的重置所有信息来重新回顾所有引导。祝你愉快</string>
+    <string name="guide_te_string6">现在，屏幕左侧正中间已经初始化了一个悬浮球控制面板。在闭合状态下，悬浮球只有一个按钮，点击后会展开面板，为Yuka用户提供包括初始化各类取词窗，修改设置等功能。点击下一步，我们会帮你展开悬浮球，并依次介绍在展开后的面板上，每个悬浮球按钮的功能。</string>
+    <string name="guide_te_string7">悬浮球已经展开。展开后的悬浮球总共包括五个按钮。原来的展开按钮会变换为闭合按钮。其余的四个按钮会分别向上，右上，右下，下四个方向平移小段距离。同理，如果悬浮球在右半边屏幕，方向会相应相反。同时，悬浮球移动后，会自动贴附在相应的屏幕边框。现在，你可以大致寻找各个按钮的位置，并点击各个按钮听取详细的说明。请注意，平时按钮的标签只有名字，但是只在引导时，标签会附带上各个按钮的功能解说。在分别听完每个按钮的功能介绍后，点击下一步继续</string>
+    <string name="guide_te_string8">最上方为设置按钮，在二级面板下为单或多悬浮窗翻译。主要效果为进入悬浮窗、悬浮球、各种模式的设置页面。</string>
+    <string name="guide_te_string9">右上为识别按钮，在二级面板下为初始化持续翻译悬浮窗按钮。主要效果为启动所有已经存在的悬浮窗的识别。</string>
+    <string name="guide_te_string10">右下为初始化按钮，在二级面板下为自动识别翻译悬浮窗按钮。主要效果为初始化上一个使用过的类型的悬浮窗。初次打开app时，默认单/多悬浮窗模式。至关重要的一点，长按此按钮进入二级面板。</string>
+    <string name="guide_te_string11">下方为退出按钮，在二级面板下为视频同步字幕悬浮窗按钮。主要效果为退出app。</string>
+    <string name="guide_te_string12">中间为闭合悬浮球按钮，在二级面板下为返回上一级。主要效果为关闭展开的悬浮球。</string>
+    <string name="guide_te_string13">悬浮球已闭合，悬浮球引导结束。此外，为了方便使用，以下功能已被禁用：1、悬浮球一段时间不使用后贴边隐藏已禁用 2、拖动的安全区域已禁用，3、流体手势兼容已禁用。悬浮窗的功能也会相应变化，这点将会在各种悬浮窗的引导中进行说明。最后，你随时可以通过开发者选项内的重置所有信息来重新回顾所有引导。祝你玩的愉快！点击下一步结束引导</string>
+
 </resources>

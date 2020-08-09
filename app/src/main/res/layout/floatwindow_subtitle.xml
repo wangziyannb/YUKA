@@ -7,6 +7,7 @@
     android:layout_width="300dp"
     android:layout_height="100dp"
     android:background="@drawable/radius_style_floatwindow"
+    android:contentDescription="Yuka同步字幕窗"
     android:orientation="vertical">
 
     <ImageView
@@ -59,7 +60,7 @@
         android:layout_marginBottom="4dp"
         android:contentDescription="显示原文"
         android:visibility="gone"
-        SubtitleFlowView:firstText="显示译文"
+        SubtitleFlowView:firstText="显示原文"
         SubtitleFlowView:textAlignment="center"
         SubtitleFlowView:textColor="@color/text_color_DarkBg"
         SubtitleFlowView:textSize="13"

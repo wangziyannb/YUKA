@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,17 +24,14 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.ActionMenuView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.NavigationMenuView;
 import com.lzf.easyfloat.permission.PermissionUtils;
 import com.qw.curtain.lib.CurtainFlow;
 import com.qw.curtain.lib.flow.CurtainFlowInterface;
 import com.qw.curtain.lib.shape.CircleShape;
-import com.qw.curtain.lib.shape.RoundShape;
 import com.wzy.yuka.MainActivity;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.GuideManager;
@@ -60,8 +58,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private GuideManager guideManager;
     private FloatWindowManager floatWindowManager;
     private MainActivity mainActivity;
-    private DrawerLayout drawer;
-    private CurtainFlow guide2;
 
     @Override
     public void onClick(View v) {
@@ -136,22 +132,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     }
 
-    private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            NavigationMenuView navigationMenuView = (NavigationMenuView) mainActivity.navigationView.getChildAt(0);
-            View setting = navigationMenuView.getChildAt(2);
-            View guidance = navigationMenuView.getChildAt(3);
-            guide2.addCurtain(4, guideManager.weaveCurtain(new RoundShape(12), 0, R.layout.guide, setting, guidance));
-            guide2.push();
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-            drawer.removeDrawerListener(listener);
-        }
-    };
-
     private long exitTime;
 
     @Override
@@ -185,7 +165,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         bottomNavigationView = view.findViewById(R.id.bottomNavigationView);
 
         mainActivity = (MainActivity) view.getContext();
-        drawer = mainActivity.drawer;
         guideManager = new GuideManager(this);
         button = bottomNavigationView.findViewById(R.id.bot_nav_start);
         button.setOnClickListener(this);
@@ -245,67 +224,98 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_LOGIN, true) && UserManager.checkLogin()) {
             ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
             ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
-            guide2 = new CurtainFlow.Builder()
-                    .with(3, guideManager.weaveCurtain(button, new CircleShape(), 32, R.layout.guide_interpret))
-                    .with(4, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide_interpret))
-                    .create();
-            guide2.start(new CurtainFlow.CallBack() {
-                @Override
-                public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
-                    ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
-                    ImageView img = layout.findViewById(R.id.guide_interpret_img);
-                    ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
-                    ConstraintSet set = new ConstraintSet();
-                    switch (currentId) {
-                        case 3:
-                            layout.setOnClickListener(v -> {
-                                curtainFlow.push();
-                                layout.setOnClickListener(null);
-                            });
-
-                            img.setImageResource(R.drawable.guide_afterlogin_main);
-                            img.setContentDescription("点击屏幕下方中间的启动按钮，启动悬浮球。双击以继续");
-                            img.setScaleType(ImageView.ScaleType.FIT_END);
-
-                            params_img.width = SizeUtil.dp2px(requireContext(), 180);
-                            params_img.height = SizeUtil.dp2px(requireContext(), 180);
-                            params_img.leftMargin = SizeUtil.dp2px(requireContext(), 30);
-
-                            img.setLayoutParams(params_img);
-
-                            set.clone(layout);
-                            set.clear(R.id.guide_interpret_img, ConstraintSet.TOP);
-                            set.applyTo(layout);
-                            break;
-                        case 4:
-                            layout.setOnClickListener(v -> {
-                                curtainFlow.finish();
-                                layout.setOnClickListener(null);
-                            });
-
-                            img.setImageResource(R.drawable.guide_afterlogin_charge);
-                            img.setContentDescription("点击屏幕右上角钱包按钮，进入充值页面。双击以结束引导");
-                            img.setScaleType(ImageView.ScaleType.FIT_START);
-
-                            params_img.width = SizeUtil.dp2px(requireContext(), 230);
-                            params_img.height = SizeUtil.dp2px(requireContext(), 240);
-
-                            img.setLayoutParams(params_img);
-                            set.clone(layout);
-                            set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
-                            set.clear(R.id.guide_interpret_img, ConstraintSet.LEFT);
-                            set.applyTo(layout);
-                            break;
+            if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+                new CurtainFlow.Builder()
+                        .with(3, guideManager.weaveCurtain(button, new CircleShape(), 32, R.layout.guide_touchexploration))
+                        .with(4, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide_touchexploration))
+                        .create().start(new CurtainFlow.CallBack() {
+                    @Override
+                    public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                        ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_te_layout);
+                        TextView textView = layout.findViewById(R.id.guide_te_t1);
+                        Button b = layout.findViewById(R.id.guide_te_b1);
+                        switch (currentId) {
+                            case 3:
+                                textView.setText(R.string.guide_te_string4);
+                                b.setOnClickListener(v -> {
+                                    curtainFlow.push();
+                                });
+                                break;
+                            case 4:
+                                Toast.makeText(getContext(), R.string.guide_te_string5, Toast.LENGTH_SHORT).show();
+                                textView.setText(R.string.guide_te_string5);
+                                b.setOnClickListener(v -> {
+                                    curtainFlow.finish();
+                                });
+                                break;
+                        }
                     }
-                }
 
-                @Override
-                public void onFinish() {
-                    sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, false);
-                }
-            });
+                    @Override
+                    public void onFinish() {
+                        sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, false);
+                    }
+                });
+            } else {
+                new CurtainFlow.Builder()
+                        .with(3, guideManager.weaveCurtain(button, new CircleShape(), 32, R.layout.guide_interpret))
+                        .with(4, guideManager.weaveCurtain(amiv, new CircleShape(), 32, R.layout.guide_interpret))
+                        .create().start(new CurtainFlow.CallBack() {
+                    @Override
+                    public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
+                        ConstraintLayout layout = curtainFlow.findViewInCurrentCurtain(R.id.guide_interpret_layout);
+                        ImageView img = layout.findViewById(R.id.guide_interpret_img);
+                        ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
+                        ConstraintSet set = new ConstraintSet();
+                        switch (currentId) {
+                            case 3:
+                                layout.setOnClickListener(v -> {
+                                    curtainFlow.push();
+                                    layout.setOnClickListener(null);
+                                });
 
+                                img.setImageResource(R.drawable.guide_afterlogin_main);
+                                img.setContentDescription("点击屏幕下方中间的启动按钮，启动悬浮球。双击以继续");
+                                img.setScaleType(ImageView.ScaleType.FIT_END);
 
+                                params_img.width = SizeUtil.dp2px(requireContext(), 180);
+                                params_img.height = SizeUtil.dp2px(requireContext(), 180);
+                                params_img.leftMargin = SizeUtil.dp2px(requireContext(), 30);
+
+                                img.setLayoutParams(params_img);
+
+                                set.clone(layout);
+                                set.clear(R.id.guide_interpret_img, ConstraintSet.TOP);
+                                set.applyTo(layout);
+                                break;
+                            case 4:
+                                layout.setOnClickListener(v -> {
+                                    curtainFlow.finish();
+                                    layout.setOnClickListener(null);
+                                });
+
+                                img.setImageResource(R.drawable.guide_afterlogin_charge);
+                                img.setContentDescription("点击屏幕右上角钱包按钮，进入充值页面。双击以结束引导");
+                                img.setScaleType(ImageView.ScaleType.FIT_START);
+
+                                params_img.width = SizeUtil.dp2px(requireContext(), 230);
+                                params_img.height = SizeUtil.dp2px(requireContext(), 240);
+
+                                img.setLayoutParams(params_img);
+                                set.clone(layout);
+                                set.clear(R.id.guide_interpret_img, ConstraintSet.BOTTOM);
+                                set.clear(R.id.guide_interpret_img, ConstraintSet.LEFT);
+                                set.applyTo(layout);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_LOGIN, false);
+                    }
+                });
+            }
         }
     }
 

@@ -20,5 +20,6 @@
         android:id="@+id/little_origin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
         android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

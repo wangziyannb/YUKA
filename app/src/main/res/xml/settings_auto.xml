@@ -39,7 +39,7 @@
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
             android:key="settings_trans_translator"
-            android:summary="有道翻译"
+            android:summary="默认有道"
             android:title="翻译器选择" />
         <SwitchPreference
             android:defaultValue="false"

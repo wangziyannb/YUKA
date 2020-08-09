@@ -69,7 +69,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                         View view = EasyFloat.getAppFloatView(tag);
                         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                         ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
-                        imageButton.getBackground().setAlpha(140);
+                        imageButton.getBackground().setAlpha(50);
                         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                         if (layoutParams.x > size[0] / 2) {
                             //右边
@@ -112,43 +112,51 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                         windowManager.updateViewLayout(view, layoutParams);
+                        ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
+                        imageButton.getBackground().setAlpha(255);
                     }
 
                     @Override
                     public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
-                        handler.postDelayed(() -> {
-                            ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
-                            imageButton.getBackground().setAlpha(255);
-                        }, 0);
+                        ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
+                        imageButton.getBackground().setAlpha(255);
                     }
 
                     @Override
                     public void dragEnd(@NotNull View view) {
-                        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoHide, true) && !isInGuiding) {
+                        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_autoHide, true)
+                                && !isInGuiding
+                                && !(boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
                             handler.postDelayed(runnable, 3000);
                         } else {
                             handler.postDelayed(() -> {
                                 ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
-                                imageButton.getBackground().setAlpha(140);
+                                imageButton.getBackground().setAlpha(50);
                             }, 3000);
                         }
                     }
-                })
-                .setLocation(100, 500);
-        if (!(boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_fluidMode, false)) {
-            fb.setDisplayHeight(context -> {
-                int[] size = GetParams.Screen();
-                if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_safeMode, true)) {
-                    if (size[0] < size[1]) {
-                        //竖屏
-                        return size[1] - SizeUtil.dp2px(context, 52 + 11);
+                });
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            fb.setLocation(0, GetParams.Screen()[1] / 2);
+        } else {
+            fb.setLocation(100, 500);
+        }
+        if (!(boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            if (!(boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_fluidMode, false)) {
+                fb.setDisplayHeight(context -> {
+                    int[] size = GetParams.Screen();
+                    if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.ball_safeMode, true)) {
+                        if (size[0] < size[1]) {
+                            //竖屏
+                            return size[1] - SizeUtil.dp2px(context, 52 + 11);
+                        } else {
+                            return size[1] - SizeUtil.dp2px(context, 52 + 11);
+                        }
                     } else {
-                        return size[1] - SizeUtil.dp2px(context, 52 + 11);
+                        return size[1];
                     }
-                } else {
-                    return size[1];
-                }
-            });
+                });
+            }
         }
         fb.show();
     }
@@ -220,10 +228,10 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                     isInChoosing = false;
                     if (floatBallLayout.isDeployed) {
                         //取消二级面板
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_settings,"设置");
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_detect,"识别");
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_reset,"初始化悬浮窗");
-                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_exit,"退出");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_settings, "设置");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_detect, "识别");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_reset, "初始化悬浮窗");
+                        flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_exit, "退出");
                     }
                 } else {
                     if (floatBallLayout.isDeployed) {
@@ -410,21 +418,21 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
             case R.id.floatball_mid2:
                 isInChoosing = true;
                 FloatBallLayout floatBallLayout = FloatBallView.findViewById(R.id.floatball_layout);
-                flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_auto,"自动模式悬浮窗初始化");
+                flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid2), 100, R.drawable.floatmenu_auto, "自动模式悬浮窗初始化");
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
-                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_continue,"持续模式悬浮窗初始化");
-                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_subtitle,"同步字幕模式悬浮窗初始化");
+                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_mid1), 100, R.drawable.floatmenu_continue, "持续模式悬浮窗初始化");
+                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_bottom), 100, R.drawable.floatmenu_subtitle, "同步字幕模式悬浮窗初始化");
                 }, 100);
                 handler.postDelayed(() -> {
-                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_normal,"单/多悬浮窗初始化");
+                    flipAnimation(floatBallLayout.findViewById(R.id.floatball_top), 100, R.drawable.floatmenu_normal, "单/多悬浮窗初始化");
                 }, 250);
                 break;
         }
         return true;
     }
 
-    private void flipAnimation(View view, long time, int new_background,CharSequence charSequence) {
+    private void flipAnimation(View view, long time, int new_background, CharSequence charSequence) {
         ObjectAnimator objectAnimator1 = ObjectAnimator
                 .ofFloat(view, "rotationY", 0, 90);
         objectAnimator1.setDuration(time)

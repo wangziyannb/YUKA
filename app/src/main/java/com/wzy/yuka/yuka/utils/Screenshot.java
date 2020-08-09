@@ -22,7 +22,7 @@ public class Screenshot {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String time = dateFormat.format(nowTime);
-        SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("HH-mm-ss");
         String time2 = dateFormat2.format(nowTime);
 
         filePath = context.getExternalFilesDir("screenshot").getAbsoluteFile() + "/" + time;
