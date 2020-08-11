@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             if (UserManager.checkLogin()) {
                 Toast.makeText(this, "您已登陆", Toast.LENGTH_SHORT).show();
             } else {
-                navController.navigate(R.id.action_nav_home_to_nav_login);
+                navController.navigate(R.id.nav_login);
                 drawer.closeDrawers();
             }
         });

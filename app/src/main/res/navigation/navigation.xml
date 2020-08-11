@@ -38,7 +38,7 @@
         android:id="@+id/nav_forgetpassword"
         android:name="com.wzy.yuka.ui.log.Password"
         android:label="修改密码"
-        tools:layout="@layout/log_forgetpassword"></fragment>
+        tools:layout="@layout/log_forgetpassword" />
     <fragment
         android:id="@+id/nav_register"
         android:name="com.wzy.yuka.ui.log.Regist"
