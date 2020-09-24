@@ -69,7 +69,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                         View view = EasyFloat.getAppFloatView(tag);
                         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
                         ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
-                        imageButton.getBackground().setAlpha(50);
+                        imageButton.getBackground().setAlpha(140);
                         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
                         if (layoutParams.x > size[0] / 2) {
                             //右边
@@ -131,7 +131,7 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
                         } else {
                             handler.postDelayed(() -> {
                                 ImageButton imageButton = FloatBallView.findViewById(R.id.floatball_main);
-                                imageButton.getBackground().setAlpha(50);
+                                imageButton.getBackground().setAlpha(140);
                             }, 3000);
                         }
                     }

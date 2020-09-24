@@ -198,4 +198,7 @@
     <string name="guide_te_string12">中间为闭合悬浮球按钮，在二级面板下为返回上一级。主要效果为关闭展开的悬浮球。</string>
     <string name="guide_te_string13">悬浮球已闭合，悬浮球引导结束。此外，为了方便使用，以下功能已被禁用：1、悬浮球一段时间不使用后贴边隐藏已禁用 2、拖动的安全区域已禁用，3、流体手势兼容已禁用。悬浮窗的功能也会相应变化，这点将会在各种悬浮窗的引导中进行说明。最后，你随时可以通过开发者选项内的重置所有信息来重新回顾所有引导。祝你玩的愉快！点击下一步结束引导</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

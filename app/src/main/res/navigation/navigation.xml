@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_nav_home_to_nav_user_service"
             app:destination="@id/nav_user_service" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_guide"
+            app:destination="@id/nav_guide" />
 
     </fragment>
     <fragment
@@ -114,6 +117,11 @@
             android:id="@+id/action_nav_user_service_to_nav_user_profile"
             app:destination="@id/nav_user_profile" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_guide"
+        android:name="com.wzy.yuka.ui.user.GuidePageFragment"
+        android:label="使用说明" />
 
     <fragment
         android:id="@+id/nav_help_Example"

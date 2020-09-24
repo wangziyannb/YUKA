@@ -17,7 +17,7 @@
         <item
             android:id="@+id/nav_guide"
             android:contentDescription="引导"
-            android:icon="@drawable/ic_favorite"
+            android:icon="@drawable/ic_guide"
             android:title="引导" />
         <item
             android:id="@+id/nav_help"
