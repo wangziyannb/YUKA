@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
 
         drawer = findViewById(R.id.drawer);
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_help, R.id.nav_about)
+                .Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_help, R.id.nav_about, R.id.nav_guide)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
