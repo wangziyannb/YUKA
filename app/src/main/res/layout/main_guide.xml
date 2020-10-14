@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FEFEFE"
+        android:background="#F4F4F4"
         android:orientation="vertical"
         android:paddingStart="24dp"
         android:paddingEnd="24dp">
@@ -114,8 +114,9 @@
             app:lineHeight="20dp" />
 
         <pl.droidsonroids.gif.GifImageView
-            android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_width="361dp"
+            android:layout_height="187dp"
+            android:layout_gravity="start"
             android:layout_marginBottom="10dp"
             android:src="@drawable/guidepage_continue" />
 
@@ -129,10 +130,48 @@
             app:lineHeight="20dp" />
 
         <pl.droidsonroids.gif.GifImageView
-            android:layout_width="wrap_content"
-            android:layout_height="558dp"
-            android:layout_marginBottom="10dp"
+            android:layout_width="360dp"
+            android:layout_height="546dp"
             android:src="@drawable/guidepage_autotranslate" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="三、翻译示例"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="点击下面图片观看YuKa翻译作品Narcissu"
+            android:textColor="#000000"
+            app:lineHeight="20dp" />
+
+        <ImageView
+            android:id="@+id/Narcissu1"
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/guidepage_narcissu1" />
+
+
+        <ImageView
+            android:id="@+id/Narcissu2"
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/guidepage_narcissu2" />
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
