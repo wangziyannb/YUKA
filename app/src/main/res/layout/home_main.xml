@@ -50,8 +50,10 @@
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="240dp"
         android:layout_marginTop="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/main_translate" />
 
