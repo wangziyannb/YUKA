@@ -1,2 +1,4 @@
+include ':yukafloatwindows'
+include ':yukalite'
 rootProject.name='YUKA'
 include ':app'
