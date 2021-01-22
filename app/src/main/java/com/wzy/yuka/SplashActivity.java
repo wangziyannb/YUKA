@@ -14,7 +14,8 @@ import androidx.annotation.NonNull;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
+import com.wzy.yukalite.YukaUserManagerException;
 
 import java.lang.ref.WeakReference;
 
@@ -40,7 +41,11 @@ public class SplashActivity extends Activity implements GlobalHandler.HandleMsgL
             GlobalHandler globalHandler = GlobalHandler.getInstance();
             globalHandler.setHandleMsgListener(this);
             globalHandler.postDelayed(runnable, ENTER_DURATION);
-            UserManager.login();
+            try {
+                Users.login();
+            } catch (YukaUserManagerException e) {
+                e.printStackTrace();
+            }
         }
     }
 

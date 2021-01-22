@@ -20,10 +20,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +132,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
             alert.show();
         });
         dialog.show();
-        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(this, 600));
+        dialog.getWindow().setLayout((SizeUtil.Screen(this)[0]), SizeUtil.dp2px(this, 600));
         WebView webView = view.findViewById(R.id.policy_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());

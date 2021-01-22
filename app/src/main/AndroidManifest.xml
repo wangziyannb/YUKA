@@ -45,25 +45,13 @@
             android:theme="@style/CurtainActivity" />
 
         <service
-            android:name=".yuka.services.ScreenStatusService"
+            android:name="com.wzy.yuka.yuka_lite.services.ScreenShotService_Single"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+        <service
+            android:name="com.wzy.yukafloatwindows.utils.ScreenStatusService"
             android:configChanges="orientation|screenSize"
             android:enabled="true" />
-        <service
-            android:name=".yuka.services.ScreenShotService_Single"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
-        <service
-            android:name=".yuka.services.ScreenShotService_Continue"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
-        <service
-            android:name=".yuka.services.ScreenShotService_Auto"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
-        <service
-            android:name=".yuka.services.AudioService"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
     </application>
 
 </manifest>

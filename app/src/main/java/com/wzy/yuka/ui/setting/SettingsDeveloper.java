@@ -12,17 +12,17 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
+import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.YukaUserManagerException;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -56,32 +56,30 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_developer, rootKey);
         globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
         getPreferenceScreen().findPreference("settings_debug_server").setOnPreferenceClickListener(preference -> {
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("mode", "yuka");
-            HttpRequest.yuka(hashMap, "", new Callback() {
-                        @Override
-                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                            Log.e("settingsFragment", "服务器检查失败");
-                            Bundle bundle = new Bundle();
-                            bundle.putString("error", e.toString());
-                            Message message = Message.obtain();
-                            message.what = 900;
-                            message.setData(bundle);
-                            globalHandler.sendMessage(message);
-                        }
+            globalHandler.setHandleMsgListener(this);
+            YukaLite.yuka(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Log.e("settingsFragment", "服务器检查失败");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("error", e.toString());
+                    Message message = Message.obtain();
+                    message.what = 900;
+                    message.setData(bundle);
+                    globalHandler.sendMessage(message);
+                }
 
-                        @Override
-                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("response", response.body().string());
-                            Message message = Message.obtain();
-                            message.what = 901;
-                            message.setData(bundle);
-                            globalHandler.sendMessage(message);
-                        }
-                    });
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("response", response.body().string());
+                    Message message = Message.obtain();
+                    message.what = 901;
+                    message.setData(bundle);
+                    globalHandler.sendMessage(message);
+                }
+            });
             return false;
         });
         getPreferenceScreen().findPreference("settings_debug_reset").setOnPreferenceClickListener(preference -> {
@@ -94,8 +92,12 @@ public class SettingsDeveloper extends PreferenceFragmentCompat implements Globa
             sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_1, true);
             sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_N_2, true);
             sharedPreferencesUtil.saveParam(SharedPreferenceCollection.FIRST_SelectWindow_A, true);
-            UserManager.logout();
-            UserManager.removeUser();
+            try {
+                Users.logout();
+            } catch (YukaUserManagerException ignored) {
+                //没有用户就
+            }
+            YukaLite.removeUser();
             Toast.makeText(getContext(), "已经重置所有用户引导并退出账号", Toast.LENGTH_SHORT).show();
             return true;
         });

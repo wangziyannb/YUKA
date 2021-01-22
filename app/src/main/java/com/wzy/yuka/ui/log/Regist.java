@@ -2,6 +2,7 @@ package com.wzy.yuka.ui.log;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -30,10 +31,9 @@ import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.ui.view.CircleTickView;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 
 
 public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener, TextWatcher {
@@ -43,7 +43,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     private CircleTickView circleTickView2;
     private EditText un_t;
     private EditText pwd_t;
-    private Runnable r = () -> UserManager.check_feasibility("u_name", un_t.getText().toString());
+    private Runnable r = () -> Users.check_feasibility("u_name", un_t.getText().toString());
 
     private void showDialog() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.policy, null, false);
@@ -61,7 +61,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
             NavHostFragment.findNavController(this).navigateUp();
         });
         dialog.show();
-        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(getContext(), 600));
+        dialog.getWindow().setLayout((SizeUtil.Screen(getContext())[0]), SizeUtil.dp2px(getContext(), 600));
         WebView webView = view.findViewById(R.id.policy_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
@@ -90,7 +90,6 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
         View root = inflater.inflate(R.layout.log_register, container, false);
         tableLayout = root.findViewById(R.id.tableLayout);
         globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
         un_t = tableLayout.findViewById(R.id.username_regist);
         pwd_t = tableLayout.findViewById(R.id.password_regist);
         circleTickView = tableLayout.findViewById(R.id.user_success);
@@ -134,11 +133,13 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.register_button) {
+            globalHandler.setHandleMsgListener(this);
             String[] params = new String[3];
             params[0] = un_t.getText() + "";
             params[1] = pwd_t.getText() + "";
-            params[2] = UserManager.getUser()[2];
-            UserManager.register(params);
+            params[2] = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            ;
+            Users.register(params);
             LoadingViewManager
                     .with(getActivity())
                     .setHintText("注册中...")
@@ -198,6 +199,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
 
     @Override
     public void afterTextChanged(Editable s) {
+        globalHandler.setHandleMsgListener(this);
         globalHandler.removeCallbacks(r);
         globalHandler.postDelayed(r, 3000);
     }

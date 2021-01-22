@@ -31,6 +31,22 @@ class YukaRequest {
             .writeTimeout(30 * 1000, TimeUnit.MILLISECONDS)
             .build();
 
+    static void yuka(@NotNull Callback callback) {
+        MultipartBody body = new MultipartBody.Builder("Yuka2016203023^")
+                .setType(MultipartBody.FORM)
+                .addPart(
+                        Headers.of("Content-Disposition", "form-data; name=\"mode\""),
+                        RequestBody.create("yuka", null)
+                )
+                .build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/yuka/yuka_v1")
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
     static void request(@NotNull YukaConfig config, @NotNull File image, @NotNull String[] user, @NotNull Callback callback) {
         MultipartBody body;
         if (Objects.equals(config.mode, "yuka")) {
@@ -163,4 +179,63 @@ class YukaRequest {
         call.enqueue(callback);
     }
 
+    static void register(String[] params, Callback callback) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("u_name", params[0])
+                .add("pwd", Encrypt.md5(params[1], params[0]))
+                .add("uuid", params[2])
+                .build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/regist/yuka_v1")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    static void check_feasibility(String mode, String params, Callback callback) {
+        FormBody.Builder formBody = new FormBody.Builder().add("mode", mode);
+        switch (mode) {
+            case "u_name":
+                formBody.add("u_name", params);
+                break;
+            case "uuid":
+                formBody.add("uuid", params);
+                break;
+        }
+        RequestBody requestBody = formBody.build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/check/yuka_v1")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void forget_password(String[] params, Callback callback) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("u_name", params[0])
+                .add("pwd", Encrypt.md5(params[1], params[0]))
+                .add("uuid", params[2])
+                .build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/forget_pwd/yuka_v1")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void activate(String[] params, Callback callback) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("u_name", params[0])
+                .add("CDKEY", params[1])
+                .build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/activate/yuka_v1")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
 }

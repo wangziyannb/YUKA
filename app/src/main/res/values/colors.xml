@@ -4,13 +4,8 @@
     <color name="colorPrimaryDark">#a84466</color>
     <color name="colorAccent">#f381a7</color>
 
-    <color name="colorSecondaryLight">#f9cfd7</color>
     <color name="colorError">#f44336</color>
-    <color name="colorWarning">#ffb74d</color>
-    <color name="colorInfo">#64b5f6</color>
-    <color name="colorSuccess">#81c784</color>
 
-    <color name="translucent">#66000000</color>
     <color name="translucent_activity">#00000000</color>
     <color name="text_color_LightBg">#999999</color>
     <color name="text_color_DarkBg">#FFFFFF</color>

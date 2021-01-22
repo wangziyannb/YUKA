@@ -27,16 +27,14 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.network.HttpRequest;
-import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.tools.params.SizeUtil;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukalite.YukaLite;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -120,9 +118,7 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
                 break;
             case "about_about_server":
                 globalHandler.setHandleMsgListener(this);
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("mode", "yuka");
-                HttpRequest.yuka(hashMap, "", new Callback() {
+                YukaLite.yuka(new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("settingsFragment", "服务器检查失败");
@@ -161,7 +157,7 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
         TextView title = view.findViewById(R.id.policy_appbar).findViewById(R.id.policy_textview1);
 
         dialog.show();
-        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(getContext(), 600));
+        dialog.getWindow().setLayout((SizeUtil.Screen(getContext())[0]), SizeUtil.dp2px(getContext(), 600));
         WebView webView = view.findViewById(R.id.policy_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());

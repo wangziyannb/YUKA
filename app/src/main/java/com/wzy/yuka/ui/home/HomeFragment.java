@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,11 +37,10 @@ import com.wzy.yuka.tools.interaction.GuideManager;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.yuka.FloatWindowManager;
-import com.wzy.yuka.yuka.floatball.FloatBall;
-import com.wzy.yuka.yuka.user.UserManager;
-import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
+import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukafloatwindows.FloatWindowManagerException;
+import com.wzy.yukalite.YukaLite;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -56,14 +54,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private Button button;
     private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     private GuideManager guideManager;
-    private FloatWindowManager floatWindowManager;
+    private YukaFloatWindowManager floatWindowManager;
     private MainActivity mainActivity;
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bot_nav_start:
-                if (UserManager.checkLogin()) {
+                if (YukaLite.isLogin()) {
                     if (!PermissionUtils.checkPermission(getContext())) {
                         PermissionUtils.requestPermission(getActivity(), b -> {
                             if (!b) {
@@ -76,12 +74,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     }
                     if (data != null) {
                         if (floatWindowManager.getNumOfFloatBalls() == 0) {
-                            try {
-                                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getApplicationWeakReference().get(), "mainFloatBall"));
-                            } catch (FloatWindowManagerException e) {
-                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
+                            floatWindowManager.addFloatBall("mainFloatBall");
                             v.setBackgroundResource(R.drawable.nav_start_checked);
                         } else {
                             floatWindowManager.remove_AllFloatBall();
@@ -129,7 +122,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-
     }
 
     private long exitTime;
@@ -173,7 +165,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         View nav_history = bottomNavigationView.findViewById(R.id.bot_nav_history);
         nav_history.setOnClickListener(this);
         try {
-            floatWindowManager = FloatWindowManager.getInstance();
+            floatWindowManager = YukaFloatWindowManager.getInstance();
             if (floatWindowManager.getData() != null) {
                 this.data = floatWindowManager.getData();
                 button.setBackgroundResource(R.drawable.nav_start_checked);
@@ -193,8 +185,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else {
             try {
                 WindowManager mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-                DisplayMetrics metrics = new DisplayMetrics();
-                mWindowManager.getDefaultDisplay().getMetrics(metrics);
+                mWindowManager.getCurrentWindowMetrics();
             } catch (Exception e) {
                 Log.e(TAG, "MediaProjection error");
                 return;
@@ -208,20 +199,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     }
                 });
             }
-            try {
-
-                floatWindowManager.setData(data);
-                floatWindowManager.add_FloatBall(new FloatBall(floatWindowManager.getApplicationWeakReference().get(), "mainFloatBall"));
-
-            } catch (FloatWindowManagerException e) {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+            floatWindowManager.setData(data);
+            floatWindowManager.addFloatBall("mainFloatBall");
         }
     }
 
     private void showInitGuide() {
-        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_LOGIN, true) && UserManager.checkLogin()) {
+        if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_LOGIN, true) && YukaLite.isLogin()) {
             ActionMenuView amv = mainActivity.findViewById(R.id.toolbar_menu);
             ActionMenuItemView amiv = (ActionMenuItemView) amv.getChildAt(0);
             if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {

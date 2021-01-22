@@ -18,9 +18,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yukalite.YukaLite;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,14 +48,14 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
         switch (v.getId()) {
             case R.id.translate_button:
                 globalHandler.setHandleMsgListener(this);
-                if (!UserManager.checkLogin()) {
+                if (!YukaLite.isLogin()) {
                     Toast.makeText(getContext(), "请登陆", Toast.LENGTH_SHORT).show();
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
                     HashMap<String, String> params = GetParams.Yuka("NONE");
                     params.put("mode", "text");
-                    HttpRequest.yuka(params, origin);
+                    //   HttpRequest.yuka(params, origin);
                 }
                 break;
         }

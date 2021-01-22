@@ -1,6 +1,7 @@
 package com.wzy.yukalite;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import com.wzy.yukalite.config.YukaConfig;
 
@@ -16,9 +17,14 @@ import okhttp3.Callback;
  */
 public class YukaLite {
     public static void init(Context application) {
-        UserManager.init(application);
+        String uuid = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID);
+        UserManager.init(application, uuid);
+        UserManager.setLogin(false);
     }
 
+    public static void yuka(@NotNull Callback callback) {
+        YukaRequest.yuka(callback);
+    }
 
     /**
      * @param config   识别器等参数文件
@@ -26,82 +32,80 @@ public class YukaLite {
      * @param callback 返回信息
      */
     public static void request(@NotNull YukaConfig config, @NotNull File image, @NotNull Callback callback) {
-        YukaRequest.request(config, image, getUser(), callback);
+        try {
+            YukaRequest.request(config, image, getUser(), callback);
+        } catch (YukaUserManagerException e) {
+            e.printStackTrace();
+        }
     }
 
-//    public static void request(@NotNull YukaConfig config,@NotNull String filePath,@NotNull Callback callback){
-//        if (filePath.length == callbacks.length) {
-//            for (int i = 0; i < filePath.length; i++) {
-//                yuka(params, filePath[i], callbacks[i]);
-//            }
-//        } else {
-//            Log.e(Tag, filePath.length + "");
-//            Log.e(Tag, callbacks.length + "");
-//            Log.e(Tag, "Number not match");
-//        }
-//    }
-//
-//    public static void request(@NotNull YukaConfig config,@NotNull String[] filePath,@NotNull Callback[] callbacks){
-//        if (filePath.length == callbacks.length) {
-//            for (int i = 0; i < filePath.length; i++) {
-//                request(config, filePath[i], callbacks[i]);
-//            }
-//        } else {
-//            Log.e(Tag, filePath.length + "");
-//            Log.e(Tag, callbacks.length + "");
-//            Log.e(Tag, "Number not match");
-//        }
-//    }
 
     public static void request(@NotNull YukaConfig config, @NotNull File[] images, @NotNull Callback[] callbacks) {
-        YukaRequest.request(config, images, getUser(), callbacks);
-    }
-
-    public static void request(@NotNull YukaConfig config, @NotNull String origin, @NotNull Callback callback) {
-        YukaRequest.request(config, origin, getUser(), callback);
-    }
-
-    public static void login(@NotNull String u_name, @NotNull String pwd, @NotNull String id, @NotNull Callback callback) {
-        UserManager.addUser(u_name, pwd, id);
         try {
-            UserManager.login(callback);
-        } catch (UserManager.YukaUserManagerException e) {
+            YukaRequest.request(config, images, getUser(), callbacks);
+        } catch (YukaUserManagerException e) {
             e.printStackTrace();
         }
     }
 
-    public static void login(@NotNull Callback callback) {
-        try {
-            UserManager.login(callback);
-        } catch (UserManager.YukaUserManagerException e) {
-            e.printStackTrace();
-        }
+    public static void addUser(@NotNull String u_name, @NotNull String pwd) {
+        UserManager.addUser(u_name, pwd);
     }
 
-    public static void logout(@NotNull Callback callback) {
-        try {
-            UserManager.logout(callback);
-        } catch (UserManager.YukaUserManagerException e) {
-            e.printStackTrace();
-        }
+    public static void removeUser() {
         UserManager.removeUser();
     }
 
-    public static void refreshInfo(Callback callback) {
+    public static void request(@NotNull YukaConfig config, @NotNull String origin, @NotNull Callback callback) {
         try {
-            UserManager.refreshInfo(callback);
-        } catch (UserManager.YukaUserManagerException e) {
+            YukaRequest.request(config, origin, getUser(), callback);
+        } catch (YukaUserManagerException e) {
             e.printStackTrace();
         }
     }
 
+    public static void login(@NotNull String u_name, @NotNull String pwd, @NotNull Callback callback) throws YukaUserManagerException {
+        UserManager.addUser(u_name, pwd);
+        UserManager.login(callback);
+    }
 
-    public static String[] getUser() {
-        try {
-            return UserManager.getUser();
-        } catch (UserManager.YukaUserManagerException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static void login(@NotNull Callback callback) throws YukaUserManagerException {
+        UserManager.login(callback);
+    }
+
+    public static void logout(@NotNull Callback callback) throws YukaUserManagerException {
+        UserManager.logout(callback);
+    }
+
+    public static void refreshInfo(@NotNull Callback callback) throws YukaUserManagerException {
+        UserManager.refreshInfo(callback);
+    }
+
+    public static void register(String[] params, Callback callback) {
+        UserManager.register(params, callback);
+    }
+
+    public static void forget_password(String[] params, Callback callback) {
+        UserManager.forget_password(params, callback);
+    }
+
+    public static void check_feasibility(String mode, String param, Callback callback) {
+        UserManager.check_feasibility(mode, param, callback);
+    }
+
+    public static void activate(String cdkey, Callback callback) {
+        UserManager.activate(cdkey, callback);
+    }
+
+    public static boolean isLogin() {
+        return UserManager.isLogin();
+    }
+
+    public static void setLogin(boolean i) {
+        UserManager.setLogin(i);
+    }
+
+    public static String[] getUser() throws YukaUserManagerException {
+        return UserManager.getUser();
     }
 }

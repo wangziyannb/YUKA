@@ -2,6 +2,7 @@ package com.wzy.yuka.ui.log;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.ui.view.CircleTickView;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
 
 public class Password extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
     private TableLayout tableLayout;
@@ -28,6 +29,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
     private EditText password_enter;
     private CircleTickView circleTickView;
     private CircleTickView circleTickView2;
+    private GlobalHandler globalHandler;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,8 +39,7 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
         password_enter = tableLayout.findViewById(R.id.password_enter);
         circleTickView = tableLayout.findViewById(R.id.ct_success);
         circleTickView2 = tableLayout.findViewById(R.id.ct_pwd);
-        GlobalHandler globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
+        globalHandler = GlobalHandler.getInstance();
         root.findViewById(R.id.password_commit).setOnClickListener(this);
         password_confirm.addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,13 +91,14 @@ public class Password extends Fragment implements View.OnClickListener, GlobalHa
         String[] params = new String[3];
         params[0] = username.getText() + "";
         params[1] = password_enter.getText() + "";
-        params[2] = UserManager.getUser()[2];
+        params[2] = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         if (password_confirm.getText().length() != password_enter.getText().length() || !password_confirm.getText().toString().equals(password_enter.getText() + "")) {
             Toast.makeText(getContext(), "两次输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
             return;
         }
         if (v.getId() == R.id.password_commit) {
-            UserManager.forget_password(params);
+            globalHandler.setHandleMsgListener(this);
+            Users.forget_password(params);
             LoadingViewManager
                     .with(getActivity())
                     .setHintText("重置密码中...")

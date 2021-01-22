@@ -21,15 +21,17 @@ class UserManager {
     private static Account account;
     private static HashMap<String, String> hashMap;
 
-    static void init(Context application) {
+    static void init(Context application, @NotNull String id) {
         account = new Account(application);
+        hashMap = account.get();
+        hashMap.put("uuid", id);
+        account.update(hashMap);
     }
 
-    static void addUser(@NotNull String u_name, @NotNull String pwd, @NotNull String id) {
+    static void addUser(@NotNull String u_name, @NotNull String pwd) {
         hashMap = account.get();
         hashMap.put("u_name", u_name);
         hashMap.put("pwd", pwd);
-        hashMap.put("id", id);
         account.update(hashMap);
     }
 
@@ -37,7 +39,6 @@ class UserManager {
         hashMap = account.get();
         hashMap.remove("u_name");
         hashMap.remove("pwd");
-        hashMap.remove("id");
         account.update(hashMap);
     }
 
@@ -54,7 +55,7 @@ class UserManager {
     }
 
     /**
-     * Login.
+     * Login.在登录前加入user吧
      * 网络或服务器错误时，msg:400
      * 账户不存在时，msg:601
      * 账户名或密码错误时，msg:601
@@ -85,10 +86,62 @@ class UserManager {
         YukaRequest.logout(params, callback);
     }
 
+    /**
+     * Register.
+     * 网络或服务器错误时，msg:400
+     * 用户名已注册时，msg:600
+     * 成功注册时，msg:200 data:id
+     *
+     * @param params the params
+     */
+    static void register(String[] params, Callback callback) {
+        YukaRequest.register(params, callback);
+    }
+
+    static void forget_password(String[] params, Callback callback) {
+        YukaRequest.forget_password(params, callback);
+    }
+
+    /**
+     * feasibility.
+     * 网络或服务器错误时，msg:400
+     * 用户名或者本机已注册时，msg:600
+     * 可以注册时，msg:200 data:id
+     *
+     * @param mode  "u_name" or "uuid"
+     * @param param 相应的值
+     */
+    static void check_feasibility(String mode, String param, Callback callback) {
+        YukaRequest.check_feasibility(mode, param, callback);
+    }
+
+    static void activate(String cdkey, Callback callback) {
+        String[] params = new String[2];
+        try {
+            params[0] = getUser()[0];
+            params[1] = cdkey;
+            YukaRequest.activate(params, callback);
+        } catch (YukaUserManagerException e) {
+            e.printStackTrace();
+        }
+    }
+
     static void refreshInfo(Callback callback) throws YukaUserManagerException {
         String[] params = getUser();
         YukaRequest.check_info(params, callback);
     }
+
+    static boolean isLogin() {
+        hashMap = account.get();
+        return Boolean.parseBoolean(hashMap.get("isLogin"));
+    }
+
+    static void setLogin(boolean i) {
+        hashMap = account.get();
+        hashMap.put("isLogin", Boolean.toString(i));
+        account.update(hashMap);
+    }
+
 
     private static class Account {
         private SharedPreferences mSharedPreferences;
@@ -126,12 +179,6 @@ class UserManager {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putString("account", json.toString());
             editor.commit();
-        }
-    }
-
-    static class YukaUserManagerException extends Exception {
-        public YukaUserManagerException(String msg) {
-            super(msg);
         }
     }
 }

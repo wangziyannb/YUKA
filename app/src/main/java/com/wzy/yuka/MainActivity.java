@@ -38,8 +38,10 @@ import com.wzy.yuka.tools.message.BaseActivity;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.YukaUserManagerException;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -73,7 +75,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
         login = header.findViewById(R.id.login_nav_header);
         Button logout = header.findViewById(R.id.logout_nav_header);
         login.setOnClickListener((v) -> {
-            if (UserManager.checkLogin()) {
+            if (YukaLite.isLogin()) {
                 Toast.makeText(this, "您已登陆", Toast.LENGTH_SHORT).show();
             } else {
                 navController.navigate(R.id.nav_login);
@@ -81,11 +83,15 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             }
         });
         logout.setOnClickListener((v) -> {
-            globalHandler.setHandleMsgListener(this);
-            if (UserManager.checkLogin()) {
-                UserManager.logout();
-                drawer.closeDrawers();
-                load("登出中...");
+            if (YukaLite.isLogin()) {
+                globalHandler.setHandleMsgListener(this);
+                try {
+                    Users.logout();
+                    load("登出中...");
+                    drawer.closeDrawers();
+                } catch (YukaUserManagerException e) {
+                    Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
             }
@@ -94,13 +100,13 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             Message message = getIntent().getParcelableExtra("msg");
             if (message.what == 100) {
                 //需要继续尝试登陆
-                UserManager.login();
+                globalHandler.setHandleMsgListener(this);
+                Users.login();
                 load("登录中...");
             }
             globalHandler.sendMessage(message);
-        } catch (NullPointerException e) {
-            UserManager.login();
-            load("登录中...");
+        } catch (NullPointerException | YukaUserManagerException ignored) {
+            //不需要登录，或者干脆没用户
         }
 
     }
@@ -115,7 +121,7 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
             menuItem.setContentDescription("账户按钮");
         }
         menuItem.setOnMenuItemClickListener(item -> {
-            if (UserManager.checkLogin()) {
+            if (YukaLite.isLogin()) {
                 if (Objects.requireNonNull(navController.getCurrentDestination()).getId() != R.id.nav_user_service) {
                     navController.navigate(R.id.nav_user_service);
                 }

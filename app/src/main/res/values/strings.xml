@@ -3,7 +3,6 @@
     <string name="True">1</string>
     <string name="False">0</string>
     <string name="id">账号</string>
-    <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="action_sign_in">登录</string>
     <string name="avatar">用户头像</string>
@@ -51,29 +50,6 @@
         <item>baidu</item>
         <item>tencent</item>
         <item>google</item>
-    </string-array>
-
-    <string-array name="translator_mode">
-        <item>经典同传模式</item>
-        <item>流式声传模式</item>
-    </string-array>
-
-    <string-array name="translator_modeset">
-        <item>classic</item>
-        <item>flowtype</item>
-    </string-array>
-
-    <string-array name="sex_selecter">
-        <item>男</item>
-        <item>女</item>
-    </string-array>
-
-    <string-array name="age_selecter">
-        <item>工作</item>
-        <item>大学</item>
-        <item>高中</item>
-        <item>初中</item>
-        <item>小学</item>
     </string-array>
 
     <string-array name="sync_provider">
@@ -199,6 +175,5 @@
     <string name="guide_te_string13">悬浮球已闭合，悬浮球引导结束。此外，为了方便使用，以下功能已被禁用：1、悬浮球一段时间不使用后贴边隐藏已禁用 2、拖动的安全区域已禁用，3、流体手势兼容已禁用。悬浮窗的功能也会相应变化，这点将会在各种悬浮窗的引导中进行说明。最后，你随时可以通过开发者选项内的重置所有信息来重新回顾所有引导。祝你玩的愉快！点击下一步结束引导</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

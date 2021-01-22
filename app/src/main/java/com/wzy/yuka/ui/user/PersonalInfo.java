@@ -24,7 +24,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
+import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.YukaUserManagerException;
 
 /**
  * Created by Ziyan on 2020/5/15.
@@ -40,12 +42,12 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
             case 200:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "成功激活", Toast.LENGTH_SHORT).show();
-                UserManager.refreshInfo();
+                globalHandler.setHandleMsgListener(this);
+                Users.refreshInfo();
                 break;
             case 201:
                 refresh_info(msg.getData());
                 LoadingViewManager.dismiss();
-
                 break;
             case 603:
                 LoadingViewManager.dismiss();
@@ -73,16 +75,21 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         root.findViewById(R.id.personal_button2).setOnClickListener(this);
 
         TextView textView = member_card.findViewById(R.id.member_username);
-        textView.setText(UserManager.getUser()[0]);
         TextView textView1 = member_card.findViewById(R.id.member_id);
-        textView1.setText(UserManager.getUser()[3]);
+        try {
+            textView.setText(YukaLite.getUser()[0]);
+            textView1.setText(YukaLite.getUser()[2]);
+        } catch (YukaUserManagerException e) {
+            e.printStackTrace();
+        }
+
 
 //        if(!UserManager.getUser()[3].equals("")){
 //            Button button=root.findViewById(R.id.personal_button3);
 //            button.setVisibility(View.VISIBLE);
 //            button.setOnClickListener(this);
 //        }
-        UserManager.refreshInfo();
+        Users.refreshInfo();
 
         LoadingViewManager
                 .with(getActivity())
@@ -131,7 +138,7 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
                         .setOutsideAlpha(0.3f)
                         .setLoadingContentMargins(50, 50, 50, 50)
                         .build();
-                UserManager.activate(cdkey_et.getText() + "");
+                Users.activate(cdkey_et.getText() + "");
                 break;
             case R.id.personal_button3:
                 NavHostFragment.findNavController(this).navigate(R.id.action_nav_user_service_to_nav_user_profile);
@@ -143,7 +150,7 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
         alert.setTitle("关于购买");
         alert.setMessage("感谢使用Yuka！以下为购买说明：\n" +
                 "1、注册账号后将会分别附送20次普通翻译和自动翻译次数，请确保已体验足够再进行购买。即使有月卡，也会优先翻译次数！\n" +
-                "2、购买月卡的价格是每月4元，后续可能改变价格，购买后将本月内无限使用普通和自动翻译。系统内录视频或游戏同传单次最多1小时，一小时收费14元\n" +
+                "2、购买月卡的价格是每月4元，后续可能改变价格，购买后将本月内每天使用300次普通和自动翻译。系统内录视频或游戏同传单次最多1小时，一小时14元\n" +
                 "3、点击起飞会跳转到商店页面，购买后自动发激活码，填于空位即可根据购买的类型获得充值。购买并不需要下载微店app！\n" +
                 "4、加群781666001，PY获得月卡。加群参与测试版本将不定期发放各种福利（不包括女装）\n");
         alert.setPositiveButton("起飞！", (dialog, which) -> {

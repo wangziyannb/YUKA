@@ -3,9 +3,7 @@ package com.wzy.yuka.tools.params;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.util.Log;
-import android.view.WindowManager;
 
 import androidx.preference.PreferenceManager;
 
@@ -19,19 +17,6 @@ public class GetParams {
 
     public static void init(Context application) {
         context = new WeakReference<>(application);
-    }
-
-    public static int[] Screen() {
-        WindowManager windowManager = (WindowManager) context.get().getSystemService(Context.WINDOW_SERVICE);
-        Point point = new Point();
-        windowManager.getDefaultDisplay().getSize(point);
-        int[] size = new int[3];
-        size[0] = point.x;
-        size[1] = point.y;
-        Resources resources = context.get().getResources();
-        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        size[2] = resources.getDimensionPixelSize(resourceId);
-        return size;
     }
 
     public static HashMap<String, String> Yuka(String mode) {

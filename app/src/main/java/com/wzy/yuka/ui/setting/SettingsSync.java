@@ -13,17 +13,15 @@ import android.view.animation.AnimationUtils;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.tools.params.SizeUtil;
 import com.wzy.yuka.ui.view.SyncCompatibleApp;
 import com.wzy.yuka.ui.view.SyncCompatibleAppsAdapter;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +33,10 @@ public class SettingsSync extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_sync, rootKey);
-        getPreferenceScreen().findPreference("settings_sync_findCompatible").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                showCompatibleApps();
-                //showDialog();
-                return false;
-            }
+        getPreferenceScreen().findPreference("settings_sync_findCompatible").setOnPreferenceClickListener(preference -> {
+            showCompatibleApps();
+            //showDialog();
+            return false;
         });
     }
 
@@ -86,7 +81,7 @@ public class SettingsSync extends PreferenceFragmentCompat {
         recyclerView.setAdapter(appsAdapter);
 
         dialog.show();
-        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(getContext(), 600));
+        dialog.getWindow().setLayout((SizeUtil.Screen(getContext())[0]), SizeUtil.dp2px(getContext(), 600));
     }
 
     @Nullable

@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 
 /**
  * Created by Ziyan on 2020/5/5.
@@ -20,7 +20,7 @@ public class SettingsActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floatwindow_settings);
-        int[] size = GetParams.Screen();
+        int[] size = SizeUtil.Screen(this);
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
         attributes.gravity = Gravity.CENTER;
         attributes.dimAmount = 0.6f; //设置窗口之外部分透明程度

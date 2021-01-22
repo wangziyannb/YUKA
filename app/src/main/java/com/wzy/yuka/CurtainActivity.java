@@ -24,17 +24,16 @@ import com.qw.curtain.lib.IGuide;
 import com.qw.curtain.lib.flow.CurtainFlowInterface;
 import com.qw.curtain.lib.shape.CircleShape;
 import com.wzy.yuka.tools.interaction.GuideManager;
-import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
-import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.yuka.FloatWindowManager;
-import com.wzy.yuka.yuka.floatball.FloatBall;
-import com.wzy.yuka.yuka.floatball.FloatBallLayout;
-import com.wzy.yuka.yuka.floatwindow.SelectWindow_Auto;
-import com.wzy.yuka.yuka.floatwindow.SelectWindow_Normal;
-import com.wzy.yuka.yuka.floatwindow.SubtitleWindow;
-import com.wzy.yuka.yuka.utils.FloatWindowManagerException;
+import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
+import com.wzy.yuka.yuka_lite.floatball.FloatBallLayout;
+import com.wzy.yuka.yuka_lite.floatball.MainFloatBall;
+import com.wzy.yuka.yuka_lite.floatwindow.SelectWindow_Auto;
+import com.wzy.yuka.yuka_lite.floatwindow.SelectWindow_Normal;
+import com.wzy.yuka.yuka_lite.floatwindow.SubtitleWindow;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukafloatwindows.FloatWindowManagerException;
 
 /**
  * Created by Ziyan on 2020/7/5.
@@ -67,7 +66,7 @@ public class CurtainActivity extends FragmentActivity {
         }
         try {
             GuideManager guideManager = new GuideManager(this);
-            FloatWindowManager floatWindowManager = FloatWindowManager.getInstance();
+            YukaFloatWindowManager floatWindowManager = YukaFloatWindowManager.getInstance(getApplication());
             switch (type) {
                 case "SWN_S":
                     SelectWindow_Normal normal_s = (SelectWindow_Normal) floatWindowManager.get_FloatWindow(i);
@@ -205,7 +204,7 @@ public class CurtainActivity extends FragmentActivity {
                             });
                     break;
                 case "FB":
-                    FloatBall fb = floatWindowManager.get_FloatBall(i);
+                    MainFloatBall fb = (MainFloatBall) floatWindowManager.get_FloatBall(i);
                     guideFloatBall(fb);
                     break;
             }
@@ -219,7 +218,7 @@ public class CurtainActivity extends FragmentActivity {
 
     }
 
-    private void guideFloatBall(FloatBall floatBall) {
+    private void guideFloatBall(MainFloatBall floatBall) {
         GuideManager guideManager = new GuideManager(this);
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
             CurtainFlow cf = new CurtainFlow.Builder()
@@ -265,10 +264,20 @@ public class CurtainActivity extends FragmentActivity {
                                 }
 
                                 @Override
+                                public void onDeploy() {
+
+                                }
+
+                                @Override
+                                public void onFold() {
+
+                                }
+
+                                @Override
                                 public void folded() {
                                     ImageButton imageButton = floatBall.getView().findViewById(R.id.floatball_main);
                                     WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) floatBall.getView().getLayoutParams();
-                                    int[] size = GetParams.Screen();
+                                    int[] size = SizeUtil.Screen(getApplicationContext());
                                     imageButton.setBackgroundResource(R.drawable.main);
                                     imageButton.setContentDescription("Yuka悬浮球");
                                     layoutParams.y = layoutParams.y + SizeUtil.dp2px(floatBall.getView().getContext(), 52);
@@ -333,7 +342,7 @@ public class CurtainActivity extends FragmentActivity {
                     img.setScaleType(ImageView.ScaleType.FIT_START);
                     ConstraintLayout.LayoutParams params_img = (ConstraintLayout.LayoutParams) img.getLayoutParams();
 
-                    int statusBarHeight = GetParams.Screen()[2];
+                    int statusBarHeight = SizeUtil.Screen(getApplicationContext())[2];
                     int[] params_floatBall = new int[2];
                     floatBall.getView().getLocationOnScreen(params_floatBall);
                     params_floatBall[1] -= statusBarHeight;
@@ -365,10 +374,20 @@ public class CurtainActivity extends FragmentActivity {
                                 }
 
                                 @Override
+                                public void onDeploy() {
+
+                                }
+
+                                @Override
+                                public void onFold() {
+
+                                }
+
+                                @Override
                                 public void folded() {
                                     ImageButton imageButton = floatBall.getView().findViewById(R.id.floatball_main);
                                     WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) floatBall.getView().getLayoutParams();
-                                    int[] size = GetParams.Screen();
+                                    int[] size = SizeUtil.Screen(getApplicationContext());
                                     imageButton.setBackgroundResource(R.drawable.main);
                                     imageButton.setContentDescription("Yuka悬浮球");
                                     layoutParams.y = layoutParams.y + SizeUtil.dp2px(floatBall.getView().getContext(), 52);

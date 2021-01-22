@@ -3,6 +3,7 @@ package com.wzy.yuka.ui.log;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,10 @@ import com.wzy.yuka.MainViewModel;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.params.GetParams;
-import com.wzy.yuka.tools.params.SizeUtil;
-import com.wzy.yuka.yuka.user.UserManager;
+import com.wzy.yuka.yuka_lite.Users;
+import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.YukaUserManagerException;
 
 
 public class Login extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener {
@@ -72,10 +74,15 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         View root = inflater.inflate(R.layout.log_login, container, false);
         TextView un_t = root.findViewById(R.id.user_name);
         TextView pwd_t = root.findViewById(R.id.password);
-        String[] params = UserManager.getUser();
-        un_t.setText(params[0]);
-        pwd_t.setText(params[1]);
-
+        try {
+            String[] params = YukaLite.getUser();
+            un_t.setText(params[0]);
+            pwd_t.setText(params[1]);
+        } catch (YukaUserManagerException e) {
+            e.printStackTrace();
+            un_t.setText("");
+            pwd_t.setText("");
+        }
         final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
         final MutableLiveData<String> user_n = (MutableLiveData<String>) mainViewModel.getuser_n();
         final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
@@ -109,7 +116,6 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         View view = (View) v.getParent();
         switch (v.getId()) {
             case R.id.register:
-                globalHandler.setHandleMsgListener(this);
                 LoadingViewManager
                         .with(getActivity())
                         .setHintText("请等待...")
@@ -118,13 +124,14 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                         .setOutsideAlpha(0.3f)
                         .setLoadingContentMargins(50, 50, 50, 50)
                         .build();
-                UserManager.check_feasibility("uuid", UserManager.getUser()[2]);
+                globalHandler.setHandleMsgListener(this);
+                Users.check_feasibility("uuid", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
                 break;
             case R.id.login:
                 if (checkBox.isChecked()) {
                     TextView username = view.findViewById(R.id.user_name);
                     TextView password = view.findViewById(R.id.password);
-                    UserManager.addUser(username.getText() + "", password.getText() + "", UserManager.getUser()[3]);
+                    Users.addUser(username.getText() + "", password.getText() + "");
                     LoadingViewManager
                             .with(getActivity())
                             .setHintText("登录中...")
@@ -133,7 +140,12 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
                             .setOutsideAlpha(0.3f)
                             .setLoadingContentMargins(50, 50, 50, 50)
                             .build();
-                    UserManager.login();
+                    globalHandler.setHandleMsgListener(this);
+                    try {
+                        Users.login();
+                    } catch (YukaUserManagerException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Toast.makeText(getContext(), "请勾选屏幕下方正中间的同意隐私协议与用户协议后再登陆", Toast.LENGTH_SHORT).show();
                 }
@@ -164,7 +176,7 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         TextView title = view.findViewById(R.id.policy_appbar).findViewById(R.id.policy_textview1);
 
         dialog.show();
-        dialog.getWindow().setLayout((GetParams.Screen()[0]), SizeUtil.dp2px(getContext(), 600));
+        dialog.getWindow().setLayout((SizeUtil.Screen(getContext())[0]), SizeUtil.dp2px(getContext(), 600));
         WebView webView = view.findViewById(R.id.policy_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());

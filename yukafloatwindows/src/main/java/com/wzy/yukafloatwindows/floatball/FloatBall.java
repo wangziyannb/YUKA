@@ -30,7 +30,6 @@ public class FloatBall implements View.OnClickListener, View.OnLongClickListener
         this.mFloatBallView = view;
     }
 
-
     public void show() {
         EasyFloat.showAppFloat(tag);
     }
