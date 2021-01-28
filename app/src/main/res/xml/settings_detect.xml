@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="api设置">
+        <ListPreference
+            android:entries="@array/sender_api"
+            android:entryValues="@array/sender_api_value_detect"
+            android:key="settings_detect_api"
+            android:summary="使用yuka提供的api，还是要使用自己的api呢？"
+            android:title="api选择" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="识别设置">
         <ListPreference
             android:entries="@array/detect_model"
@@ -38,6 +46,7 @@
             android:summaryOn="翻译日韩文等"
             android:title="全半角转换" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="额外设置">
         <SeekBarPreference
             android:key="settings_continuousMode_interval"

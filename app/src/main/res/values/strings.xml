@@ -108,6 +108,23 @@
         <item>stream</item>
     </string-array>
 
+    <string-array name="sender_api_value_detect">
+        <item>yuka_v1</item>
+        <item>other</item>
+    </string-array>
+    <string-array name="sender_api_value_auto">
+        <item>yuka_v1</item>
+        <item>other</item>
+    </string-array>
+    <string-array name="sender_api_value_sync">
+        <item>yuka_v1</item>
+        <item>other</item>
+    </string-array>
+    <string-array name="sender_api">
+        <item>yuka_v1</item>
+        <item>自定义</item>
+    </string-array>
+
     <string name="register">注册</string>
     <string name="mb_mid_4250_name">伊莉雅</string>
     <string name="sync_HowToModifyTargetSdk">一般来说，TargetSdk为29（即安卓Q）的App默认支持本功能。低于29的App默认不支持本功能。如要强制支持，请用MT管理器修改该App中的AndroidManifest.xml中的android:targetSdkVersion值为29即可</string>

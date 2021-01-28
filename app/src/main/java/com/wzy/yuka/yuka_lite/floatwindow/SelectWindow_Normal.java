@@ -39,8 +39,8 @@ import org.jetbrains.annotations.NotNull;
 public class SelectWindow_Normal extends FloatWindow {
     public boolean isContinue;
     private boolean isPlay = false;
-    private SharedPreferencesUtil spUtil;
-    private YukaFloatWindowManager mFloatWindowManager;
+    private final SharedPreferencesUtil spUtil;
+    private final YukaFloatWindowManager mFloatWindowManager;
 
     public SelectWindow_Normal(int index, String tag, YukaFloatWindowManager manager, boolean isContinue) throws FloatWindowManagerException {
         super(index, tag, manager);
@@ -89,9 +89,9 @@ public class SelectWindow_Normal extends FloatWindow {
                         (int) ((SizeUtil.Screen(applicationWeakReference.get())[1] + 1.5 * SizeUtil.Screen(applicationWeakReference.get())[2]) / 2 - SizeUtil.dp2px(applicationWeakReference.get(), 120) / 2))
                 .setAppFloatAnimator(null)
                 .registerCallbacks(new OnFloatCallbacks() {
-                    Handler handler = new Handler(Looper.getMainLooper());
+                    final Handler handler = new Handler(Looper.getMainLooper());
                     View view;
-                    Runnable r = () -> {
+                    final Runnable r = () -> {
                         if (view != null) {
                             String str_t = ((TextView) this.view.findViewById(R.id.translatedText)).getText() + "";
                             if ((!TextUtils.isEmpty(str_t)) && (!str_t.equals("选取目标位置后点识别")) && (!str_t.equals("等待选取..."))) {
@@ -205,8 +205,7 @@ public class SelectWindow_Normal extends FloatWindow {
 
     @Override
     public void dismiss() {
-        mFloatWindowManager.stop_ScreenShotTrans_normal(true);
-        mFloatWindowManager.stop_ScreenShotTrans_normal(false);
+        mFloatWindowManager.stop_ScreenShotTrans_normal(isContinue);
         super.dismiss();
     }
 

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="api设置">
+        <ListPreference
+            android:entries="@array/sender_api"
+            android:entryValues="@array/sender_api_value_sync"
+            android:key="settings_sync_api"
+            android:summary="使用yuka提供的api，还是要使用自己的api呢？"
+            android:title="api选择" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="同步字幕设置">
         <ListPreference
             android:entries="@array/sync_provider"
@@ -25,6 +33,10 @@
             android:summary="默认英文"
             android:title="译文语言" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="同步字幕设置(自定义API)">
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="额外选项">
         <Preference
             android:key="settings_sync_findCompatible"

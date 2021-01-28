@@ -35,10 +35,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MainFloatBall extends FloatBall {
     public boolean isInGuiding = false;
-    private WindowManager windowManager;
+    private final WindowManager windowManager;
     private boolean isInChoosing = false;
-    private SharedPreferencesUtil spUtil;
-    private YukaFloatWindowManager mFloatWindowManager;
+    private final SharedPreferencesUtil spUtil;
+    private final YukaFloatWindowManager mFloatWindowManager;
 
     public MainFloatBall(int index, String tag, YukaFloatWindowManager manager) {
         super(index, tag, manager);
@@ -57,8 +57,8 @@ public class MainFloatBall extends FloatBall {
                 .setShowPattern(ShowPattern.ALL_TIME)
                 .setDragEnable(true)
                 .registerCallbacks(new OnFloatCallbacks() {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    Runnable runnable = () -> {
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    final Runnable runnable = () -> {
                         int[] size = SizeUtil.Screen(applicationWeakReference.get());
                         View view = EasyFloat.getAppFloatView(tag);
                         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
@@ -186,9 +186,9 @@ public class MainFloatBall extends FloatBall {
                         e.printStackTrace();
                     }
                 } else {
-//                    Intent intent = new Intent(applicationWeakReference.get(), com.wzy.yuka.ui.setting.SettingsActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    applicationWeakReference.get().startActivity(intent);
+                    Intent intent = new Intent(applicationWeakReference.get(), com.wzy.yuka.ui.setting.SettingsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    applicationWeakReference.get().startActivity(intent);
                     if ((boolean) spUtil.getParam(SharedPreferenceCollection.ball_autoClose, true)) {
                         imageButton.performClick();
                     }

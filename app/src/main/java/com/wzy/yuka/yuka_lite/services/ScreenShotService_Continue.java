@@ -44,13 +44,88 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
- * Created by Ziyan on 2020/4/30.
+ * Created by Ziyan on 2020/5/2.
  */
-public class ScreenShotService_Single extends Service implements GlobalHandler.HandleMsgListener {
+public class ScreenShotService_Continue extends Service implements GlobalHandler.HandleMsgListener {
+    private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private final ScreenShotService_Continue.ContinueBinder binder = new ScreenShotService_Continue.ContinueBinder();
     private GlobalHandler globalHandler;
     private YukaFloatWindowManager floatWindowManager;
-    private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-    private final SingleBinder binder = new SingleBinder();
+    private boolean continuous = false;
+    private final Runnable runnable = () -> {
+        try {
+            globalHandler.setHandleMsgListener(this);
+            floatWindowManager.hide_all();
+            Screenshot screenshot = new Screenshot(this, floatWindowManager.getmLocation(0), new int[1]);
+
+            int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
+            boolean save = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true);
+            if (!save) {
+                //时间足够长，点击退出按钮会导致本过程失效
+                globalHandler.postDelayed(screenshot::cleanImage, 6000);
+            }
+            if (continuous) {
+                screenshot.getScreenshot(true, delay, floatWindowManager.getData(), () -> {
+                    try {
+                        FloatWindow floatWindow = floatWindowManager.get_FloatWindow(0);
+                        floatWindow.show();
+                        floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
+                    } catch (FloatWindowManagerException e) {
+                        e.printStackTrace();
+                    }
+                    sendScreenshot(screenshot, save);
+                });
+            } else {
+                FloatWindow floatWindow = floatWindowManager.get_FloatWindow(0);
+                floatWindow.show();
+                floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
+            }
+        } catch (FloatWindowManagerException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    };
+
+    /**
+     * 在这里修改传递Screenshot的位置
+     *
+     * @param screenshot
+     * @param save
+     */
+    private void sendScreenshot(Screenshot screenshot, boolean save) {
+        String fileName = screenshot.getFullFileNames()[0];
+        String filePath = screenshot.getFilePath();
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", 0);
+                bundle.putString("response", response.body().string());
+                bundle.putString("fileName", fileName);
+                bundle.putString("filePath", filePath);
+                bundle.putBoolean("save", save);
+                Message message = Message.obtain();
+                message.what = 1;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
+        };
+        //todo
+        //预置yukaConfig，说实话挺难用的
+        YukaConfig yukaConfig = new YukaConfig.Builder().setMode(Mode.translate).setOCR(Model.baidu, false, false).build();
+        File image = new File(fileName);
+        YukaLite.request(yukaConfig, image, callback);
+    }
 
     @Override
     public void handleMsg(Message msg) {
@@ -71,13 +146,16 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         String fileName = bundle.getString("fileName");
         String filePath = bundle.getString("filePath");
         boolean save = bundle.getBoolean("save");
-        Log.e("SSSS", response);
+        Log.d("SSSC", response);
         try {
             JSONObject resultJson = new JSONObject(response);
             String origin = resultJson.getString("origin");
             String result = resultJson.getString("results");
             double time = resultJson.getDouble("time");
             floatWindowManager.get_FloatWindow(index).showResults(origin, result, time);
+            if (continuous) {
+                startScreenshot((int) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousModeInterval, 6) * 1000);
+            }
             if (save) {
                 ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);
             }
@@ -98,98 +176,29 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         }
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        try {
-            floatWindowManager = YukaFloatWindowManager.getInstance();
-            createNotificationChannel();
-            globalHandler = GlobalHandler.getInstance();
-        } catch (FloatWindowManagerException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-        return Service.START_NOT_STICKY;
-    }
-
-
-    public void getScreenshot(FloatWindow[] floatWindows) {
-        globalHandler.setHandleMsgListener(this);
-        int[][] location = new int[floatWindows.length][4];
-        int[] index = new int[floatWindows.length];
-        for (int i = 0; i < floatWindows.length; i++) {
-            location[i] = floatWindows[i].location;
-            index[i] = floatWindows[i].getIndex();
-        }
-        Screenshot screenshot = new Screenshot(this, location, index);
-        //性能不足可能会导致窗子不再出现（消失动画未完成）
-        int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
-        boolean save = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true);
-        if (!save) {
-            //时间足够长，点击退出按钮会导致本过程失效
-            globalHandler.postDelayed(screenshot::cleanImage, 6000);
-        }
-        screenshot.getScreenshot(false, delay, floatWindowManager.getData(), () -> {
-            for (FloatWindow floatWindow : floatWindows) {
-                floatWindow.show();
-                floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
-            }
-            sendScreenshot(screenshot, save);
-        });
-    }
-
-    public void getScreenshot(FloatWindow floatWindow) {
-        FloatWindow[] floatWindows = new FloatWindow[]{floatWindow};
-        getScreenshot(floatWindows);
+    public void stopScreenshot() {
+        continuous = false;
     }
 
     /**
-     * 在这里修改传递Screenshot的位置
-     *
-     * @param screenshot
-     * @param save
+     * 持续截图的第一个流程开始
+     * 注意一定只有一个取词窗
      */
-    private void sendScreenshot(Screenshot screenshot, boolean save) {
-        Callback[] callbacks = new Callback[screenshot.getLocation().length];
-        String[] fileNames = screenshot.getFullFileNames();
-        String filePath = screenshot.getFilePath();
-        for (int i = 0; i < callbacks.length; i++) {
-            String fileName = fileNames[i];
-            int finalI = i;
-            callbacks[i] = new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("error", e.toString());
-                    Message message = Message.obtain();
-                    message.what = 0;
-                    message.setData(bundle);
-                    globalHandler.sendMessage(message);
-                }
+    public void startScreenshot(int interval) {
+        globalHandler.postDelayed(runnable, interval);
+    }
 
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("index", screenshot.getIndex()[finalI]);
-                    bundle.putString("response", response.body().string());
-                    bundle.putString("fileName", fileName);
-                    bundle.putString("filePath", filePath);
-                    bundle.putBoolean("save", save);
-                    Message message = Message.obtain();
-                    message.what = 1;
-                    message.setData(bundle);
-                    globalHandler.sendMessage(message);
-                }
-            };
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        continuous = true;
+        createNotificationChannel();
+        globalHandler = GlobalHandler.getInstance();
+        try {
+            floatWindowManager = YukaFloatWindowManager.getInstance();
+        } catch (FloatWindowManagerException e) {
+            e.printStackTrace();
         }
-        //todo
-        //预置yukaConfig，说实话挺难用的
-        YukaConfig yukaConfig = new YukaConfig.Builder().setMode(Mode.translate).setOCR(Model.baidu, false, false).build();
-        File[] images = new File[fileNames.length];
-        for (int i = 0; i < images.length; i++) {
-            images[i] = new File(fileNames[i]);
-        }
-        YukaLite.request(yukaConfig, images, callbacks);
+        return Service.START_NOT_STICKY;
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -197,7 +206,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         String id = "channel_01";
         CharSequence name = "Yuka";
-        String description = "单次截屏服务已启动";
+        String description = "持续截屏服务已启动";
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
@@ -232,19 +241,15 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        return true;
-    }
-
-    @Override
     public void onDestroy() {
         stopForeground(true);
+        globalHandler.removeCallbacks(runnable);
         super.onDestroy();
     }
 
-    public class SingleBinder extends Binder {
-        public ScreenShotService_Single getService() {
-            return ScreenShotService_Single.this;
+    public class ContinueBinder extends Binder {
+        public ScreenShotService_Continue getService() {
+            return ScreenShotService_Continue.this;
         }
 
     }
