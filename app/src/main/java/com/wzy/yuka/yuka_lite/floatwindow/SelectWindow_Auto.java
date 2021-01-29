@@ -44,8 +44,8 @@ import org.json.JSONObject;
  */
 public class SelectWindow_Auto extends FloatWindow {
     private String[] Tags = new String[1];
-    private SharedPreferencesUtil spUtil;
-    private YukaFloatWindowManager mFloatWindowManager;
+    private final SharedPreferencesUtil spUtil;
+    private final YukaFloatWindowManager mFloatWindowManager;
 
     public SelectWindow_Auto(int index, String tag, YukaFloatWindowManager manager) {
         super(index, tag, manager);
@@ -236,9 +236,9 @@ public class SelectWindow_Auto extends FloatWindow {
 
                 })
                 .registerCallbacks(new OnFloatCallbacks() {
-                    Handler handler = new Handler(Looper.getMainLooper());
+                    final Handler handler = new Handler(Looper.getMainLooper());
                     View view;
-                    Runnable r = () -> {
+                    final Runnable r = () -> {
                         if (view != null) {
                             String str_t = ((TextView) this.view.findViewById(R.id.little_textView)).getText() + "";
                             String str_o = ((TextView) this.view.findViewById(R.id.little_origin)).getText() + "";

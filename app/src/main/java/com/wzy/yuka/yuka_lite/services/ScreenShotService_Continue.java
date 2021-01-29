@@ -45,10 +45,11 @@ import okhttp3.Response;
 
 /**
  * Created by Ziyan on 2020/5/2.
+ * Modified by Ziyan on 2021/1/27.
  */
 public class ScreenShotService_Continue extends Service implements GlobalHandler.HandleMsgListener {
     private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-    private final ScreenShotService_Continue.ContinueBinder binder = new ScreenShotService_Continue.ContinueBinder();
+    private final ScreenShotService_Continue.ContinueBinder binder = new ContinueBinder();
     private GlobalHandler globalHandler;
     private YukaFloatWindowManager floatWindowManager;
     private boolean continuous = false;

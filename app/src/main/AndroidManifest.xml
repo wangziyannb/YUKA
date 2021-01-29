@@ -54,6 +54,14 @@
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service
+            android:name=".yuka_lite.services.ScreenShotService_Auto"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+        <service
+            android:name=".yuka_lite.services.AudioService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection" />
+        <service
             android:name="com.wzy.yukafloatwindows.utils.ScreenStatusService"
             android:configChanges="orientation|screenSize"
             android:enabled="true" />

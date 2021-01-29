@@ -3,11 +3,13 @@ package com.wzy.yuka.yuka_lite.floatwindow;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.transition.TransitionManager;
@@ -32,8 +34,8 @@ import org.jetbrains.annotations.Nullable;
 public class SubtitleWindow extends FloatWindow implements View.OnClickListener {
     private int mode = 1;
     private boolean isPlay = false;
-    private SharedPreferencesUtil spUtil;
-    private YukaFloatWindowManager mFloatWindowManager;
+    private final SharedPreferencesUtil spUtil;
+    private final YukaFloatWindowManager mFloatWindowManager;
 
     public SubtitleWindow(int index, String tag, YukaFloatWindowManager manager) throws FloatWindowManagerException {
         super(index, tag, manager);
@@ -139,6 +141,7 @@ public class SubtitleWindow extends FloatWindow implements View.OnClickListener 
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

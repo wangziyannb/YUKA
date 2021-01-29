@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -29,7 +30,7 @@ import okhttp3.Response;
  * Created by Ziyan on 2020/7/22.
  */
 public class UpdateManager {
-    private WeakReference<Context> contextWR;
+    private final WeakReference<Context> contextWR;
 
     public UpdateManager(Context context) {
         contextWR = new WeakReference<>(context);
@@ -84,6 +85,7 @@ public class UpdateManager {
                 //P以下不能直接用，会报错
                 versionCode = packageInfo.getLongVersionCode();
             }
+            Log.d("update", "showUpdate: " + res);
             JSONObject jsonObject = new JSONObject(res);
             String version_code = jsonObject.getString("version_code");
             if (Integer.parseInt(version_code) > versionCode) {

@@ -11,10 +11,14 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
 import com.wzy.yuka.yuka_lite.floatball.MainFloatBall;
 import com.wzy.yuka.yuka_lite.floatwindow.SelectWindow_Auto;
 import com.wzy.yuka.yuka_lite.floatwindow.SelectWindow_Normal;
 import com.wzy.yuka.yuka_lite.floatwindow.SubtitleWindow;
+import com.wzy.yuka.yuka_lite.services.AudioService;
+import com.wzy.yuka.yuka_lite.services.ScreenShotService_Auto;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Continue;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Single;
 import com.wzy.yukafloatwindows.FloatWindowManager;
@@ -27,15 +31,16 @@ import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
 public class YukaFloatWindowManager extends FloatWindowManager {
     private static YukaFloatWindowManager manager = null;
     private Intent mData;
-    private Intent mScreenShotAutoService;
+    private final Intent mScreenShotAutoService;
     private final Intent mScreenShotContinueService;
     private final Intent mScreenShotSingleService;
-    private Intent mAudioService;
+    private final Intent mAudioService;
     private int sum = 0;
     private String lastMode = "SWN_S";
     private ScreenShotService_Single.SingleBinder singleBinder;
     private ScreenShotService_Continue.ContinueBinder continueBinder;
-
+    private ScreenShotService_Auto.AutoBinder autoBinder;
+    private AudioService.AudioBinder audioBinder;
 
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -44,21 +49,28 @@ public class YukaFloatWindowManager extends FloatWindowManager {
                 singleBinder = (ScreenShotService_Single.SingleBinder) service;
             } else if (service.getClass().equals(ScreenShotService_Continue.ContinueBinder.class)) {
                 continueBinder = (ScreenShotService_Continue.ContinueBinder) service;
+            } else if (service.getClass().equals(ScreenShotService_Auto.AutoBinder.class)) {
+                autoBinder = (ScreenShotService_Auto.AutoBinder) service;
+            } else if (service.getClass().equals(ScreenShotService_Auto.AutoBinder.class)) {
+                audioBinder = (AudioService.AudioBinder) service;
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             singleBinder = null;
+            continueBinder = null;
+            autoBinder = null;
+            audioBinder = null;
         }
     };
 
     private YukaFloatWindowManager(Application application) {
         super(application);
-//        this.mScreenShotAutoService = new Intent(applicationWeakReference.get(), ScreenShotService_Auto.class);
+        this.mScreenShotAutoService = new Intent(applicationWeakReference.get(), ScreenShotService_Auto.class);
         this.mScreenShotContinueService = new Intent(applicationWeakReference.get(), ScreenShotService_Continue.class);
         this.mScreenShotSingleService = new Intent(applicationWeakReference.get(), ScreenShotService_Single.class);
-//        this.mAudioService = new Intent(applicationWeakReference.get(), AudioService.class);
+        this.mAudioService = new Intent(applicationWeakReference.get(), AudioService.class);
     }
 
     public static YukaFloatWindowManager getInstance() throws FloatWindowManagerException {
@@ -180,10 +192,12 @@ public class YukaFloatWindowManager extends FloatWindowManager {
             } else if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
                 start_ScreenShotTrans_auto();
             } else if (judgeTypeOfFloatWindow(SubtitleWindow.class, 0)) {
-                start_RecordingTrans();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    start_RecordingTrans();
+                }
             }
         } catch (FloatWindowManagerException e) {
-            Toast.makeText(applicationWeakReference.get(), "需要点击重置先初始化悬浮窗哦！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationWeakReference.get(), "需要点击重置（第三个按钮）先初始化悬浮窗哦！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -202,9 +216,6 @@ public class YukaFloatWindowManager extends FloatWindowManager {
                     //服务已经启动
                     continueBinder.getService().startScreenshot(50);
                 }
-//                mLocation = new int[1][4];
-//                mLocation[0] = mFloatWindows[0].location;
-//                startService(mScreenShotContinueService);
             } else {
                 //普通翻译-多悬浮窗模式
                 if (singleBinder == null) {
@@ -235,19 +246,38 @@ public class YukaFloatWindowManager extends FloatWindowManager {
     }
 
     public void start_ScreenShotTrans_auto() {
-//        if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
-//            mLocation = new int[1][4];
-//            mLocation[0] = mFloatWindows[0].location;
-//            startService(mScreenShotAutoService);
-//        }
+        if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
+            //自动翻译-普通模式
+            if (autoBinder == null) {
+                //服务还没启动
+                startService(mScreenShotAutoService);
+                applicationWeakReference.get().getApplicationContext()
+                        .bindService(mScreenShotAutoService, connection, Service.BIND_AUTO_CREATE);
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(() -> autoBinder.getService().getScreenshot(mFloatWindows[0]), 100);
+            } else {
+                //服务已经启动
+                autoBinder.getService().getScreenshot(mFloatWindows[0]);
+            }
+        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void start_RecordingTrans() {
-//        if (judgeTypeOfFloatWindow(SubtitleWindow.class, 0)) {
-//            mLocation = new int[1][4];
-//            mLocation[0] = mFloatWindows[0].location;
-//            startService(mAudioService);
-//        }
+        if (judgeTypeOfFloatWindow(SubtitleWindow.class, 0)) {
+            if (audioBinder == null) {
+                //服务还没启动
+                startService(mAudioService);
+                applicationWeakReference.get().getApplicationContext()
+                        .bindService(mAudioService, connection, Service.BIND_AUTO_CREATE);
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(() -> audioBinder.getService().initRecord(), 100);
+            } else {
+                //服务已经启动
+                audioBinder.getService().initRecord();
+            }
+            startService(mAudioService);
+        }
     }
 
     public void stop_ScreenShotTrans_normal(boolean ifContinue) {
@@ -268,11 +298,19 @@ public class YukaFloatWindowManager extends FloatWindowManager {
     }
 
     public void stop_ScreenShotTrans_auto() {
-//        applicationWeakReference.get().stopService(mScreenShotAutoService);
+        if (autoBinder != null) {
+            applicationWeakReference.get().getApplicationContext().unbindService(connection);
+            applicationWeakReference.get().stopService(mScreenShotAutoService);
+            autoBinder = null;
+        }
     }
 
     public void stop_RecordingTrans() {
-//        applicationWeakReference.get().stopService(mAudioService);
+        if (audioBinder != null) {
+            applicationWeakReference.get().getApplicationContext().unbindService(connection);
+            applicationWeakReference.get().stopService(mAudioService);
+            audioBinder = null;
+        }
     }
 
 

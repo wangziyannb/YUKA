@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
-import com.wzy.yuka.tools.io.ResultOutput;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
@@ -30,11 +29,10 @@ import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
 import com.wzy.yukalite.YukaLite;
 import com.wzy.yukalite.config.Mode;
 import com.wzy.yukalite.config.Model;
+import com.wzy.yukalite.config.Translator;
 import com.wzy.yukalite.config.YukaConfig;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,14 +42,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
- * Created by Ziyan on 2020/4/30.
- * Modified by Ziyan on 2021/1/12.
+ * Created by Ziyan on 2020/6/6.
+ * Modified by Ziyan on 2021/1/28.
  */
-public class ScreenShotService_Single extends Service implements GlobalHandler.HandleMsgListener {
+public class ScreenShotService_Auto extends Service implements GlobalHandler.HandleMsgListener {
+    private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private final ScreenShotService_Auto.AutoBinder binder = new AutoBinder();
     private GlobalHandler globalHandler;
     private YukaFloatWindowManager floatWindowManager;
-    private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-    private final SingleBinder binder = new SingleBinder();
 
     @Override
     public void handleMsg(Message msg) {
@@ -72,20 +70,15 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         String fileName = bundle.getString("fileName");
         String filePath = bundle.getString("filePath");
         boolean save = bundle.getBoolean("save");
-        Log.e("SSSS", response);
+        Log.d("SSSA", response);
+//        if (save) {
+//            ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);
+//        }
         try {
-            JSONObject resultJson = new JSONObject(response);
-            String origin = resultJson.getString("origin");
-            String result = resultJson.getString("results");
-            double time = resultJson.getDouble("time");
-            floatWindowManager.get_FloatWindow(index).showResults(origin, result, time);
-            if (save) {
-                ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);
-            }
-        } catch (JSONException | FloatWindowManagerException e) {
+            floatWindowManager.get_FloatWindow(index).showResults("", response, 0);
+        } catch (FloatWindowManagerException e) {
             e.printStackTrace();
         }
-
     }
 
     private void errorProcess(Message message) {
@@ -101,28 +94,19 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        createNotificationChannel();
         try {
             floatWindowManager = YukaFloatWindowManager.getInstance();
-            createNotificationChannel();
-            globalHandler = GlobalHandler.getInstance();
         } catch (FloatWindowManagerException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
+        globalHandler = GlobalHandler.getInstance();
         return Service.START_NOT_STICKY;
     }
 
-
-    public void getScreenshot(FloatWindow[] floatWindows) {
-        globalHandler.setHandleMsgListener(this);
-        int[][] location = new int[floatWindows.length][4];
-        int[] index = new int[floatWindows.length];
-        for (int i = 0; i < floatWindows.length; i++) {
-            location[i] = floatWindows[i].location;
-            index[i] = floatWindows[i].getIndex();
-        }
-        Screenshot screenshot = new Screenshot(this, location, index);
+    public void getScreenshot(FloatWindow floatWindow) {
+        Screenshot screenshot = new Screenshot(this, new int[][]{floatWindow.location}, new int[1]);
         //性能不足可能会导致窗子不再出现（消失动画未完成）
         int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
         boolean save = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true);
@@ -131,66 +115,50 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
             globalHandler.postDelayed(screenshot::cleanImage, 6000);
         }
         screenshot.getScreenshot(false, delay, floatWindowManager.getData(), () -> {
-            for (FloatWindow floatWindow : floatWindows) {
-                floatWindow.show();
-                floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
-            }
+            floatWindow.show();
+            floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
             sendScreenshot(screenshot, save);
         });
+        //各项设置，包括快速模式、保存照片
     }
 
-    public void getScreenshot(FloatWindow floatWindow) {
-        FloatWindow[] floatWindows = new FloatWindow[]{floatWindow};
-        getScreenshot(floatWindows);
-    }
-
-    /**
-     * 在这里修改传递Screenshot的位置
-     *
-     * @param screenshot
-     * @param save
-     */
     private void sendScreenshot(Screenshot screenshot, boolean save) {
-        Callback[] callbacks = new Callback[screenshot.getLocation().length];
-        String[] fileNames = screenshot.getFullFileNames();
+        String fileName = screenshot.getFullFileNames()[0];
         String filePath = screenshot.getFilePath();
-        for (int i = 0; i < callbacks.length; i++) {
-            String fileName = fileNames[i];
-            int finalI = i;
-            callbacks[i] = new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("error", e.toString());
-                    Message message = Message.obtain();
-                    message.what = 0;
-                    message.setData(bundle);
-                    globalHandler.sendMessage(message);
-                }
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
 
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("index", screenshot.getIndex()[finalI]);
-                    bundle.putString("response", response.body().string());
-                    bundle.putString("fileName", fileName);
-                    bundle.putString("filePath", filePath);
-                    bundle.putBoolean("save", save);
-                    Message message = Message.obtain();
-                    message.what = 1;
-                    message.setData(bundle);
-                    globalHandler.sendMessage(message);
-                }
-            };
-        }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", 0);
+                bundle.putString("response", response.body().string());
+                bundle.putString("fileName", fileName);
+                bundle.putString("filePath", filePath);
+                bundle.putBoolean("save", save);
+                Message message = Message.obtain();
+                message.what = 1;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
+        };
+        globalHandler.setHandleMsgListener(this);
         //todo
         //预置yukaConfig，说实话挺难用的
-        YukaConfig yukaConfig = new YukaConfig.Builder().setMode(Mode.translate).setOCR(Model.baidu, false, false).build();
-        File[] images = new File[fileNames.length];
-        for (int i = 0; i < images.length; i++) {
-            images[i] = new File(fileNames[i]);
-        }
-        YukaLite.request(yukaConfig, images, callbacks);
+        YukaConfig yukaConfig = new YukaConfig.Builder()
+                .setMode(Mode.auto)
+                .setOCR(Model.baidu, false, false, 30)
+                .setTranslator(Translator.youdao).build();
+        File image = new File(fileName);
+        YukaLite.request(yukaConfig, image, callback);
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -198,7 +166,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         String id = "channel_01";
         CharSequence name = "Yuka";
-        String description = "单次截屏服务已启动";
+        String description = "自动识别翻译服务已启动";
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             Notification notification = new NotificationCompat.Builder(this, id)
                     .setContentTitle(name).setContentText(description).setWhen(System.currentTimeMillis())
@@ -233,19 +201,14 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        return true;
-    }
-
-    @Override
     public void onDestroy() {
         stopForeground(true);
         super.onDestroy();
     }
 
-    public class SingleBinder extends Binder {
-        public ScreenShotService_Single getService() {
-            return ScreenShotService_Single.this;
+    public class AutoBinder extends Binder {
+        public ScreenShotService_Auto getService() {
+            return ScreenShotService_Auto.this;
         }
 
     }
