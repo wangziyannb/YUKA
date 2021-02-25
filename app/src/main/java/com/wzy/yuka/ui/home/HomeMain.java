@@ -18,13 +18,19 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.message.GlobalHandler;
-import com.wzy.yuka.tools.params.GetParams;
+import com.wzy.yuka.yuka_lite.sender.ConfigBuilder;
 import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.config.YukaConfig;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Ziyan on 2020/5/8.
@@ -47,15 +53,35 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.translate_button:
-                globalHandler.setHandleMsgListener(this);
                 if (!YukaLite.isLogin()) {
                     Toast.makeText(getContext(), "请登陆", Toast.LENGTH_SHORT).show();
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
-                    HashMap<String, String> params = GetParams.Yuka("NONE");
-                    params.put("mode", "text");
-                    //   HttpRequest.yuka(params, origin);
+                    YukaConfig config = ConfigBuilder.yuka(getContext(), ConfigBuilder.text);
+                    Callback callback = new Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("error", e.toString());
+                            Message message = Message.obtain();
+                            message.what = 400;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("response", response.body().string());
+                            Message message = Message.obtain();
+                            message.what = 200;
+                            message.setData(bundle);
+                            globalHandler.sendMessage(message);
+                        }
+                    };
+                    globalHandler.setHandleMsgListener(this);
+                    YukaLite.request(config, origin, callback);
                 }
                 break;
         }

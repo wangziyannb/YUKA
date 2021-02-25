@@ -18,7 +18,44 @@ public class SharedPreferenceCollection {
     public static final String debug_savePic = "settings_debug_savePic";
 
     public static final String action_fastMode = "settings_fastMode";
-    public static final String action_continuousModeInterval = "settings_continuousMode_interval";
+
+    //单多悬浮窗相应设置项
+    //使用的api
+    public static final String detect_api = "settings_detect_api";
+    //设置组-单多悬浮窗的识别器(yuka)
+    public static final String detect = "settings_detect";
+    public static final String detect_model = "settings_detect_model";
+    public static final String detect_punctuation = "settings_detect_punctuation";
+    public static final String detect_vertical = "settings_detect_vertical";
+    public static final String detect_continuousMode_interval = "settings_continuousMode_interval";
+    //设置组-单多悬浮窗的识别器(other)
+    public static final String detect_other = "settings_detect_other";
+    public static final String detect_other_model = "settings_detect_other_detect_model";
+    public static final String detect_other_youdao_key = "settings_detect_other_youdao_appkey";
+    public static final String detect_other_youdao_appsec = "settings_detect_other_youdao_appsec";
+
+
+    public static final String auto_api = "settings_auto_api";
+    public static final String auto_model = "settings_auto_model";
+    public static final String auto_toleration = "settings_auto_toleration";
+    public static final String auto_punctuation = "settings_auto_punctuation";
+    public static final String auto_vertical = "settings_auto_vertical";
+    public static final String auto_offset = "settings_auto_offset";
+
+    public static final String sync_api = "settings_sync_api";
+    public static final String sync_provider = "settings_trans_syncProvider";
+    public static final String sync_modes = "settings_trans_syncModes";
+    public static final String sync_o = "settings_trans_sync_o";
+    public static final String sync_t = "settings_trans_sync_t";
+
+    public static final String translator = "settings_translator";
+    public static final String trans_translator = "settings_trans_translator";
+    public static final String trans_baidu_SBCS = "settings_baidu_SBCS";
+
+    public static final String translator_other = "settings_translator_other";
+    public static final String trans_other_translator = "settings_trans_other_translator";
+    public static final String trans_other_youdao_key = "settings_trans_other_youdao_appkey";
+    public static final String trans_other_youdao_appsec = "settings_trans_other_youdao_appsec";
 
 
     public static final String normal_detect_model = "detect_modelset";

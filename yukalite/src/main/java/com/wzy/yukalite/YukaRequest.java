@@ -8,7 +8,6 @@ import com.wzy.yukalite.tools.Encrypt;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -49,15 +48,7 @@ class YukaRequest {
 
     static void request(@NotNull YukaConfig config, @NotNull File image, @NotNull String[] user, @NotNull Callback callback) {
         MultipartBody body;
-        if (Objects.equals(config.mode, "yuka")) {
-            body = new MultipartBody.Builder("YukaRandomBoundary^")
-                    .setType(MultipartBody.FORM)
-                    .addPart(
-                            Headers.of("Content-Disposition", "form-data; name=\"mode\""),
-                            RequestBody.create(Objects.requireNonNull(config.mode), null)
-                    )
-                    .build();
-        } else if (image.exists()) {
+        if (image.exists()) {
             body = new MultipartBody.Builder("YukaRandomBoundary^^")
                     .setType(MultipartBody.FORM)
                     .addPart(
@@ -101,18 +92,17 @@ class YukaRequest {
                             RequestBody.create(user[2], null)
                     )
                     .build();
+            Request.Builder request = new Request.Builder().post(body);
+            if (config.mode.equals("auto")) {
+                request.url("https://yukacn.xyz/yuka/yuka_advance/yuka_v1");
+            } else {
+                request.url("https://yukacn.xyz/yuka/yuka/yuka_v1");
+            }
+            Call call = client.newCall(request.build());
+            call.enqueue(callback);
         } else {
             Log.e("Yuka", "file invalid");
-            return;
         }
-        Request.Builder request = new Request.Builder().post(body);
-        if (config.mode.equals("auto")) {
-            request.url("https://yukacn.xyz/yuka/yuka_advance/yuka_v1");
-        } else {
-            request.url("https://yukacn.xyz/yuka/yuka/yuka_v1");
-        }
-        Call call = client.newCall(request.build());
-        call.enqueue(callback);
     }
 
     static void request(@NotNull YukaConfig config, @NotNull File[] images, @NotNull String[] user, @NotNull Callback[] callbacks) {

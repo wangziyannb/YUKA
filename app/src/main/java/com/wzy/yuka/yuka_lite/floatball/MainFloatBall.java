@@ -126,6 +126,28 @@ public class MainFloatBall extends FloatBall {
                     }
                 })
                 .setLocation(100, 500);
+        if ((boolean) spUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            fb.setLocation(0, SizeUtil.Screen(applicationWeakReference.get())[1] / 2);
+        } else {
+            fb.setLocation(100, 500);
+        }
+        if (!(boolean) spUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
+            if (!(boolean) spUtil.getParam(SharedPreferenceCollection.ball_fluidMode, false)) {
+                fb.setDisplayHeight(context -> {
+                    int[] size = SizeUtil.Screen(applicationWeakReference.get());
+                    if ((boolean) spUtil.getParam(SharedPreferenceCollection.ball_safeMode, true)) {
+                        if (size[0] < size[1]) {
+                            //竖屏
+                            return size[1] - SizeUtil.dp2px(context, 52 + 11);
+                        } else {
+                            return size[1] - SizeUtil.dp2px(context, 52 + 11);
+                        }
+                    } else {
+                        return size[1];
+                    }
+                });
+            }
+        }
         fb.show();
     }
 
@@ -218,7 +240,7 @@ public class MainFloatBall extends FloatBall {
                         e.printStackTrace();
                     }
                 } else {
-//                    mFloatWindowManager.reset();
+                    mFloatWindowManager.reset();
                     if ((boolean) spUtil.getParam(SharedPreferenceCollection.ball_autoClose, true)) {
                         imageButton.performClick();
                     }

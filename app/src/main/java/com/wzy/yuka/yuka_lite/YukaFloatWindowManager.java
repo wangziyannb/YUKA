@@ -51,7 +51,7 @@ public class YukaFloatWindowManager extends FloatWindowManager {
                 continueBinder = (ScreenShotService_Continue.ContinueBinder) service;
             } else if (service.getClass().equals(ScreenShotService_Auto.AutoBinder.class)) {
                 autoBinder = (ScreenShotService_Auto.AutoBinder) service;
-            } else if (service.getClass().equals(ScreenShotService_Auto.AutoBinder.class)) {
+            } else if (service.getClass().equals(AudioService.AudioBinder.class)) {
                 audioBinder = (AudioService.AudioBinder) service;
             }
         }
@@ -183,7 +183,6 @@ public class YukaFloatWindowManager extends FloatWindowManager {
         }
     }
 
-
     public void detect() {
         try {
             hide_all();
@@ -198,6 +197,20 @@ public class YukaFloatWindowManager extends FloatWindowManager {
             }
         } catch (FloatWindowManagerException e) {
             Toast.makeText(applicationWeakReference.get(), "需要点击重置（第三个按钮）先初始化悬浮窗哦！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void reset() {
+        if (judgeTypeOfFloatWindow(SelectWindow_Auto.class, 0)) {
+            mFloatWindows[0].reset();
+            return;
+        }
+        remove_AllFloatWindow();
+        mLocation = null;
+        try {
+            addFloatWindow(lastMode);
+        } catch (FloatWindowManagerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -312,7 +325,6 @@ public class YukaFloatWindowManager extends FloatWindowManager {
             audioBinder = null;
         }
     }
-
 
     private boolean judgeTypeOfFloatWindow(Class clazz, int index) {
         if (getNumOfFloatWindows() > index) {

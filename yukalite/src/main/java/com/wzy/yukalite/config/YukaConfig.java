@@ -37,10 +37,28 @@ public class YukaConfig {
             return this;
         }
 
+        public Builder setOCR(Model model) {
+            this.model = model.name();
+            return this;
+        }
+
+        public Builder setOCR(Model model, boolean punctuation) {
+            this.model = model.name();
+            this.punctuation = punctuation;
+            return this;
+        }
+
         public Builder setOCR(Model model, boolean punctuation, boolean vertical) {
             this.model = model.name();
             this.punctuation = punctuation;
             this.vertical = vertical;
+            return this;
+        }
+
+        public Builder setOCR(Model model, boolean punctuation, int toleration) {
+            this.model = model.name();
+            this.punctuation = punctuation;
+            this.toleration = toleration;
             return this;
         }
 

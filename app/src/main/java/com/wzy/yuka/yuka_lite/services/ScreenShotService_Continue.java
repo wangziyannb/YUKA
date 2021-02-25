@@ -24,12 +24,11 @@ import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
+import com.wzy.yuka.yuka_lite.sender.ConfigBuilder;
 import com.wzy.yuka.yuka_lite.utils.Screenshot;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
 import com.wzy.yukalite.YukaLite;
-import com.wzy.yukalite.config.Mode;
-import com.wzy.yukalite.config.Model;
 import com.wzy.yukalite.config.YukaConfig;
 
 import org.jetbrains.annotations.NotNull;
@@ -123,7 +122,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         };
         //todo
         //预置yukaConfig，说实话挺难用的
-        YukaConfig yukaConfig = new YukaConfig.Builder().setMode(Mode.translate).setOCR(Model.baidu, false, false).build();
+        YukaConfig yukaConfig = ConfigBuilder.yuka(this, ConfigBuilder.translate);
         File image = new File(fileName);
         YukaLite.request(yukaConfig, image, callback);
     }
@@ -155,7 +154,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             double time = resultJson.getDouble("time");
             floatWindowManager.get_FloatWindow(index).showResults(origin, result, time);
             if (continuous) {
-                startScreenshot((int) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_continuousModeInterval, 6) * 1000);
+                startScreenshot((int) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_continuousMode_interval, 6) * 1000);
             }
             if (save) {
                 ResultOutput.appendResult(filePath + "/imgList.txt", fileName, result);

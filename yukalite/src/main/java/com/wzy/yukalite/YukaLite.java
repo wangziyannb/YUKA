@@ -39,7 +39,6 @@ public class YukaLite {
         }
     }
 
-
     public static void request(@NotNull YukaConfig config, @NotNull File[] images, @NotNull Callback[] callbacks) {
         try {
             YukaRequest.request(config, images, getUser(), callbacks);

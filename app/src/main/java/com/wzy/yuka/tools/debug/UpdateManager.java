@@ -45,7 +45,7 @@ public class UpdateManager {
         globalHandler.setHandleMsgListener(msg -> {
             switch (msg.what) {
                 case 400:
-                    Toast.makeText(contextWR.get(), "网络请求失败，请检查服务器或网络！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(contextWR.get(), "更新检查失败", Toast.LENGTH_SHORT).show();
                     break;
                 case 200:
                     showUpdate(msg.getData().getString("response"));
