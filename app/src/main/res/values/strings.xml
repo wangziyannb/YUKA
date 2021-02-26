@@ -21,9 +21,9 @@
     </string-array>
 
     <string-array name="detect_model">
-        <item>百度（百度AI开放平台）</item>
+        <item>百度（百度智能云）</item>
         <item>有道（有道智云）</item>
-        <item>谷歌（Google Cloud Vision）</item>
+        <item>谷歌（Google Cloud Vision）（目前被墙）</item>
     </string-array>
 
     <string-array name="auto_modelset">
@@ -34,15 +34,15 @@
 
     <string-array name="auto_model">
         <item>有道（有道智云）</item>
-        <item>百度（百度AI开放平台）</item>
-        <item>谷歌（Google Cloud Vision）</item>
+        <item>百度（百度智能云）</item>
+        <item>谷歌（Google Cloud Vision）（目前被墙）</item>
     </string-array>
 
     <string-array name="translator_name">
         <item>有道翻译</item>
         <item>百度翻译</item>
         <item>腾讯翻译</item>
-        <item>Google翻译</item>
+        <item>Google翻译（目前被墙）</item>
     </string-array>
 
     <string-array name="translator">
@@ -115,10 +115,12 @@
 
     <string-array name="other_detect_modelset">
         <item>youdao</item>
+        <item>baidu</item>
     </string-array>
 
     <string-array name="other_detect_model">
         <item>有道（有道智云）</item>
+        <item>百度（百度智能云）</item>
     </string-array>
 
     <string-array name="other_trans_modelset">

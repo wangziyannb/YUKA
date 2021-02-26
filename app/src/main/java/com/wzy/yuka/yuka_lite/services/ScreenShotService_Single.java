@@ -114,7 +114,7 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
         }
         Screenshot screenshot = new Screenshot(this, location, index);
         //性能不足可能会导致窗子不再出现（消失动画未完成）
-        int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
+        int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, true) ? 200 : 800;
         boolean save = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true);
         if (!save) {
             //时间足够长，点击退出按钮会导致本过程失效

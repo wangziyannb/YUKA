@@ -18,6 +18,7 @@
             android:title="识别器选择" />
         <SwitchPreference
             android:key="settings_fastMode"
+            android:defaultValue="true"
             android:summary="高性能要求，出现取词框消失请禁用"
             android:title="快速识别" />
         <SeekBarPreference

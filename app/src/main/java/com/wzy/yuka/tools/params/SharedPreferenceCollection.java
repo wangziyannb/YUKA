@@ -31,8 +31,12 @@ public class SharedPreferenceCollection {
     //设置组-单多悬浮窗的识别器(other)
     public static final String detect_other = "settings_detect_other";
     public static final String detect_other_model = "settings_detect_other_detect_model";
+    public static final String detect_other_vertical = "settings_detect_other_vertical";
+    public static final String detect_other_punctuation = "settings_detect_other_punctuation";
     public static final String detect_other_youdao_key = "settings_detect_other_youdao_appkey";
     public static final String detect_other_youdao_appsec = "settings_detect_other_youdao_appsec";
+    public static final String detect_other_baidu_key = "settings_detect_other_baidu_apikey";
+    public static final String detect_other_baidu_appsec = "settings_detect_other_baidu_seckey";
 
 
     public static final String auto_api = "settings_auto_api";

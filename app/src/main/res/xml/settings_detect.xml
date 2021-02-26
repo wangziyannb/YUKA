@@ -21,6 +21,7 @@
         <SwitchPreference
             android:key="settings_fastMode"
             android:summary="高性能要求，出现取词框消失请禁用"
+            android:defaultValue="true"
             android:title="快速识别" />
         <SwitchPreference
             android:defaultValue="false"
@@ -53,11 +54,32 @@
             android:key="settings_detect_other_youdao_appsec"
             android:summary="接入方式务必是api，且已经开通并绑定ocr服务"
             android:title="应用密钥" />
+        <EditTextPreference
+            android:dialogTitle="请输入API Key"
+            android:key="settings_detect_other_baidu_apikey"
+            android:summary="id和密钥均在 文字识别-应用列表内"
+            android:title="API Key" />
+        <EditTextPreference
+            android:dialogTitle="请输入Secret Key"
+            android:key="settings_detect_other_baidu_seckey"
+            android:summary="如未创建应用，请先创建应用"
+            android:title="Secret Key" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_fastMode"
+            android:summary="高性能要求，出现取词框消失请禁用"
+            android:title="快速识别" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="settings_detect_punctuation"
+            android:key="settings_detect_other_punctuation"
             android:summary="影响原文，如无标点可使用"
             android:title="标点优化" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_detect_other_vertical"
+            android:summaryOff="横排"
+            android:summaryOn="竖排"
+            android:title="文字方向" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="settings_translator"

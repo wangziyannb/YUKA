@@ -58,7 +58,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
             floatWindowManager.hide_all();
             Screenshot screenshot = new Screenshot(this, floatWindowManager.getmLocation(0), new int[1]);
 
-            int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, false) ? 200 : 800;
+            int delay = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.action_fastMode, true) ? 200 : 800;
             boolean save = (Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.debug_savePic, true);
             if (!save) {
                 //时间足够长，点击退出按钮会导致本过程失效

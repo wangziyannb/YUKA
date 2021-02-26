@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,13 +35,14 @@ import okhttp3.Response;
  * Created by Ziyan on 2021/2/4.
  */
 public class Processor {
-    private GlobalHandler globalHandler;
-    private WeakReference<Context> contextWeakReference;
+    private final GlobalHandler globalHandler;
+    private final WeakReference<Context> contextWeakReference;
+    private final SharedPreferencesUtil util;
+    private final Resources resources;
     private String mode;
     private Screenshot screenshot;
     private boolean save;
-    private SharedPreferencesUtil util;
-    private Resources resources;
+
 
     private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -96,8 +98,8 @@ public class Processor {
                 String model = (String) util.getParam(SharedPreferenceCollection.detect_other_model, resources.getStringArray(R.array.other_detect_modelset)[0]);
                 if (model.equals(resources.getStringArray(R.array.other_detect_modelset)[0])) {
                     single_get_origin_youdao();
-                } else {
-                    //todo 引入更多api
+                } else if (model.equals(resources.getStringArray(R.array.other_detect_modelset)[1])) {
+                    single_get_origin_baidu();
                 }
                 break;
         }
@@ -169,9 +171,10 @@ public class Processor {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     Bundle bundle = new Bundle();
                     bundle.putInt("index", screenshot.getIndex()[finalI]);
+                    bundle.putBoolean("save", save);
                     String resp = response.body().string();
                     try {
-                        String result = YoudaoOCR.single(resp, (Boolean) util.getParam(SharedPreferenceCollection.detect_punctuation, false));
+                        String result = YoudaoOCR.single(resp, (Boolean) util.getParam(SharedPreferenceCollection.detect_other_punctuation, false));
                         bundle.putString("ocr_initial", resp);
                         bundle.putString("ocr", result);
                         bundle.putString("fileName", fileName);
@@ -196,11 +199,74 @@ public class Processor {
         String APP_KEY = (String) util.getParam(SharedPreferenceCollection.detect_other_youdao_key, "");
         String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.detect_other_youdao_appsec, "");
         if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
-            Toast.makeText(contextWeakReference.get(), "未填写应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextWeakReference.get(), "未填写有道的应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
             single_get_all_yuka();
         } else {
             YoudaoOCR.request(APP_KEY, APP_SECRET, images, callbacks);
         }
+    }
+
+    private void single_get_origin_baidu() {
+        //百度，需要先鉴权。那一边写的是同步+异步，记得另起线程
+        new Thread(() -> {
+            Callback[] callbacks = new Callback[screenshot.getLocation().length];
+            String[] fileNames = screenshot.getFullFileNames();
+            String filePath = screenshot.getFilePath();
+            File[] images = new File[fileNames.length];
+
+            for (int i = 0; i < fileNames.length; i++) {
+                String fileName = fileNames[i];
+                int finalI = i;
+                callbacks[i] = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("error", e.toString());
+                        Message message = Message.obtain();
+                        message.what = 0x0;
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("index", screenshot.getIndex()[finalI]);
+                        bundle.putBoolean("save", save);
+                        String resp = response.body().string();
+                        Log.d("TAG", "onResponse: " + resp);
+                        try {
+                            String result = BaiduOCR.single(resp, (Boolean) util.getParam(SharedPreferenceCollection.detect_other_punctuation, false), (Boolean) util.getParam(SharedPreferenceCollection.detect_other_vertical, false));
+                            bundle.putString("ocr_initial", resp);
+                            bundle.putString("ocr", result);
+                            bundle.putString("fileName", fileName);
+                            bundle.putString("filePath", filePath);
+                            bundle.putString("model", "baidu");
+                            Message message = Message.obtain();
+                            message.what = 0x1;
+                            message.setData(bundle);
+                            handler.sendMessage(message);
+                        } catch (JSONException e) {
+                            Message message = Message.obtain();
+                            message.what = 0x0;
+                            bundle.putString("error", "识别器出现错误，请前往相应官网文档查询错误原因。\n返回的内容为:" + resp);
+                            message.setData(bundle);
+                            handler.sendMessage(message);
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                images[i] = new File(fileNames[i]);
+            }
+            String API_Key = (String) util.getParam(SharedPreferenceCollection.detect_other_baidu_key, "");
+            String Secret_Key = (String) util.getParam(SharedPreferenceCollection.detect_other_baidu_appsec, "");
+            if (API_Key.isEmpty() || Secret_Key.isEmpty()) {
+                Toast.makeText(contextWeakReference.get(), "未填写百度的API Key或Secret Key，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
+                single_get_all_yuka();
+            } else {
+                BaiduOCR.request(API_Key, Secret_Key, images, callbacks, handler);
+            }
+        }).start();
     }
 
     private void single_get_result(Bundle bundle) {
@@ -216,7 +282,6 @@ public class Processor {
     private void single_get_result_youdao(Bundle bundle, String origin) {
         String APP_KEY = (String) util.getParam(SharedPreferenceCollection.trans_other_youdao_key, "");
         String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.trans_other_youdao_appsec, "");
-
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

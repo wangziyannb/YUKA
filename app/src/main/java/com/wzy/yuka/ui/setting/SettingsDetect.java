@@ -5,10 +5,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 
 import com.wzy.yuka.R;
@@ -50,27 +52,51 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
     }
 
     private void preferenceVisibilityChange() {
-        PreferenceCategory category_model = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect);
-        PreferenceCategory category_translator = getPreferenceScreen().findPreference(SharedPreferenceCollection.translator);
-        PreferenceCategory category_model_other = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_other);
-        PreferenceCategory category_translator_other = getPreferenceScreen().findPreference(SharedPreferenceCollection.translator_other);
+        PreferenceScreen screen = getPreferenceScreen();
+        PreferenceCategory category_model = screen.findPreference(SharedPreferenceCollection.detect);
+        PreferenceCategory category_translator = screen.findPreference(SharedPreferenceCollection.translator);
+        PreferenceCategory category_model_other = screen.findPreference(SharedPreferenceCollection.detect_other);
+        PreferenceCategory category_translator_other = screen.findPreference(SharedPreferenceCollection.translator_other);
 
-        SwitchPreference vertical = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_vertical);
-        SwitchPreference punctuation = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_punctuation);
-
-        SwitchPreference SBCS = getPreferenceScreen().findPreference(SharedPreferenceCollection.trans_baidu_SBCS);
         if (category_model != null && category_translator != null && category_model_other != null && category_translator_other != null) {
             if (sender_api.getValue().equals("other")) {
                 category_model.setVisible(false);
                 category_translator.setVisible(false);
                 category_model_other.setVisible(true);
                 category_translator_other.setVisible(true);
+                EditTextPreference youdao_key = screen.findPreference(SharedPreferenceCollection.detect_other_youdao_key);
+                EditTextPreference youdao_sec = screen.findPreference(SharedPreferenceCollection.detect_other_youdao_appsec);
+                EditTextPreference baidu_key = screen.findPreference(SharedPreferenceCollection.detect_other_baidu_key);
+                EditTextPreference baidu_sec = screen.findPreference(SharedPreferenceCollection.detect_other_baidu_appsec);
+                SwitchPreference vertical = screen.findPreference(SharedPreferenceCollection.detect_other_vertical);
+                SwitchPreference punctuation = screen.findPreference(SharedPreferenceCollection.detect_other_punctuation);
 
+                if (youdao_key != null && youdao_sec != null && baidu_key != null && baidu_sec != null && vertical != null && punctuation != null) {
+                    switch (model_other.getValue()) {
+                        case "youdao":
+                            youdao_key.setVisible(true);
+                            youdao_sec.setVisible(true);
+                            baidu_key.setVisible(false);
+                            baidu_sec.setVisible(false);
+                            vertical.setVisible(false);
+                            break;
+                        case "baidu":
+                            youdao_key.setVisible(false);
+                            youdao_sec.setVisible(false);
+                            baidu_key.setVisible(true);
+                            baidu_sec.setVisible(true);
+                            vertical.setVisible(true);
+                            break;
+                    }
+                }
             } else {
                 category_model.setVisible(true);
                 category_translator.setVisible(true);
                 category_model_other.setVisible(false);
                 category_translator_other.setVisible(false);
+                SwitchPreference vertical = screen.findPreference(SharedPreferenceCollection.detect_vertical);
+                SwitchPreference punctuation = screen.findPreference(SharedPreferenceCollection.detect_punctuation);
+                SwitchPreference SBCS = screen.findPreference(SharedPreferenceCollection.trans_baidu_SBCS);
                 if (vertical != null && model != null && punctuation != null) {
                     switch (model.getValue()) {
                         case "youdao":
