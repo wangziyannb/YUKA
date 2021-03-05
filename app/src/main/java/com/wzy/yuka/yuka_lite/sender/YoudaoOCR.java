@@ -2,6 +2,7 @@ package com.wzy.yuka.yuka_lite.sender;
 
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.wzy.yuka.tools.params.Encrypt;
 
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +38,7 @@ public class YoudaoOCR {
         }
     }
 
+    //可以同时应用于普通和自动模式
     public static void request(String APP_KEY, String APP_SECRET, File file, Callback callback) {
         String img = loadAsBase64(file);
         String YOUDAO_URL = "https://openapi.youdao.com/ocrapi";
@@ -77,6 +80,7 @@ public class YoudaoOCR {
     }
 
     public static String single(String response, boolean punctuation) throws JSONException {
+        Log.d("TAG", response);
         JSONArray array = new JSONObject(response).getJSONObject("Result").getJSONArray("regions");
         StringBuilder origin = new StringBuilder();
         for (int i = 0; i < array.length(); i++) {
@@ -90,6 +94,10 @@ public class YoudaoOCR {
         }
         return origin.toString();
     }
+
+//    public static String auto(String response,boolean punctuation,int toleration){
+//        youdaoJsonBuilder builder=new youdaoJsonBuilder(response,punctuation,toleration);
+//    }
 
     public static String loadAsBase64(File file) {
         //将图片文件转化为字节数组字符串，并对其进行Base64编码处理
@@ -116,6 +124,35 @@ public class YoudaoOCR {
         }
         int len = q.length();
         return len <= 20 ? q : (q.substring(0, 10) + len + q.substring(len - 10, len));
+    }
+
+    private static class youdaoJsonBuilder {
+        String origin_dict;
+        boolean punctuation;
+        int toleration;
+        //后期得猜语言
+        ArrayList<String> lang = new ArrayList<>();
+
+        public youdaoJsonBuilder(String origin_dict, boolean punctuation, int toleration) {
+            this.origin_dict = origin_dict;
+            this.punctuation = punctuation;
+            this.toleration = toleration;
+        }
+
+        public JSONObject build() {
+            return new JSONObject();
+        }
+
+//        private JSONObject main(){
+//            try {
+//                JSONArray array = new JSONObject(origin_dict).getJSONObject("Result").getJSONArray("regions");
+//                int j=0;
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
     }
 }
 
