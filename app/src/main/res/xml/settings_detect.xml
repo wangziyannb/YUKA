@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="api设置">
         <ListPreference
             android:entries="@array/sender_api"
-            android:entryValues="@array/sender_api_value_detect"
+            android:entryValues="@array/sender_api_value"
             android:key="settings_detect_api"
             android:summary="使用yuka提供的api，还是要使用自己的api呢？"
             android:title="api选择" />
@@ -37,7 +37,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="settings_detect_other"
-        android:title="识别设置(API)">
+        android:title="识别设置(自定义)">
         <ListPreference
             android:entries="@array/other_detect_model"
             android:entryValues="@array/other_detect_modelset"
@@ -99,7 +99,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="settings_translator_other"
-        android:title="翻译设置(API)">
+        android:title="翻译设置(自定义)">
         <ListPreference
             android:entries="@array/other_trans_model"
             android:entryValues="@array/other_trans_modelset"
@@ -116,7 +116,6 @@
             android:key="settings_trans_other_youdao_appsec"
             android:summary="接入方式务必是api，且已经开通并绑定自然语言翻译服务"
             android:title="应用密钥" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="额外设置">

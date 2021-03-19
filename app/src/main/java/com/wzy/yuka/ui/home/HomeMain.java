@@ -19,6 +19,7 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.BaseFragment;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.yuka_lite.sender.ConfigBuilder;
+import com.wzy.yuka.yuka_lite.sender.Modes;
 import com.wzy.yukalite.YukaLite;
 import com.wzy.yukalite.config.YukaConfig;
 
@@ -58,7 +59,7 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
-                    YukaConfig config = ConfigBuilder.yuka(getContext(), ConfigBuilder.text);
+                    YukaConfig config = ConfigBuilder.yuka(getContext(), Modes.text);
                     Callback callback = new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {

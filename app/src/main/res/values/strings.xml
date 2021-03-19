@@ -108,7 +108,7 @@
         <item>stream</item>
     </string-array>
 
-    <string-array name="sender_api_value_detect">
+    <string-array name="sender_api_value">
         <item>yuka_v1</item>
         <item>other</item>
     </string-array>
@@ -123,6 +123,16 @@
         <item>百度（百度智能云）</item>
     </string-array>
 
+    <string-array name="other_auto_modelset">
+        <item>youdao</item>
+        <item>baidu</item>
+    </string-array>
+
+    <string-array name="other_auto_model">
+        <item>有道（有道智云）</item>
+        <item>百度（百度智能云）</item>
+    </string-array>
+
     <string-array name="other_trans_modelset">
         <item>youdao</item>
     </string-array>
@@ -131,10 +141,6 @@
         <item>有道（有道智云）</item>
     </string-array>
 
-    <string-array name="sender_api_value_auto">
-        <item>yuka_v1</item>
-        <item>other</item>
-    </string-array>
 
     <string-array name="sender_api_value_sync">
         <item>yuka_v1</item>

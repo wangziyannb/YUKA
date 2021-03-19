@@ -79,6 +79,12 @@ public class Processor {
         }
     };
 
+    /**
+     * @param context    一般是service
+     * @param screenshot 截图对象
+     * @param mode       从Modes中取
+     * @param save       是否保存（仅对自动有效）
+     */
     public Processor(Context context, Screenshot screenshot, String mode, boolean save) {
         globalHandler = GlobalHandler.getInstance();
         util = SharedPreferencesUtil.getInstance();
@@ -323,4 +329,56 @@ public class Processor {
             YoudaoTranslator.request(APP_KEY, APP_SECRET, origin, callback);
         }
     }
+
+    public void auto_main(String api) {
+        switch (api) {
+            case "yuka_v1":
+                auto_get_all_yuka();
+                break;
+            case "other":
+                String model = (String) util.getParam(SharedPreferenceCollection.detect_other_model, resources.getStringArray(R.array.other_detect_modelset)[0]);
+                if (model.equals(resources.getStringArray(R.array.other_detect_modelset)[0])) {
+                    single_get_origin_youdao();
+                } else if (model.equals(resources.getStringArray(R.array.other_detect_modelset)[1])) {
+                    single_get_origin_baidu();
+                }
+                break;
+        }
+    }
+
+    private void auto_get_all_yuka() {
+        String fileName = screenshot.getFullFileNames()[0];
+        String filePath = screenshot.getFilePath();
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", 0);
+                bundle.putString("response", response.body().string());
+                bundle.putString("fileName", fileName);
+                bundle.putString("filePath", filePath);
+                bundle.putBoolean("save", save);
+                bundle.putString("api", "yuka_v1");
+                Message message = Message.obtain();
+                message.what = 1;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
+        };
+        //预置yukaConfig，说实话挺难用的
+        YukaConfig yukaConfig = ConfigBuilder.yuka(contextWeakReference.get(), mode);
+        File image = new File(fileName);
+        YukaLite.request(yukaConfig, image, callback);
+    }
+
 }

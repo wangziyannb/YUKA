@@ -16,14 +16,9 @@ import com.wzy.yukalite.config.YukaConfig;
  * Created by Ziyan on 2021/1/16.
  */
 public class ConfigBuilder {
-    public final static String text = "text";
-    public final static String ocr = "ocr";
-    public final static String translate = "translate";
-    public final static String auto = "auto";
-
     /**
      * @param context 用于获取默认值的context
-     * @param mode    只可能从以下中选择：text, ocr, translate, auto   yuka不需要yukaconfig
+     * @param mode    只可能从Modes中选择：text, ocr, translate, auto   yuka不需要yukaconfig
      * @return 组建完成的YukaConfig
      */
     public static YukaConfig yuka(Context context, String mode) {
@@ -31,11 +26,11 @@ public class ConfigBuilder {
         Resources resources = context.getResources();
         YukaConfig.Builder builder = new YukaConfig.Builder();
         switch (mode) {
-            case text:
+            case Modes.text:
                 //仅仅只是翻译文本，所以不需要对ocr指定任何参数
                 builder.setMode(Mode.text);
                 break;
-            case ocr:
+            case Modes.ocr:
                 //仅仅只是识别文字，不需要翻译，所以只指定ocr参数就可以返回了
                 builder.setMode(Mode.ocr);
                 switch ((String) spUtil.getParam(SharedPreferenceCollection.detect_model, resources.getStringArray(R.array.detect_modelset)[0])) {
@@ -52,7 +47,7 @@ public class ConfigBuilder {
                         break;
                 }
                 return builder.build();
-            case translate:
+            case Modes.translate:
                 //既要识别文字，还得额外翻译。需要指定ocr参数和translator参数
                 builder.setMode(Mode.translate);
                 switch ((String) spUtil.getParam(SharedPreferenceCollection.detect_model, resources.getStringArray(R.array.detect_modelset)[0])) {
@@ -69,7 +64,7 @@ public class ConfigBuilder {
                         break;
                 }
                 break;
-            case auto:
+            case Modes.auto:
                 //更高级别的“translate”，但用的是另外一套ocr参数。translator则通用
                 builder.setMode(Mode.auto);
                 //标点优化

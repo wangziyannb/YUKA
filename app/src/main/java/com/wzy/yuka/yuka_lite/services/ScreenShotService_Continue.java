@@ -25,6 +25,7 @@ import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
 import com.wzy.yuka.yuka_lite.sender.ConfigBuilder;
+import com.wzy.yuka.yuka_lite.sender.Modes;
 import com.wzy.yuka.yuka_lite.utils.Screenshot;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
@@ -122,7 +123,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
         };
         //todo
         //预置yukaConfig，说实话挺难用的
-        YukaConfig yukaConfig = ConfigBuilder.yuka(this, ConfigBuilder.translate);
+        YukaConfig yukaConfig = ConfigBuilder.yuka(this, Modes.translate);
         File image = new File(fileName);
         YukaLite.request(yukaConfig, image, callback);
     }

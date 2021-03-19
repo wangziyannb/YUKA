@@ -25,7 +25,7 @@ import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
-import com.wzy.yuka.yuka_lite.sender.ConfigBuilder;
+import com.wzy.yuka.yuka_lite.sender.Modes;
 import com.wzy.yuka.yuka_lite.sender.Processor;
 import com.wzy.yuka.yuka_lite.utils.Screenshot;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
@@ -142,8 +142,8 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
      */
     private void sendScreenshot(Screenshot screenshot, boolean save) {
         Resources resources = this.getResources();
-        String api = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_api, resources.getStringArray(R.array.sender_api_value_detect)[0]);
-        Processor processor = new Processor(this, screenshot, ConfigBuilder.translate, save);
+        String api = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_api, resources.getStringArray(R.array.sender_api_value)[0]);
+        Processor processor = new Processor(this, screenshot, Modes.translate, save);
         processor.single_main(api);
     }
 
