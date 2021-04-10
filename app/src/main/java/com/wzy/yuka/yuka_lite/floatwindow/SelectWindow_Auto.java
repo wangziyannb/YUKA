@@ -167,7 +167,7 @@ public class SelectWindow_Auto extends FloatWindow {
                 }
                 initLittleWindows(words, translationx, location_json, index);
             }
-            Toast.makeText(applicationWeakReference.get(), "使用时间：" + total_time, Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationWeakReference.get(), "使用时间：" + total_time + "秒", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             try {
                 JSONObject jsono = new JSONObject(translation);

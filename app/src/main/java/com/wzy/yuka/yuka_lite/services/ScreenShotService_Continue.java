@@ -24,24 +24,13 @@ import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
-import com.wzy.yuka.yuka_lite.sender.ConfigBuilder;
-import com.wzy.yuka.yuka_lite.sender.Modes;
+import com.wzy.yuka.yuka_lite.sender.Processor;
 import com.wzy.yuka.yuka_lite.utils.Screenshot;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
-import com.wzy.yukalite.YukaLite;
-import com.wzy.yukalite.config.YukaConfig;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * Created by Ziyan on 2020/5/2.
@@ -94,38 +83,9 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
      * @param save
      */
     private void sendScreenshot(Screenshot screenshot, boolean save) {
-        String fileName = screenshot.getFullFileNames()[0];
-        String filePath = screenshot.getFilePath();
-        Callback callback = new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Bundle bundle = new Bundle();
-                bundle.putString("error", e.toString());
-                Message message = Message.obtain();
-                message.what = 0;
-                message.setData(bundle);
-                globalHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Bundle bundle = new Bundle();
-                bundle.putInt("index", 0);
-                bundle.putString("response", response.body().string());
-                bundle.putString("fileName", fileName);
-                bundle.putString("filePath", filePath);
-                bundle.putBoolean("save", save);
-                Message message = Message.obtain();
-                message.what = 1;
-                message.setData(bundle);
-                globalHandler.sendMessage(message);
-            }
-        };
-        //todo
-        //预置yukaConfig，说实话挺难用的
-        YukaConfig yukaConfig = ConfigBuilder.yuka(this, Modes.translate);
-        File image = new File(fileName);
-        YukaLite.request(yukaConfig, image, callback);
+        globalHandler.setHandleMsgListener(this);
+        Processor processor = new Processor(this, screenshot, save);
+        processor.single_main();
     }
 
     @Override

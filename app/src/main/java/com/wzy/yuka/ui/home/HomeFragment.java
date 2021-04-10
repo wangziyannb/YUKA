@@ -3,7 +3,6 @@ package com.wzy.yuka.ui.home;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -183,13 +181,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if (resultCode == Activity.RESULT_CANCELED) {
             Log.e(TAG, "User cancel");
         } else {
-            try {
-                WindowManager mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-                mWindowManager.getCurrentWindowMetrics();
-            } catch (Exception e) {
-                Log.e(TAG, "MediaProjection error");
-                return;
-            }
+            //未知错误 java.lang.NoSuchMethodError: No interface method getCurrentWindowMetrics
+            //确实是分版本了呀..?
+//            try {
+//                DisplayMetrics metrics = new DisplayMetrics();
+//                WindowManager mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+//                if(Build.VERSION.SDK_INT> Build.VERSION_CODES.Q){
+//                    mWindowManager.getCurrentWindowMetrics();
+//                }else{
+//                    mWindowManager.getDefaultDisplay().getMetrics(metrics);
+//                }
+//            } catch (Exception e) {
+//                Log.e(TAG, "MediaProjection error");
+//                return;
+//            }
             this.data = data;
             button.setBackgroundResource(R.drawable.nav_start_checked);
             if (!PermissionUtils.checkPermission(getContext())) {

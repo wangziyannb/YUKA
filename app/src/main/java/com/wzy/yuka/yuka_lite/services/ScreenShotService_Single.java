@@ -6,7 +6,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Build;
@@ -25,7 +24,6 @@ import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
-import com.wzy.yuka.yuka_lite.sender.Modes;
 import com.wzy.yuka.yuka_lite.sender.Processor;
 import com.wzy.yuka.yuka_lite.utils.Screenshot;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
@@ -105,7 +103,6 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
 
 
     public void getScreenshot(FloatWindow[] floatWindows) {
-        globalHandler.setHandleMsgListener(this);
         int[][] location = new int[floatWindows.length][4];
         int[] index = new int[floatWindows.length];
         for (int i = 0; i < floatWindows.length; i++) {
@@ -141,10 +138,9 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
      * @param save
      */
     private void sendScreenshot(Screenshot screenshot, boolean save) {
-        Resources resources = this.getResources();
-        String api = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_api, resources.getStringArray(R.array.sender_api_value)[0]);
-        Processor processor = new Processor(this, screenshot, Modes.translate, save);
-        processor.single_main(api);
+        globalHandler.setHandleMsgListener(this);
+        Processor processor = new Processor(this, screenshot, save);
+        processor.single_main();
     }
 
     @TargetApi(Build.VERSION_CODES.O)

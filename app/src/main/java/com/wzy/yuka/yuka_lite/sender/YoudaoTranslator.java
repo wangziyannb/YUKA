@@ -1,5 +1,11 @@
 package com.wzy.yuka.yuka_lite.sender;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+
+import androidx.annotation.NonNull;
+
 import com.wzy.yuka.tools.params.Encrypt;
 
 import org.json.JSONArray;
@@ -20,6 +26,28 @@ import okhttp3.RequestBody;
  * Created by Ziyan on 2021/2/25.
  */
 public class YoudaoTranslator {
+    private static final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            Message message = Message.obtain();
+            switch (msg.what) {
+                case 0x0:
+
+                    break;
+                case 0x1:
+
+                    break;
+                case 0x2:
+
+                    break;
+            }
+        }
+    };
+    Handler pHandler;
+
+    public static void request(String APP_KEY, String APP_SECRET, String origin, Handler handler) {
+
+    }
 
     public static void request(String APP_KEY, String APP_SECRET, String origin, Callback callback) {
         String YOUDAO_URL = "https://openapi.youdao.com/api";
@@ -73,5 +101,6 @@ public class YoudaoTranslator {
         }
         return result.toString();
     }
+
 
 }

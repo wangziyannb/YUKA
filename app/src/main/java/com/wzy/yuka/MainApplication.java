@@ -5,7 +5,6 @@ import android.view.accessibility.AccessibilityManager;
 
 import com.lzf.easyfloat.EasyFloat;
 import com.wzy.yuka.tools.debug.CrashManager;
-import com.wzy.yuka.tools.params.GetParams;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
@@ -18,7 +17,6 @@ public class MainApplication extends Application {
         EasyFloat.init(this, false);
         CrashManager crashHandler = new CrashManager(this);
         Thread.setDefaultUncaughtExceptionHandler(crashHandler);
-        GetParams.init(this);
         YukaFloatWindowManager.init(this);
         YukaLite.init(this);
         SharedPreferencesUtil.init(this);
