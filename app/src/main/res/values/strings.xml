@@ -130,15 +130,17 @@
 
     <string-array name="other_auto_model">
         <item>有道（有道智云）</item>
-        <item>百度（百度智能云）</item>
+        <item>百度（百度智能云）暂时无效！</item>
     </string-array>
 
     <string-array name="other_trans_modelset">
         <item>youdao</item>
+        <item>baidu</item>
     </string-array>
 
     <string-array name="other_trans_model">
         <item>有道（有道智云）</item>
+        <item>百度（百度智能云）</item>
     </string-array>
 
 

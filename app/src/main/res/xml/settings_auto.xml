@@ -137,6 +137,22 @@
             android:key="settings_trans_other_youdao_appsec"
             android:summary="接入方式务必是api，且已经开通并绑定自然语言翻译服务"
             android:title="应用密钥" />
+        <EditTextPreference
+            android:dialogTitle="请输入APP ID"
+            android:key="settings_trans_other_baidu_apikey"
+            android:summary="id和密钥均在 管理控制台-开发者信息中"
+            android:title="APP ID" />
+        <EditTextPreference
+            android:dialogTitle="请输入密钥"
+            android:key="settings_trans_other_baidu_seckey"
+            android:summary="请确保开发者信息中，ip地址留空"
+            android:title="密钥" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_trans_other_baidu_SBCS"
+            android:summaryOff="翻译英文等"
+            android:summaryOn="翻译日韩文等"
+            android:title="全半角转换" />
     </PreferenceCategory>
     <PreferenceCategory android:title="额外设置">
         <Preference

@@ -41,8 +41,8 @@ public class Processor {
     private final SharedPreferencesUtil util;
     private final Resources resources;
     private String mode;
-    private Screenshot screenshot;
-    private boolean save;
+    private final Screenshot screenshot;
+    private final boolean save;
     long time;
     private String[] auto_trans;
     private boolean error = false;
@@ -314,16 +314,67 @@ public class Processor {
     }
 
     private void single_get_result(Bundle bundle) {
-        String response = bundle.getString("ocr");
         String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
+        boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
         switch (translator) {
             case "youdao":
-                single_get_result_youdao(bundle, response);
+                single_get_result_youdao(bundle);
+                break;
+            case "baidu":
+                single_get_result_baidu(bundle, SBCS);
+                break;
         }
 
     }
 
-    private void single_get_result_youdao(Bundle bundle, String origin) {
+    private void single_get_result_baidu(Bundle bundle, boolean SBCS) {
+        String origin = bundle.getString("ocr");
+        String APP_KEY = (String) util.getParam(SharedPreferenceCollection.trans_other_baidu_key, "");
+        String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.trans_other_baidu_appsec, "");
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0x0;
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resp = response.body().string();
+                try {
+                    String result = BaiduTranslator.single(resp);
+                    bundle.putString("trans_initial", resp);
+                    bundle.putString("translate", result);
+                    bundle.putString("translator", "baidu");
+                    Message message = Message.obtain();
+                    message.what = 0x2;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } catch (JSONException e) {
+                    Message message = Message.obtain();
+                    message.what = 0x0;
+                    bundle.putString("error", "翻译器出现错误，请前往相应官网文档查询错误原因。\n返回的内容为:" + resp);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+
+            }
+        };
+
+        if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
+            Toast.makeText(contextWeakReference.get(), "未填写应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
+            single_get_all_yuka();
+        } else {
+            BaiduTranslator.request(APP_KEY, APP_SECRET, origin, SBCS, callback);
+        }
+    }
+
+    private void single_get_result_youdao(Bundle bundle) {
+        String origin = bundle.getString("ocr");
         String APP_KEY = (String) util.getParam(SharedPreferenceCollection.trans_other_youdao_key, "");
         String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.trans_other_youdao_appsec, "");
         Callback callback = new Callback() {
@@ -486,11 +537,14 @@ public class Processor {
 
     private void auto_get_result(Bundle bundle) {
         String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
+        boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
         switch (translator) {
             case "youdao":
                 auto_get_result_youdao(bundle);
+                break;
+            case "baidu":
+                auto_get_result_baidu(bundle, SBCS);
         }
-
     }
 
     private void auto_get_result_youdao(Bundle bundle) {
@@ -547,6 +601,69 @@ public class Processor {
             } else {
                 for (int i = 0; i < array.length(); i++) {
                     YoudaoTranslator.request(APP_KEY, APP_SECRET, sa[i], callbacks[i]);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void auto_get_result_baidu(Bundle bundle, boolean SBCS) {
+        String origin = bundle.getString("ocr");
+        String APP_KEY = (String) util.getParam(SharedPreferenceCollection.trans_other_baidu_key, "");
+        String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.trans_other_baidu_appsec, "");
+        try {
+            JSONObject origin_j = new JSONObject(origin);
+            JSONArray array = origin_j.getJSONArray("values");
+            String[] sa = new String[array.length()];
+            auto_trans = new String[array.length()];
+            Callback[] callbacks = new Callback[array.length()];
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject src = array.getJSONObject(i).getJSONObject("src");
+                sa[i] = src.getString("words");
+                int finalI = i;
+                callbacks[i] = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("error", e.toString());
+                        Message message = Message.obtain();
+                        message.what = 0x0;
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resp = response.body().string();
+                        try {
+                            String result = BaiduTranslator.single(resp);
+                            bundle.putString("trans_initial", resp);
+                            bundle.putString("translate", result);
+                            bundle.putString("translator", "baidu");
+                            bundle.putInt("auto_index", finalI);
+                            Message message = Message.obtain();
+                            message.what = 0x4;
+                            message.setData(bundle);
+                            handler.sendMessage(message);
+                        } catch (JSONException e) {
+                            Message message = Message.obtain();
+                            message.what = 0x0;
+                            bundle.putString("error", "翻译器出现错误，请前往相应官网文档查询错误原因。\n返回的内容为:" + resp);
+                            message.setData(bundle);
+                            handler.sendMessage(message);
+                        }
+                    }
+                };
+            }
+            if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
+                Toast.makeText(contextWeakReference.get(), "未填写应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
+                auto_get_all_yuka();
+            } else {
+                for (int i = 0; i < array.length(); i++) {
+                    BaiduTranslator.request(APP_KEY, APP_SECRET, sa[i], SBCS, callbacks[i]);
                 }
             }
         } catch (JSONException e) {

@@ -60,6 +60,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
 
         if (category_model != null && category_translator != null && category_model_other != null && category_translator_other != null) {
             if (sender_api.getValue().equals("other")) {
+                //自定义
                 category_model.setVisible(false);
                 category_translator.setVisible(false);
                 category_model_other.setVisible(true);
@@ -68,8 +69,16 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                 EditTextPreference youdao_sec = screen.findPreference(SharedPreferenceCollection.detect_other_youdao_appsec);
                 EditTextPreference baidu_key = screen.findPreference(SharedPreferenceCollection.detect_other_baidu_key);
                 EditTextPreference baidu_sec = screen.findPreference(SharedPreferenceCollection.detect_other_baidu_appsec);
+
+                EditTextPreference youdao_key_t = screen.findPreference(SharedPreferenceCollection.trans_other_youdao_key);
+                EditTextPreference youdao_sec_t = screen.findPreference(SharedPreferenceCollection.trans_other_youdao_appsec);
+                EditTextPreference baidu_key_t = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_key);
+                EditTextPreference baidu_sec_t = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_appsec);
+
                 SwitchPreference vertical = screen.findPreference(SharedPreferenceCollection.detect_other_vertical);
                 SwitchPreference punctuation = screen.findPreference(SharedPreferenceCollection.detect_other_punctuation);
+
+                SwitchPreference SBCS = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_SBCS);
 
                 if (youdao_key != null && youdao_sec != null && baidu_key != null && baidu_sec != null && vertical != null && punctuation != null) {
                     switch (model_other.getValue()) {
@@ -89,7 +98,27 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                             break;
                     }
                 }
+                if (youdao_key_t != null && youdao_sec_t != null && baidu_key_t != null && baidu_sec_t != null && SBCS != null) {
+                    switch (translator_other.getValue()) {
+                        case "youdao":
+                            youdao_key_t.setVisible(true);
+                            youdao_sec_t.setVisible(true);
+                            baidu_key_t.setVisible(false);
+                            baidu_sec_t.setVisible(false);
+                            SBCS.setVisible(false);
+                            break;
+                        case "baidu":
+                            youdao_key_t.setVisible(false);
+                            youdao_sec_t.setVisible(false);
+                            baidu_key_t.setVisible(true);
+                            baidu_sec_t.setVisible(true);
+                            SBCS.setVisible(true);
+                            break;
+                    }
+                }
+
             } else {
+                //yuka_v1
                 category_model.setVisible(true);
                 category_translator.setVisible(true);
                 category_model_other.setVisible(false);

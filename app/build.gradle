@@ -9,8 +9,8 @@ android {
         applicationId "com.wzy.yuka"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4230
-        versionName '1.1.0'
+        versionCode 4241
+        versionName '1.1.1'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

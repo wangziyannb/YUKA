@@ -81,6 +81,9 @@ public class SharedPreferenceCollection {
     public static final String trans_other_translator = "settings_trans_other_translator";
     public static final String trans_other_youdao_key = "settings_trans_other_youdao_appkey";
     public static final String trans_other_youdao_appsec = "settings_trans_other_youdao_appsec";
+    public static final String trans_other_baidu_key = "settings_trans_other_baidu_apikey";
+    public static final String trans_other_baidu_appsec = "settings_trans_other_baidu_seckey";
+    public static final String trans_other_baidu_SBCS = "settings_trans_other_baidu_SBCS";
 
     //引导选项
     public static final String FIRST_GuideActivity = "first_open_guideActivity";

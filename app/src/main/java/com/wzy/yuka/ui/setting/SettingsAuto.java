@@ -64,11 +64,18 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                 category_translator.setVisible(false);
                 category_model_other.setVisible(true);
                 category_translator_other.setVisible(true);
+
                 EditTextPreference youdao_key = screen.findPreference(SharedPreferenceCollection.auto_other_youdao_key);
                 EditTextPreference youdao_sec = screen.findPreference(SharedPreferenceCollection.auto_other_youdao_appsec);
                 EditTextPreference baidu_key = screen.findPreference(SharedPreferenceCollection.auto_other_baidu_key);
                 EditTextPreference baidu_sec = screen.findPreference(SharedPreferenceCollection.auto_other_baidu_appsec);
                 SwitchPreference vertical = screen.findPreference(SharedPreferenceCollection.auto_other_vertical);
+
+                EditTextPreference youdao_key_t = screen.findPreference(SharedPreferenceCollection.trans_other_youdao_key);
+                EditTextPreference youdao_sec_t = screen.findPreference(SharedPreferenceCollection.trans_other_youdao_appsec);
+                EditTextPreference baidu_key_t = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_key);
+                EditTextPreference baidu_sec_t = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_appsec);
+                SwitchPreference SBCS = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_SBCS);
                 if (youdao_key != null && youdao_sec != null && baidu_key != null && baidu_sec != null && vertical != null) {
                     switch (model_other.getValue()) {
                         case "youdao":
@@ -87,6 +94,25 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                             break;
                     }
                 }
+                if (youdao_key_t != null && youdao_sec_t != null && baidu_key_t != null && baidu_sec_t != null && SBCS != null) {
+                    switch (translator_other.getValue()) {
+                        case "youdao":
+                            youdao_key_t.setVisible(true);
+                            youdao_sec_t.setVisible(true);
+                            baidu_key_t.setVisible(false);
+                            baidu_sec_t.setVisible(false);
+                            SBCS.setVisible(false);
+                            break;
+                        case "baidu":
+                            youdao_key_t.setVisible(false);
+                            youdao_sec_t.setVisible(false);
+                            baidu_key_t.setVisible(true);
+                            baidu_sec_t.setVisible(true);
+                            SBCS.setVisible(true);
+                            break;
+                    }
+                }
+
             } else {
                 category_model.setVisible(true);
                 category_translator.setVisible(true);

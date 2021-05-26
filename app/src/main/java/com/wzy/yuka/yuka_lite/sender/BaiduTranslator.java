@@ -1,6 +1,7 @@
 package com.wzy.yuka.yuka_lite.sender;
 
 import com.wzy.yuka.tools.params.Encrypt;
+import com.wzy.yuka.yuka_lite.utils.BCConvert;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,20 +18,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
- * Created by Ziyan on 2021/2/25.
+ * Created by Ziyan on 2021/5/26.
  */
-public class YoudaoTranslator {
+class BaiduTranslator {
 
-    public static void request(String APP_KEY, String APP_SECRET, String origin, Callback callback) {
-        String YOUDAO_URL = "https://openapi.youdao.com/api";
-
-        String curtime = String.valueOf(System.currentTimeMillis() / 1000);
+    public static void request(String APP_KEY, String APP_SECRET, String origin, boolean SBCS, Callback callback) {
+        String BAIDU_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate";
+        origin = (SBCS ? BCConvert.bj2qj(origin) : origin);
         String from = "auto";
-        String to = "auto";
+        String to = "zh";
 
-        String signType = "v3";
         String salt = UUID.randomUUID() + "";
-        String sign = Encrypt.sha256(APP_KEY + truncate(origin) + salt + curtime + APP_SECRET);
+        String sign = Encrypt.md5(APP_KEY + origin + salt + APP_SECRET);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(30 * 1000, TimeUnit.MILLISECONDS)
@@ -42,36 +41,23 @@ public class YoudaoTranslator {
                 .add("from", from)
                 .add("to", to)
                 .add("q", origin)
-                .add("curtime", curtime)
-                .add("appKey", APP_KEY)
-                .add("signType", signType)
+                .add("appid", APP_KEY)
                 .add("salt", salt)
                 .add("sign", sign)
                 .build();
         Request request = new Request.Builder()
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .url(YOUDAO_URL)
+                .url(BAIDU_URL)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
         call.enqueue(callback);
     }
 
-    private static String truncate(String q) {
-        if (q == null) {
-            return null;
-        }
-        int len = q.length();
-        return len <= 20 ? q : (q.substring(0, 10) + len + q.substring(len - 10, len));
-    }
 
     public static String single(String response) throws JSONException {
-        JSONArray array = new JSONObject(response).getJSONArray("translation");
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < array.length(); i++) {
-            result.append(array.getString(i));
-        }
-        return result.toString();
+        JSONArray array = new JSONObject(response).getJSONArray("trans_result");
+        return ((JSONObject) array.get(0)).get("dst").toString();
     }
 
 
