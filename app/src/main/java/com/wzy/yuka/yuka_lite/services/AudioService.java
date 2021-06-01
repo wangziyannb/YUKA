@@ -29,9 +29,12 @@ import androidx.core.app.NotificationCompat;
 
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.network.SyncAudio;
 import com.wzy.yuka.tools.network.WebsocketRequest;
+import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
+import com.wzy.yuka.yuka_lite.sender.YoudaoAudio;
 import com.wzy.yuka.yuka_lite.utils.YoudaoAsrResolver;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 import com.wzy.yukalite.YukaLite;
@@ -51,7 +54,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
     private boolean mWhetherRecord;
     private byte[] bytes;
     private YukaFloatWindowManager floatWindowManager;
-    private WebsocketRequest websocketRequest;
+    private SyncAudio websocketRequest;
 
     @Override
     public void handleMsg(Message msg) {
@@ -95,11 +98,14 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                             floatWindowManager.get_FloatWindow(0)
                                     .showResults("同传时间已经用尽，请返回充值", "同传时间已经用尽，请返回充值", 0);
                             break;
+                        default:
+                            floatWindowManager.get_FloatWindow(0)
+                                    .showResults("连接有道错误，错误代码：" + resolver.getErrorCode(), "连接有道错误，错误代码：" + resolver.getErrorCode(), 0);
+                            break;
                     }
                 } catch (FloatWindowManagerException e) {
                     e.printStackTrace();
                 }
-
                 floatWindowManager.stop_RecordingTrans();
                 break;
 
@@ -148,7 +154,20 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
         globalHandler.setHandleMsgListener(this);
         mWhetherRecord = true;
         try {
-            websocketRequest = new WebsocketRequest(YukaLite.getUser());
+            String api = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_api, getResources().getStringArray(R.array.sender_api_value)[0]);
+            switch (api) {
+                case "yuka_v1":
+                    websocketRequest = new WebsocketRequest(YukaLite.getUser());
+                    break;
+                case "other":
+                    //todo 添加更多实时语音识别可选服务
+                    String APP_KEY = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_youdao_key, "");
+                    String APP_SECRET = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_youdao_appsec, "");
+                    websocketRequest = new YoudaoAudio(APP_KEY, APP_SECRET);
+                    break;
+
+            }
+
             websocketRequest.start((String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
                     (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"),
                     (String) sharedPreferencesUtil.getParam("settings_trans_syncModes", "stream"));

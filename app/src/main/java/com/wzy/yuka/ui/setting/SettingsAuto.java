@@ -65,6 +65,12 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                 category_model_other.setVisible(true);
                 category_translator_other.setVisible(true);
 
+                //todo 加监听器送过去注册账号
+                Preference youdao_reg = screen.findPreference(SharedPreferenceCollection.auto_other_reg_youdao);
+                Preference baidu_reg = screen.findPreference(SharedPreferenceCollection.auto_other_reg_baidu);
+                Preference youdao_reg_t = screen.findPreference(SharedPreferenceCollection.trans_other_reg_youdao);
+                Preference baidu_reg_t = screen.findPreference(SharedPreferenceCollection.trans_other_reg_baidu);
+
                 EditTextPreference youdao_key = screen.findPreference(SharedPreferenceCollection.auto_other_youdao_key);
                 EditTextPreference youdao_sec = screen.findPreference(SharedPreferenceCollection.auto_other_youdao_appsec);
                 EditTextPreference baidu_key = screen.findPreference(SharedPreferenceCollection.auto_other_baidu_key);
@@ -76,9 +82,11 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                 EditTextPreference baidu_key_t = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_key);
                 EditTextPreference baidu_sec_t = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_appsec);
                 SwitchPreference SBCS = screen.findPreference(SharedPreferenceCollection.trans_other_baidu_SBCS);
-                if (youdao_key != null && youdao_sec != null && baidu_key != null && baidu_sec != null && vertical != null) {
+                if (youdao_key != null && youdao_sec != null && baidu_key != null && baidu_sec != null && vertical != null && youdao_reg != null && baidu_reg != null) {
                     switch (model_other.getValue()) {
                         case "youdao":
+                            youdao_reg.setVisible(true);
+                            baidu_reg.setVisible(false);
                             youdao_key.setVisible(true);
                             youdao_sec.setVisible(true);
                             baidu_key.setVisible(false);
@@ -86,6 +94,8 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                             vertical.setVisible(false);
                             break;
                         case "baidu":
+                            youdao_reg.setVisible(false);
+                            baidu_reg.setVisible(true);
                             youdao_key.setVisible(false);
                             youdao_sec.setVisible(false);
                             baidu_key.setVisible(true);
@@ -94,9 +104,11 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                             break;
                     }
                 }
-                if (youdao_key_t != null && youdao_sec_t != null && baidu_key_t != null && baidu_sec_t != null && SBCS != null) {
+                if (youdao_key_t != null && youdao_reg_t != null && baidu_reg_t != null && youdao_sec_t != null && baidu_key_t != null && baidu_sec_t != null && SBCS != null) {
                     switch (translator_other.getValue()) {
                         case "youdao":
+                            youdao_reg_t.setVisible(true);
+                            baidu_reg_t.setVisible(false);
                             youdao_key_t.setVisible(true);
                             youdao_sec_t.setVisible(true);
                             baidu_key_t.setVisible(false);
@@ -104,6 +116,8 @@ public class SettingsAuto extends PreferenceFragmentCompat implements Preference
                             SBCS.setVisible(false);
                             break;
                         case "baidu":
+                            youdao_reg_t.setVisible(false);
+                            baidu_reg_t.setVisible(true);
                             youdao_key_t.setVisible(false);
                             youdao_sec_t.setVisible(false);
                             baidu_key_t.setVisible(true);

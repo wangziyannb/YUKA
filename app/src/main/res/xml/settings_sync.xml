@@ -5,36 +5,75 @@
             android:entries="@array/sender_api"
             android:entryValues="@array/sender_api_value_sync"
             android:key="settings_sync_api"
-            android:summary="使用yuka提供的api，还是要使用自己的api呢？"
+            android:summary="使用yuka提供的api，还是要使用自己的百度云等账号呢？"
             android:title="api选择" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="同步字幕设置">
+    <PreferenceCategory
+        android:key="settings_sync"
+        android:title="同步字幕设置">
         <ListPreference
             android:entries="@array/sync_provider"
             android:entryValues="@array/sync_providerset"
-            android:key="settings_trans_syncProvider"
+            android:key="settings_sync_syncProvider"
             android:title="翻译器选择" />
         <ListPreference
             android:entries="@array/sync_mode"
             android:entryValues="@array/sync_modeset"
-            android:key="settings_trans_syncModes"
+            android:key="settings_sync_syncModes"
             android:summary="默认实时传输"
             android:title="识别模式" />
         <ListPreference
             android:entries="@array/sync_o_language"
             android:entryValues="@array/sync_o_languageset"
-            android:key="settings_trans_sync_o"
+            android:key="settings_sync_sync_o"
             android:summary="默认中文"
             android:title="源音频语言" />
         <ListPreference
             android:entries="@array/sync_t_language"
             android:entryValues="@array/sync_t_languageset"
-            android:key="settings_trans_sync_t"
+            android:key="settings_sync_sync_t"
             android:summary="默认英文"
             android:title="译文语言" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="同步字幕设置(自定义API)">
-
+    <PreferenceCategory
+        android:key="settings_sync_other"
+        android:title="同步字幕设置(自定义API)">
+        <ListPreference
+            android:entries="@array/sync_provider"
+            android:entryValues="@array/other_sync_providerset"
+            android:key="settings_sync_other_syncProvider"
+            android:title="翻译器选择" />
+        <Preference
+            android:key="settings_sync_other_reg_youdao"
+            android:title="我要注册有道账号！" />
+        <EditTextPreference
+            android:dialogTitle="请输入应用id"
+            android:key="settings_sync_other_youdao_appkey"
+            android:summary="id和密钥均在 应用管理-我的应用内"
+            android:title="应用id" />
+        <EditTextPreference
+            android:dialogTitle="请输入应用密钥"
+            android:key="settings_sync_other_youdao_appsec"
+            android:summary="接入方式务必是api，且已经开通并绑定实时语音翻译服务"
+            android:title="应用密钥" />
+        <ListPreference
+            android:entries="@array/sync_mode"
+            android:entryValues="@array/sync_modeset"
+            android:key="settings_sync_other_syncModes"
+            android:summary="默认实时传输"
+            android:title="识别模式" />
+        <ListPreference
+            android:entries="@array/sync_o_language"
+            android:entryValues="@array/sync_o_languageset"
+            android:key="settings_sync_other_sync_o"
+            android:summary="默认中文"
+            android:title="源音频语言" />
+        <ListPreference
+            android:entries="@array/sync_t_language"
+            android:entryValues="@array/sync_t_languageset"
+            android:key="settings_sync_other_sync_t"
+            android:summary="默认英文"
+            android:title="译文语言" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="额外选项">

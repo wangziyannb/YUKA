@@ -32,6 +32,8 @@ public class SharedPreferenceCollection {
     //设置组-单多悬浮窗的识别器(other)
     public static final String detect_other = "settings_detect_other";
     public static final String detect_other_model = "settings_detect_other_detect_model";
+    public static final String detect_other_reg_baidu = "settings_detect_other_reg_baidu";
+    public static final String detect_other_reg_youdao = "settings_detect_other_reg_youdao";
     public static final String detect_other_vertical = "settings_detect_other_vertical";
     public static final String detect_other_punctuation = "settings_detect_other_punctuation";
     public static final String detect_other_youdao_key = "settings_detect_other_youdao_appkey";
@@ -53,6 +55,8 @@ public class SharedPreferenceCollection {
     //设置组-单多悬浮窗的识别器(other)
     public static final String auto_other = "settings_auto_other";
     public static final String auto_other_model = "settings_auto_other_model";
+    public static final String auto_other_reg_baidu = "settings_auto_other_reg_baidu";
+    public static final String auto_other_reg_youdao = "settings_auto_other_reg_youdao";
     public static final String auto_other_toleration = "settings_auto_other_toleration";
     public static final String auto_other_punctuation = "settings_auto_other_punctuation";
     public static final String auto_other_vertical = "settings_auto_other_vertical";
@@ -63,13 +67,26 @@ public class SharedPreferenceCollection {
     //设置组-共有
     public static final String auto_offset = "settings_auto_offset";
 
-
     //同步翻译悬浮窗相应设置项
+    //使用的api
     public static final String sync_api = "settings_sync_api";
-    public static final String sync_provider = "settings_trans_syncProvider";
-    public static final String sync_modes = "settings_trans_syncModes";
-    public static final String sync_o = "settings_trans_sync_o";
-    public static final String sync_t = "settings_trans_sync_t";
+    //设置组-同步翻译悬浮窗(yuka)
+    public static final String sync = "settings_sync";
+    public static final String sync_provider = "settings_sync_syncProvider";
+    public static final String sync_modes = "settings_sync_syncModes";
+    public static final String sync_o = "settings_sync_sync_o";
+    public static final String sync_t = "settings_sync_sync_t";
+    //设置组-同步翻译悬浮窗(other)
+    public static final String sync_other = "settings_sync_other";
+    public static final String sync_other_provider = "settings_sync_other_syncProvider";
+    public static final String sync_other_reg_youdao = "settings_sync_other_reg_youdao";
+    public static final String sync_other_youdao_key = "settings_sync_other_youdao_appkey";
+    public static final String sync_other_youdao_appsec = "settings_sync_other_youdao_appsec";
+    public static final String sync_other_modes = "settings_sync_other_syncModes";
+    public static final String sync_other_o = "settings_sync_other_sync_o";
+    public static final String sync_other_t = "settings_sync_other_sync_t";
+    //设置组-共有
+    public static final String sync_findCompatible = "settings_sync_findCompatible";
 
     //翻译相应设置项
     //设置组-翻译(yuka)
@@ -79,6 +96,8 @@ public class SharedPreferenceCollection {
     //设置组-翻译(other)
     public static final String translator_other = "settings_translator_other";
     public static final String trans_other_translator = "settings_trans_other_translator";
+    public static final String trans_other_reg_baidu = "settings_trans_other_reg_baidu";
+    public static final String trans_other_reg_youdao = "settings_trans_other_reg_youdao";
     public static final String trans_other_youdao_key = "settings_trans_other_youdao_appkey";
     public static final String trans_other_youdao_appsec = "settings_trans_other_youdao_appsec";
     public static final String trans_other_baidu_key = "settings_trans_other_baidu_apikey";

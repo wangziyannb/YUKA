@@ -6,8 +6,9 @@
             android:entries="@array/sender_api"
             android:entryValues="@array/sender_api_value"
             android:key="settings_detect_api"
-            android:summary="使用yuka提供的api，还是要使用自己的api呢？"
+            android:summary="使用yuka提供的api，还是要使用自己的百度云等账号呢？"
             android:title="api选择" />
+
     </PreferenceCategory>
     <PreferenceCategory
         android:key="settings_detect"
@@ -44,6 +45,13 @@
             android:key="settings_detect_other_detect_model"
             android:summary="默认有道"
             android:title="识别器选择" />
+        <Preference
+            android:key="settings_detect_other_reg_youdao"
+            android:title="我要注册有道账号！" />
+        <Preference
+            android:key="settings_detect_other_reg_baidu"
+            android:summary="有度盘等账号无需额外注册，可直接使用该账号"
+            android:title="我要注册百度账号！" />
         <EditTextPreference
             android:dialogTitle="请输入应用id"
             android:key="settings_detect_other_youdao_appkey"
@@ -88,7 +96,7 @@
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
             android:key="settings_trans_translator"
-            android:summary="默认有道"
+            android:summary="默认百度"
             android:title="翻译器选择" />
         <SwitchPreference
             android:defaultValue="false"
@@ -106,6 +114,13 @@
             android:key="settings_trans_other_translator"
             android:summary="默认有道"
             android:title="翻译器选择" />
+        <Preference
+            android:key="settings_trans_other_reg_youdao"
+            android:title="我要注册有道账号！" />
+        <Preference
+            android:key="settings_trans_other_reg_baidu"
+            android:summary="有度盘等账号无需额外注册，可直接使用该账号"
+            android:title="我要注册百度账号！" />
         <EditTextPreference
             android:dialogTitle="请输入应用id"
             android:key="settings_trans_other_youdao_appkey"

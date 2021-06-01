@@ -27,27 +27,27 @@
     </string-array>
 
     <string-array name="auto_modelset">
-        <item>youdao</item>
         <item>baidu</item>
+        <item>youdao</item>
         <item>google</item>
     </string-array>
 
     <string-array name="auto_model">
-        <item>有道（有道智云）</item>
         <item>百度（百度智能云）</item>
+        <item>有道（有道智云）</item>
         <item>谷歌（Google Cloud Vision）（目前被墙）</item>
     </string-array>
 
     <string-array name="translator_name">
-        <item>有道翻译</item>
         <item>百度翻译</item>
+        <item>有道翻译</item>
         <item>腾讯翻译</item>
         <item>Google翻译（目前被墙）</item>
     </string-array>
 
     <string-array name="translator">
-        <item>youdao</item>
         <item>baidu</item>
+        <item>youdao</item>
         <item>tencent</item>
         <item>google</item>
     </string-array>
@@ -55,7 +55,12 @@
     <string-array name="sync_provider">
         <item>有道</item>
     </string-array>
+
     <string-array name="sync_providerset">
+        <item>youdao</item>
+    </string-array>
+
+    <string-array name="other_sync_providerset">
         <item>youdao</item>
     </string-array>
 
