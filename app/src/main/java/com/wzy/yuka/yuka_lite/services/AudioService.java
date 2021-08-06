@@ -136,7 +136,11 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                     .setAudioFormat(audioFormat)
                     .setBufferSizeInBytes(size)
                     .build();
-            startRecord(record, size);
+            if (record.getState() != AudioRecord.STATE_INITIALIZED) {
+                Toast.makeText(this, "未准备好录音，请关闭录音悬浮窗并重试", Toast.LENGTH_SHORT).show();
+            } else {
+                startRecord(record, size);
+            }
         } catch (FloatWindowManagerException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -152,26 +156,32 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
 
     private void startRecord(AudioRecord record, int bufferSize) {
         globalHandler.setHandleMsgListener(this);
-        mWhetherRecord = true;
         try {
-            String api = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_api, getResources().getStringArray(R.array.sender_api_value)[0]);
+            String o = "zh-CHS";
+            String t = "en";
+            String mode = "stream";
+            String api = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_api, getResources().getStringArray(R.array.sender_api_value_sync)[0]);
             switch (api) {
                 case "yuka_v1":
                     websocketRequest = new WebsocketRequest(YukaLite.getUser());
+                    o = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_o, "zh-CHS");
+                    t = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_t, "en");
+                    mode = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_modes, "stream");
                     break;
                 case "other":
                     //todo 添加更多实时语音识别可选服务
                     String APP_KEY = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_youdao_key, "");
                     String APP_SECRET = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_youdao_appsec, "");
                     websocketRequest = new YoudaoAudio(APP_KEY, APP_SECRET);
+                    o = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_o, "zh-CHS");
+                    t = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_t, "en");
+                    mode = (String) sharedPreferencesUtil.getParam(SharedPreferenceCollection.sync_other_modes, "stream");
                     break;
-
             }
 
-            websocketRequest.start((String) sharedPreferencesUtil.getParam("settings_trans_sync_o", "zh-CHS"),
-                    (String) sharedPreferencesUtil.getParam("settings_trans_sync_t", "en"),
-                    (String) sharedPreferencesUtil.getParam("settings_trans_syncModes", "stream"));
+            websocketRequest.start(o, t, mode);
             new Thread(() -> {
+                mWhetherRecord = true;
                 record.startRecording();//开始录制
                 bytes = new byte[bufferSize];
                 while (mWhetherRecord) {
@@ -190,6 +200,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
                 record.stop();//停止录制
                 record.release();
             }).start();
+
         } catch (YukaUserManagerException e) {
             e.printStackTrace();
         }

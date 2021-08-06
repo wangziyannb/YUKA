@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "com.wzy.yuka"
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 4241
-        versionName '1.1.1'
+        targetSdkVersion 29
+        versionCode 4247
+        versionName '1.1.3'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -1,9 +1,14 @@
 package com.wzy.yuka;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -12,12 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.FragmentActivity;
 
 import com.lzf.easyfloat.EasyFloat;
+import com.lzf.easyfloat.permission.PermissionUtils;
 import com.qw.curtain.lib.Curtain;
 import com.qw.curtain.lib.CurtainFlow;
 import com.qw.curtain.lib.IGuide;
@@ -35,30 +42,19 @@ import com.wzy.yuka.yuka_lite.floatwindow.SubtitleWindow;
 import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * Created by Ziyan on 2020/7/5.
  */
 public class CurtainActivity extends FragmentActivity {
     public static final String name = "type";
     public static final String index = "index";
+    public static final String permission = "Permission";
     private Curtain curtain = null;
-    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        setContentView(R.layout.guide_empty);
-        Intent intent = getIntent();
-        String type = intent.getStringExtra(name);
-        int mIndex = intent.getIntExtra(index, 0);
-        if (type == null) {
-            finish();
-        } else {
-            showInitGuide(type, mIndex);
-        }
-    }
+    private static final int REQUEST_MEDIA_PROJECTION = 0x2893;
+    private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
 
     private void showInitGuide(String type, int i) {
         if (curtain != null) {
@@ -218,6 +214,24 @@ public class CurtainActivity extends FragmentActivity {
 
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        setContentView(R.layout.guide_empty);
+        Intent intent = getIntent();
+        String type = intent.getStringExtra(name);
+        int mIndex = intent.getIntExtra(index, 0);
+        if (type == null) {
+            finish();
+        } else if (type.equals(permission)) {
+            requestPermission();
+        } else {
+            showInitGuide(type, mIndex);
+        }
+    }
+
     private void guideFloatBall(MainFloatBall floatBall) {
         GuideManager guideManager = new GuideManager(this);
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {
@@ -230,7 +244,7 @@ public class CurtainActivity extends FragmentActivity {
                 ConstraintLayout layout;
                 TextView textView;
                 Button button;
-                FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
+                final FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
 
                 @Override
                 public void onProcess(int currentId, CurtainFlowInterface curtainFlow) {
@@ -322,7 +336,7 @@ public class CurtainActivity extends FragmentActivity {
                     .create();
             cf.start(new CurtainFlow.CallBack() {
                 ConstraintLayout layout;
-                FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
+                final FloatBallLayout fbl = floatBall.getView().findViewById(R.id.floatball_layout);
 
                 private void setImg(ConstraintLayout layout, int imageResource, int width, int height, int top, int left) {
                     ImageView img = layout.findViewById(R.id.guide_interpret_img);
@@ -421,5 +435,68 @@ public class CurtainActivity extends FragmentActivity {
         }
 
 
+    }
+
+    @AfterPermissionGranted(233)
+    @SuppressLint("WrongConstant")
+    private void requestPermission() {
+        String[] perms = {Manifest.permission.RECORD_AUDIO};
+        if (!EasyPermissions.hasPermissions(this, perms)) {
+            EasyPermissions.requestPermissions(this, "拒绝了录音权限，内录同步字幕将会无法使用", 233, perms);
+        } else {
+            MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) this.getSystemService("media_projection");
+            Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();
+            startActivityForResult(captureIntent, REQUEST_MEDIA_PROJECTION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String TAG = "CurtainActivity";
+        if (resultCode == Activity.RESULT_CANCELED) {
+            Log.e(TAG, "User cancel");
+        } else {
+            //未知错误 java.lang.NoSuchMethodError: No interface method getCurrentWindowMetrics
+            //确实是分版本了呀..?
+//            try {
+//                DisplayMetrics metrics = new DisplayMetrics();
+//                WindowManager mWindowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+//                if(Build.VERSION.SDK_INT> Build.VERSION_CODES.Q){
+//                    mWindowManager.getCurrentWindowMetrics();
+//                }else{
+//                    mWindowManager.getDefaultDisplay().getMetrics(metrics);
+//                }
+//            } catch (Exception e) {
+//                Log.e(TAG, "MediaProjection error");
+//                return;
+//            }
+            if (!PermissionUtils.checkPermission(this)) {
+                PermissionUtils.requestPermission(this, b -> {
+                    if (!b) {
+                        Toast.makeText(this, "用户未授权悬浮窗权限", Toast.LENGTH_SHORT).show();
+                    } else {
+                        YukaFloatWindowManager manager = YukaFloatWindowManager.getInstance(getApplication());
+                        manager.setData(data);
+                        if (manager.getNumOfFloatBalls() == 0) {
+                            manager.addFloatBall("mainFloatBall");
+                        }
+                    }
+                });
+            } else {
+                YukaFloatWindowManager manager = YukaFloatWindowManager.getInstance(getApplication());
+                manager.setData(data);
+                if (manager.getNumOfFloatBalls() == 0) {
+                    manager.addFloatBall("mainFloatBall");
+                }
+            }
+        }
+        finish();
     }
 }

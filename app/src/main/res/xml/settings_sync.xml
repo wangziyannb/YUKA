@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="api设置">
         <ListPreference
-            android:entries="@array/sender_api"
+            android:entries="@array/sender_api_sync"
             android:entryValues="@array/sender_api_value_sync"
             android:key="settings_sync_api"
             android:summary="使用yuka提供的api，还是要使用自己的百度云等账号呢？"

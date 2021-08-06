@@ -132,7 +132,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                     }
                 }
 
-            } else {
+            } else if (sender_api.getValue().equals("yuka_v1")) {
                 //yuka_v1
                 category_model.setVisible(true);
                 category_translator.setVisible(true);
@@ -170,6 +170,11 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                         }
                     }
                 }
+            } else if (sender_api.getValue().equals("share")) {
+                category_model.setVisible(false);
+                category_translator.setVisible(false);
+                category_model_other.setVisible(false);
+                category_translator_other.setVisible(false);
             }
         }
     }

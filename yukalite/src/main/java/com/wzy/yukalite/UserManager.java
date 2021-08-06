@@ -2,7 +2,6 @@ package com.wzy.yukalite;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,10 +21,7 @@ class UserManager {
     private static HashMap<String, String> hashMap;
 
     static void init(Context application, @NotNull String id) {
-        account = new Account(application);
-        hashMap = account.get();
-        hashMap.put("uuid", id);
-        account.update(hashMap);
+        account = new Account(application, id);
     }
 
     static void addUser(@NotNull String u_name, @NotNull String pwd) {
@@ -48,8 +44,10 @@ class UserManager {
         params[0] = hashMap.get("u_name");
         params[1] = hashMap.get("pwd");
         params[2] = hashMap.get("uuid");
-        if (params[0] == null || params[1] == null || params[2] == null) {
-            throw new YukaUserManagerException("No User Available");
+        if (params[0] == null || params[0].equals("")
+                || params[1] == null || params[1].equals("")
+                || params[2] == null || params[2].equals("")) {
+            throw new YukaUserManagerException(YukaUserManagerException.NO_USER);
         }
         return params;
     }
@@ -62,10 +60,6 @@ class UserManager {
      * 成功登陆时，msg:200
      */
     static void login(Callback callback) throws YukaUserManagerException {
-        hashMap = account.get();
-        if ((!hashMap.containsKey("u_name")) || getUser()[0].equals("")) {
-            throw new YukaUserManagerException("No User Available");
-        }
         String[] params = getUser();
         YukaRequest.login(params, callback);
     }
@@ -78,10 +72,6 @@ class UserManager {
      * 成功登出时，msg:200
      */
     static void logout(Callback callback) throws YukaUserManagerException {
-        hashMap = account.get();
-        if (!hashMap.containsKey("u_name")) {
-            throw new YukaUserManagerException("No User Available");
-        }
         String[] params = getUser();
         YukaRequest.logout(params, callback);
     }
@@ -115,15 +105,12 @@ class UserManager {
         YukaRequest.check_feasibility(mode, param, callback);
     }
 
-    static void activate(String cdkey, Callback callback) {
+    static void activate(String cdkey, Callback callback) throws YukaUserManagerException {
         String[] params = new String[2];
-        try {
-            params[0] = getUser()[0];
-            params[1] = cdkey;
-            YukaRequest.activate(params, callback);
-        } catch (YukaUserManagerException e) {
-            e.printStackTrace();
-        }
+        params[0] = getUser()[0];
+        params[1] = cdkey;
+        YukaRequest.activate(params, callback);
+
     }
 
     static void refreshInfo(Callback callback) throws YukaUserManagerException {
@@ -144,10 +131,10 @@ class UserManager {
 
 
     private static class Account {
-        private SharedPreferences mSharedPreferences;
+        private final SharedPreferences mSharedPreferences;
         private JSONObject json;
 
-        Account(Context context) {
+        Account(Context context, String id) {
             mSharedPreferences = context.getSharedPreferences("yuka", Context.MODE_PRIVATE);
             try {
                 json = new JSONObject(mSharedPreferences.getString("account", ""));
@@ -155,7 +142,7 @@ class UserManager {
                 Log.e("Account", "Account:load json failed");
                 json = new JSONObject();
                 HashMap<String, String> map = get();
-                map.put("uuid", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
+                map.put("uuid", id);
                 update(map);
             }
         }

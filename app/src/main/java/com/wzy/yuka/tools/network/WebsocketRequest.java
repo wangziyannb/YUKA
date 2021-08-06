@@ -90,7 +90,7 @@ public class WebsocketRequest extends SyncAudio {
             Bundle bundle = new Bundle();
 
             if (text.contains("\"errorCode\":\"603\"") || text.contains("\"errorCode\":\"602\"") || text.contains("\"errorCode\":\"601\"")) {
-                onClosed(webSocket, 600, "");
+                this.onClosed(webSocket, 600, "");
                 bundle.putString("syncMessage", text);
                 message.what = 253;
             } else if (text.contains("\"total_time\"")) {

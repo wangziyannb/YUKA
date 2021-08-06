@@ -50,7 +50,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private NavController navController;
     private BottomNavigationView bottomNavigationView;
     private Button button;
-    private SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+    private final SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
     private GuideManager guideManager;
     private YukaFloatWindowManager floatWindowManager;
     private MainActivity mainActivity;
@@ -67,10 +67,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             }
                         });
                     }
-                    if (data == null) {
+                    if (data == null && floatWindowManager.getData() == null) {
                         requestPermission();
-                    }
-                    if (data != null) {
+                    } else if (data != null || floatWindowManager.getData() != null) {
                         if (floatWindowManager.getNumOfFloatBalls() == 0) {
                             floatWindowManager.addFloatBall("mainFloatBall");
                             v.setBackgroundResource(R.drawable.nav_start_checked);

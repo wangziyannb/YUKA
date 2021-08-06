@@ -9,15 +9,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Screenshot {
-    private String[] fullFileName;
-    private int[][] location;
-    private String filePath;
-    private WeakReference<Context> mContext;
-    private int[] index;
+    private final String[] fullFileName;
+    private final int[][] location;
+    private final String filePath;
+    private final WeakReference<Context> mContext;
+    private final int[] index;
+    private final String[] fileName;
 
     public Screenshot(Context context, int[][] location, int[] index) {
         this.location = location;
         this.index = index;
+        fileName = new String[location.length];
         fullFileName = new String[location.length];
         mContext = new WeakReference<>(context);
         Date nowTime = new Date();
@@ -31,8 +33,9 @@ public class Screenshot {
         File file = new File(filePath);
         file.mkdir();
         for (int i = 0; i < location.length; i++) {
-            fullFileName[i] = filePath + "/" + time2 + "_" + "LU" + location[i][0] + "_" + location[i][1] +
+            fileName[i] = time2 + "_" + "LU" + location[i][0] + "_" + location[i][1] +
                     " " + "RU" + location[i][2] + "_" + location[i][3] + ".jpg";
+            fullFileName[i] = filePath + "/" + fileName[i];
         }
     }
 
@@ -43,6 +46,10 @@ public class Screenshot {
 
     public String[] getFullFileNames() {
         return fullFileName;
+    }
+
+    public String[] getFileNames() {
+        return fileName;
     }
 
     public int[][] getLocation() {

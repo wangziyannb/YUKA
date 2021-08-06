@@ -28,11 +28,11 @@ import java.util.List;
 
 public class SubtitleFlowView extends TextSwitcher implements
         ViewSwitcher.ViewFactory {
-    private float mHeight;
-    private Context mContext;
-    private String mFirstText;
-    private int mtextAlignment;
-    private int mtextColor;
+    private final float mHeight;
+    private final Context mContext;
+    private final String mFirstText;
+    private final int mtextAlignment;
+    private final int mtextColor;
     private int mbackGround;
     //mInUp,mOutUp分离构成向下翻页的进出动画
     private Rotate3dAnimation mInUp;
@@ -117,6 +117,9 @@ public class SubtitleFlowView extends TextSwitcher implements
     }
 
     private void checkText(CharSequence text) {
+        if (text == null) {
+            return;
+        }
         TextView textView = (TextView) getCurrentView();
 
         TextPaint textPaint = textView.getPaint();

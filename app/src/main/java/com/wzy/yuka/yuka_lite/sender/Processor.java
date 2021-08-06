@@ -1,7 +1,10 @@
 package com.wzy.yuka.yuka_lite.sender;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.wzy.yuka.R;
+import com.wzy.yuka.tools.io.PictureCopy;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
@@ -27,6 +31,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -133,7 +139,7 @@ public class Processor {
 
     public void single_main() {
         this.mode = Modes.translate;
-        String api = (String) util.getParam(SharedPreferenceCollection.detect_api, resources.getStringArray(R.array.sender_api_value)[0]);
+        String api = (String) util.getParam(SharedPreferenceCollection.detect_api, resources.getStringArray(R.array.sender_api_value_detect)[0]);
         switch (api) {
             case "yuka_v1":
                 single_get_all_yuka();
@@ -145,6 +151,9 @@ public class Processor {
                 } else if (model.equals(resources.getStringArray(R.array.other_detect_modelset)[1])) {
                     single_get_origin_baidu();
                 }
+                break;
+            case "share":
+                single_share();
                 break;
         }
     }
@@ -313,6 +322,32 @@ public class Processor {
         }).start();
     }
 
+    private void single_share() {
+        String[] fullFileNames = screenshot.getFullFileNames();
+        String[] fileNames = screenshot.getFileNames();
+        Uri[] uris = new Uri[fullFileNames.length];
+        for (int i = 0; i < fullFileNames.length; i++) {
+            //先存到DCIM下
+            Date nowTime = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String time = dateFormat.format(nowTime);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                uris[i] = new PictureCopy().copyFileToDownloadDir(contextWeakReference.get(), fullFileNames[i], "yuka" + File.separator + time);
+            } else {
+                uris[i] = Uri.parse(fullFileNames[i]);
+            }
+        }
+        for (Uri uri : uris) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+            Intent share = Intent.createChooser(intent, "分享yuka截下的图以供翻译");
+            share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            contextWeakReference.get().startActivity(share);
+        }
+    }
+
     private void single_get_result(Bundle bundle) {
         String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
         boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
@@ -422,7 +457,7 @@ public class Processor {
     public void auto_main() {
         this.mode = Modes.auto;
         time = System.currentTimeMillis();
-        String api = (String) util.getParam(SharedPreferenceCollection.auto_api, resources.getStringArray(R.array.sender_api_value)[0]);
+        String api = (String) util.getParam(SharedPreferenceCollection.auto_api, resources.getStringArray(R.array.sender_api_value_auto)[0]);
         switch (api) {
             case "yuka_v1":
                 auto_get_all_yuka();

@@ -138,7 +138,12 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
                         .setOutsideAlpha(0.3f)
                         .setLoadingContentMargins(50, 50, 50, 50)
                         .build();
-                Users.activate(cdkey_et.getText() + "");
+                try {
+                    Users.activate(cdkey_et.getText() + "");
+                } catch (YukaUserManagerException e) {
+                    Toast.makeText(getContext(), "没有可用的用户", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
                 break;
             case R.id.personal_button3:
                 NavHostFragment.findNavController(this).navigate(R.id.action_nav_user_service_to_nav_user_profile);

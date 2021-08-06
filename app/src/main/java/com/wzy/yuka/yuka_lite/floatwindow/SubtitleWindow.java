@@ -20,6 +20,7 @@ import com.lzf.easyfloat.interfaces.OnFloatCallbacks;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
+import com.wzy.yuka.ui.view.SubtitleFlowView;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
 import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;

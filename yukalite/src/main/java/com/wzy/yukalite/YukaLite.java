@@ -1,5 +1,6 @@
 package com.wzy.yukalite;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.Settings;
 
@@ -17,9 +18,15 @@ import okhttp3.Callback;
  */
 public class YukaLite {
     public static void init(Context application) {
+        @SuppressLint("HardwareIds")
         String uuid = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID);
         UserManager.init(application, uuid);
-        UserManager.setLogin(false);
+        try {
+            UserManager.getUser();
+        } catch (YukaUserManagerException e) {
+            UserManager.setLogin(false);
+        }
+
     }
 
     public static void yuka(@NotNull Callback callback) {
@@ -92,7 +99,7 @@ public class YukaLite {
         UserManager.check_feasibility(mode, param, callback);
     }
 
-    public static void activate(String cdkey, Callback callback) {
+    public static void activate(String cdkey, Callback callback) throws YukaUserManagerException {
         UserManager.activate(cdkey, callback);
     }
 

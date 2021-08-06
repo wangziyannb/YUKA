@@ -203,7 +203,7 @@ public class Users {
         });
     }
 
-    public static void activate(String cdkey) {
+    public static void activate(String cdkey) throws YukaUserManagerException {
         globalHandler = GlobalHandler.getInstance();
         YukaLite.activate(cdkey, new Callback() {
             @Override
