@@ -5,7 +5,7 @@
             android:entries="@array/sender_api_sync"
             android:entryValues="@array/sender_api_value_sync"
             android:key="settings_sync_api"
-            android:summary="使用yuka提供的api，还是要使用自己的百度云等账号呢？"
+            android:summary="由谁来提供识别呢？"
             android:title="api选择" />
     </PreferenceCategory>
     <PreferenceCategory

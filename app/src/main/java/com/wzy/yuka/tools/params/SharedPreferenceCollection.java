@@ -40,9 +40,15 @@ public class SharedPreferenceCollection {
     public static final String detect_other_youdao_appsec = "settings_detect_other_youdao_appsec";
     public static final String detect_other_baidu_key = "settings_detect_other_baidu_apikey";
     public static final String detect_other_baidu_appsec = "settings_detect_other_baidu_seckey";
-    //设置组-共有
-    public static final String detect_continuousMode_interval = "settings_continuousMode_interval";
+    //设置组-本地tesseract的识别器(tess)
+    public static final String detect_tess = "settings_detect_tess";
+    public static final String detect_tess_model = "settings_detect_tess_detect_model";
+    public static final String detect_tess_lang = "settings_detect_tess_lang";
+    public static final String detect_tess_lang_sub = "settings_detect_tess_lang_sub";
 
+    //设置组-特殊
+    public static final String detect_continuousMode_interval = "settings_continuousMode_interval";
+    public static final String detect_share_store = "settings_detect_share_store";
     //自动识别悬浮窗相应设置项
     //使用的api
     public static final String auto_api = "settings_auto_api";
@@ -89,6 +95,9 @@ public class SharedPreferenceCollection {
     public static final String sync_findCompatible = "settings_sync_findCompatible";
 
     //翻译相应设置项
+    //使用的api
+    public static final String trans_api = "settings_trans_api";
+    public static final String trans_api_auto = "settings_auto_trans_api";
     //设置组-翻译(yuka)
     public static final String translator = "settings_translator";
     public static final String trans_translator = "settings_trans_translator";

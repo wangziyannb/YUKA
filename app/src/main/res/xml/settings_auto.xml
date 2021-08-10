@@ -8,10 +8,17 @@
             android:key="settings_auto_api"
             android:summary="由谁来提供识别和翻译呢？"
             android:title="api选择" />
+        <ListPreference
+            android:entries="@array/sender_api_trans_auto"
+            android:entryValues="@array/sender_api_value_trans_auto"
+            android:key="settings_auto_trans_api"
+            android:summary="由谁来提供翻译呢？"
+            android:title="翻译api选择" />
     </PreferenceCategory>
+
     <PreferenceCategory
         android:key="settings_auto"
-        android:title="识别设置">
+        android:title="识别设置(yuka_v1)">
         <ListPreference
             android:entries="@array/auto_model"
             android:entryValues="@array/auto_modelset"
@@ -109,9 +116,10 @@
             android:title="文字方向" />
 
     </PreferenceCategory>
+
     <PreferenceCategory
         android:key="settings_translator"
-        android:title="翻译设置">
+        android:title="翻译设置(yuka_v1)">
         <ListPreference
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
@@ -168,6 +176,7 @@
             android:summaryOn="翻译日韩文等"
             android:title="全半角转换" />
     </PreferenceCategory>
+
     <PreferenceCategory android:title="额外设置">
         <Preference
             android:key="settings_auto_offset"

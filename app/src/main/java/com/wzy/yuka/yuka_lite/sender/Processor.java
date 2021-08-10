@@ -152,6 +152,9 @@ public class Processor {
                     single_get_origin_baidu();
                 }
                 break;
+            case "tess":
+                single_tess_get_origin();
+                break;
             case "share":
                 single_share();
                 break;
@@ -320,6 +323,18 @@ public class Processor {
                 BaiduOCR.request(API_Key, Secret_Key, images, callbacks, handler);
             }
         }).start();
+    }
+
+    private void single_tess_get_origin() {
+        String model = (String) util.getParam(SharedPreferenceCollection.detect_tess_model, resources.getStringArray(R.array.tess_detect_modelset)[0]);
+        String langs = (String) util.getParam(SharedPreferenceCollection.detect_tess_lang, resources.getStringArray(R.array.tess_langset)[0]);
+
+        String[] sub_langs = (String[]) util.getParam(SharedPreferenceCollection.detect_tess_lang_sub, resources.getStringArray(R.array.tess_langset_sub)[0]);
+
+        if (sub_langs.equals(new String[]{"null"})) {
+
+        }
+        String[] origins = TessOCR.detect(contextWeakReference.get(), screenshot, langs, sub_langs, model);
     }
 
     private void single_share() {

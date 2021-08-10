@@ -113,6 +113,77 @@
         <item>stream</item>
     </string-array>
 
+    <string-array name="tess_detect_model">
+        <item>注重质量</item>
+        <item>注重速度</item>
+    </string-array>
+
+    <string-array name="tess_detect_modelset">
+        <item>best</item>
+        <item>fast</item>
+    </string-array>
+
+    <string-array name="tess_lang">
+        <item>简中</item>
+        <item>简中（竖排）</item>
+        <item>繁中</item>
+        <item>繁中（竖排）</item>
+        <item>英语</item>
+        <item>日语</item>
+        <item>日语（竖排）</item>
+        <item>韩语</item>
+        <item>韩语（竖排）</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+
+    <string-array name="tess_langset">
+        <item>chi_sim</item>
+        <item>chi_sim_vert</item>
+        <item>chi_tra</item>
+        <item>chi_tra_vert</item>
+        <item>eng</item>
+        <item>jpn</item>
+        <item>jpn_vert</item>
+        <item>kor</item>
+        <item>kor_vert</item>
+        <item>fra</item>
+        <item>rus</item>
+        <item>deu</item>
+    </string-array>
+
+    <string-array name="tess_lang_sub">
+        <item>无</item>
+        <item>简中</item>
+        <item>简中（竖排）</item>
+        <item>繁中</item>
+        <item>繁中（竖排）</item>
+        <item>英语</item>
+        <item>日语</item>
+        <item>日语（竖排）</item>
+        <item>韩语</item>
+        <item>韩语（竖排）</item>
+        <item>法语</item>
+        <item>俄语</item>
+        <item>德语</item>
+    </string-array>
+
+    <string-array name="tess_langset_sub">
+        <item>null</item>
+        <item>chi_sim</item>
+        <item>chi_sim_vert</item>
+        <item>chi_tra</item>
+        <item>chi_tra_vert</item>
+        <item>eng</item>
+        <item>jpn</item>
+        <item>jpn_vert</item>
+        <item>kor</item>
+        <item>kor_vert</item>
+        <item>fra</item>
+        <item>rus</item>
+        <item>deu</item>
+    </string-array>
 
     <string-array name="other_detect_modelset">
         <item>youdao</item>
@@ -147,24 +218,51 @@
 
     <string-array name="sender_api_detect">
         <item>yuka_v1</item>
-        <item>自定义</item>
-        <item>分享（如有道翻译官等）</item>
+        <item>自定义在线识别</item>
+        <item>离线tesseract-LSTM</item>
+        <item>分享截图至其他软件（如有道翻译官等）</item>
     </string-array>
 
     <string-array name="sender_api_value_detect">
         <item>yuka_v1</item>
         <item>other</item>
+        <item>tess</item>
         <item>share</item>
     </string-array>
 
+    <string-array name="sender_api_trans">
+        <item>yuka_v1</item>
+        <item>自定义在线翻译</item>
+        <item>不翻译，仅识别</item>
+    </string-array>
+
+    <string-array name="sender_api_value_trans">
+        <item>yuka_v1</item>
+        <item>other</item>
+        <item>null</item>
+    </string-array>
+
+
     <string-array name="sender_api_auto">
         <item>yuka_v1</item>
-        <item>自定义</item>
+        <item>自定义在线识别</item>
     </string-array>
 
     <string-array name="sender_api_value_auto">
         <item>yuka_v1</item>
         <item>other</item>
+    </string-array>
+
+    <string-array name="sender_api_trans_auto">
+        <item>yuka_v1</item>
+        <item>自定义在线翻译</item>
+        <item>不翻译，仅识别</item>
+    </string-array>
+
+    <string-array name="sender_api_value_trans_auto">
+        <item>yuka_v1</item>
+        <item>other</item>
+        <item>null</item>
     </string-array>
 
     <string-array name="sender_api_sync">

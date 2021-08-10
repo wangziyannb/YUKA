@@ -6,13 +6,19 @@
             android:entries="@array/sender_api_detect"
             android:entryValues="@array/sender_api_value_detect"
             android:key="settings_detect_api"
-            android:summary="由谁来提供识别和翻译呢？"
-            android:title="api选择" />
-
+            android:summary="由谁来提供识别呢？"
+            android:title="识别api选择" />
+        <ListPreference
+            android:entries="@array/sender_api_trans"
+            android:entryValues="@array/sender_api_value_trans"
+            android:key="settings_trans_api"
+            android:summary="由谁来提供翻译呢？"
+            android:title="翻译api选择" />
     </PreferenceCategory>
+
     <PreferenceCategory
         android:key="settings_detect"
-        android:title="识别设置">
+        android:title="识别设置(yuka_v1)">
         <ListPreference
             android:entries="@array/detect_model"
             android:entryValues="@array/detect_modelset"
@@ -20,9 +26,9 @@
             android:summary="默认百度"
             android:title="识别器选择" />
         <SwitchPreference
+            android:defaultValue="true"
             android:key="settings_fastMode"
             android:summary="高性能要求，出现取词框消失请禁用"
-            android:defaultValue="true"
             android:title="快速识别" />
         <SwitchPreference
             android:defaultValue="false"
@@ -90,8 +96,36 @@
             android:title="文字方向" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:key="settings_detect_tess"
+        android:title="识别设置(tesseract-LSTM)">
+        <ListPreference
+            android:entries="@array/tess_detect_model"
+            android:entryValues="@array/tess_detect_modelset"
+            android:key="settings_detect_tess_detect_model"
+            android:summary="默认注重质量"
+            android:title="模型类型" />
+        <ListPreference
+            android:entries="@array/tess_lang"
+            android:entryValues="@array/tess_langset"
+            android:key="settings_detect_tess_lang"
+            android:summary="默认中文"
+            android:title="识别语言（主要）" />
+        <MultiSelectListPreference
+            android:entries="@array/tess_lang_sub"
+            android:entryValues="@array/tess_langset_sub"
+            android:key="settings_detect_tess_lang_sub"
+            android:summary="包含特殊形式（如竖排），选的越多识别效率越低。"
+            android:title="识别语言（次要）" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_fastMode"
+            android:summary="高性能要求，出现取词框消失请禁用"
+            android:title="快速识别" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="settings_translator"
-        android:title="翻译设置">
+        android:title="翻译设置(yuka_v1)">
         <ListPreference
             android:entries="@array/translator_name"
             android:entryValues="@array/translator"
@@ -159,6 +193,10 @@
             app:min="2"
             app:seekBarIncrement="1"
             app:showSeekBarValue="true" />
+        <Preference
+            android:key="settings_detect_share_store"
+            android:summary="安卓9以下为android/data/com.wzy.yuka/screenshot\n安卓10及以上为download/yuka"
+            android:title="截下来的图都到哪里去了？" />
     </PreferenceCategory>
 
 </PreferenceScreen>

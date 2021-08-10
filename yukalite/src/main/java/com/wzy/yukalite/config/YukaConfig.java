@@ -1,10 +1,11 @@
 package com.wzy.yukalite.config;
 
+
 /**
  * Created by Ziyan on 2020/8/11.
  */
 public class YukaConfig {
-    public static final String api_version = "yuka_v1";
+    public static final String api_version = "yuka_v1.1";
     public String mode;
     public String model;
     public String translator;
@@ -37,46 +38,57 @@ public class YukaConfig {
             return this;
         }
 
-        public Builder setOCR(Model model) {
-            this.model = model.name();
+        public Builder setOCR_Google(boolean vertical) {
+            this.model = Model.google.name();
+            this.vertical = vertical;
             return this;
         }
 
-        public Builder setOCR(Model model, boolean punctuation) {
-            this.model = model.name();
-            this.punctuation = punctuation;
-            return this;
-        }
-
-        public Builder setOCR(Model model, boolean punctuation, boolean vertical) {
-            this.model = model.name();
+        public Builder setOCR_Baidu(boolean punctuation, boolean vertical) {
+            this.model = Model.baidu.name();
             this.punctuation = punctuation;
             this.vertical = vertical;
             return this;
         }
 
-        public Builder setOCR(Model model, boolean punctuation, int toleration) {
-            this.model = model.name();
+        public Builder setOCR_Youdao(boolean punctuation) {
+            this.model = Model.youdao.name();
             this.punctuation = punctuation;
+            return this;
+        }
+
+        public Builder setAutoOCR_Google(boolean vertical, int toleration) {
             this.toleration = toleration;
-            return this;
+            return setOCR_Google(vertical);
         }
 
-        public Builder setOCR(Model model, boolean punctuation, boolean vertical, int toleration) {
-            this.model = model.name();
-            this.punctuation = punctuation;
-            this.vertical = vertical;
+        public Builder setAutoOCR_Youdao(boolean punctuation, int toleration) {
             this.toleration = toleration;
+            return setOCR_Youdao(punctuation);
+        }
+
+        public Builder setAutoOCR_Baidu(boolean punctuation, boolean vertical, int toleration) {
+            this.toleration = toleration;
+            return setOCR_Baidu(punctuation, vertical);
+        }
+
+        public Builder setTranslator_Youdao() {
+            this.translator = Translator.youdao.name();
             return this;
         }
 
-        public Builder setTranslator(Translator translator) {
-            this.translator = translator.name();
+        public Builder setTranslator_Tencent() {
+            this.translator = Translator.tencent.name();
             return this;
         }
 
-        public Builder setTranslator(Translator translator, boolean SBCS) {
-            this.translator = translator.name();
+        public Builder setTranslator_Google() {
+            this.translator = Translator.google.name();
+            return this;
+        }
+
+        public Builder setTranslator_Baidu(boolean SBCS) {
+            this.translator = Translator.baidu.name();
             this.SBCS = SBCS;
             return this;
         }

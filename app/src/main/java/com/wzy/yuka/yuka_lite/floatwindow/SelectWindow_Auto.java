@@ -160,6 +160,8 @@ public class SelectWindow_Auto extends FloatWindow {
                 JSONArray location = src.getJSONArray("location");
                 if (src.getString("location").equals("[0,0,0,0]")) {
                     Toast.makeText(applicationWeakReference.get(), "Yuka的ocr识别余额不足，请联系开发者QQ1269586767让他购买", Toast.LENGTH_SHORT).show();
+                } else if (src.getString("location").equals("[0,0,0,1]")) {
+                    Toast.makeText(applicationWeakReference.get(), "剩余自动识别次数不足", Toast.LENGTH_SHORT).show();
                 }
                 int[] location_json = new int[4];
                 for (int j = 0; j < location.length(); j++) {

@@ -8,8 +8,6 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yukalite.config.Mode;
-import com.wzy.yukalite.config.Model;
-import com.wzy.yukalite.config.Translator;
 import com.wzy.yukalite.config.YukaConfig;
 
 /**
@@ -35,15 +33,14 @@ public class ConfigBuilder {
                 builder.setMode(Mode.ocr);
                 switch ((String) spUtil.getParam(SharedPreferenceCollection.detect_model, resources.getStringArray(R.array.detect_modelset)[0])) {
                     case "baidu":
-                        builder.setOCR(Model.baidu,
-                                (boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false),
+                        builder.setOCR_Baidu((boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false),
                                 (boolean) spUtil.getParam(SharedPreferenceCollection.detect_vertical, false));
                         break;
                     case "youdao":
-                        builder.setOCR(Model.youdao, (boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false));
+                        builder.setOCR_Youdao((boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false));
                         break;
                     case "google":
-                        builder.setOCR(Model.google);
+                        builder.setOCR_Google((boolean) spUtil.getParam(SharedPreferenceCollection.detect_vertical, false));
                         break;
                 }
                 return builder.build();
@@ -52,15 +49,14 @@ public class ConfigBuilder {
                 builder.setMode(Mode.translate);
                 switch ((String) spUtil.getParam(SharedPreferenceCollection.detect_model, resources.getStringArray(R.array.detect_modelset)[0])) {
                     case "baidu":
-                        builder.setOCR(Model.baidu,
-                                (boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false),
+                        builder.setOCR_Baidu((boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false),
                                 (boolean) spUtil.getParam(SharedPreferenceCollection.detect_vertical, false));
                         break;
                     case "youdao":
-                        builder.setOCR(Model.youdao, (boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false));
+                        builder.setOCR_Youdao((boolean) spUtil.getParam(SharedPreferenceCollection.detect_punctuation, false));
                         break;
                     case "google":
-                        builder.setOCR(Model.google);
+                        builder.setOCR_Google((boolean) spUtil.getParam(SharedPreferenceCollection.detect_vertical, false));
                         break;
                 }
                 break;
@@ -76,13 +72,13 @@ public class ConfigBuilder {
 
                 switch ((String) spUtil.getParam(SharedPreferenceCollection.auto_model, resources.getStringArray(R.array.auto_modelset)[0])) {
                     case "youdao":
-                        builder.setOCR(Model.youdao, punctuation, toleration);
+                        builder.setAutoOCR_Youdao(punctuation, toleration);
                         break;
                     case "baidu":
-                        builder.setOCR(Model.baidu, punctuation, vertical, toleration);
+                        builder.setAutoOCR_Baidu(punctuation, vertical, toleration);
                         break;
                     case "google":
-                        builder.setOCR(Model.google, punctuation, vertical, toleration);
+                        builder.setAutoOCR_Google(vertical, toleration);
                         break;
                 }
                 break;
@@ -91,16 +87,16 @@ public class ConfigBuilder {
         //翻译器相关选项
         switch ((String) spUtil.getParam(SharedPreferenceCollection.trans_translator, resources.getStringArray(R.array.translator)[0])) {
             case "youdao":
-                builder.setTranslator(Translator.youdao);
+                builder.setTranslator_Youdao();
                 break;
             case "baidu":
-                builder.setTranslator(Translator.baidu, (boolean) spUtil.getParam(SharedPreferenceCollection.trans_baidu_SBCS, false));
+                builder.setTranslator_Baidu((boolean) spUtil.getParam(SharedPreferenceCollection.trans_baidu_SBCS, false));
                 break;
             case "tencent":
-                builder.setTranslator(Translator.tencent);
+                builder.setTranslator_Tencent();
                 break;
             case "google":
-                builder.setTranslator(Translator.google);
+                builder.setTranslator_Google();
                 break;
         }
         return builder.build();
