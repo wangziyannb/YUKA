@@ -101,7 +101,7 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
             //时间足够长，点击退出按钮会导致本过程失效
             globalHandler.postDelayed(screenshot::cleanImage, 6000);
         }
-        screenshot.getScreenshot(false, delay, floatWindowManager.getData(), () -> {
+        screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.auto_OTSUPreprocess, false), delay, floatWindowManager.getData(), () -> {
             floatWindow.show();
             floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
             sendScreenshot(screenshot, save);

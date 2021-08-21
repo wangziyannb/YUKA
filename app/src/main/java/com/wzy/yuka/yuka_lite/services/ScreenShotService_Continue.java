@@ -55,7 +55,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                 globalHandler.postDelayed(screenshot::cleanImage, 6000);
             }
             if (continuous) {
-                screenshot.getScreenshot(true, delay, floatWindowManager.getData(), () -> {
+                screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_OTSUPreprocess, false), delay, floatWindowManager.getData(), () -> {
                     try {
                         FloatWindow floatWindow = floatWindowManager.get_FloatWindow(0);
                         floatWindow.show();

@@ -39,9 +39,9 @@ public class Screenshot {
         }
     }
 
-    public void getScreenshot(boolean isGrayscale, int delay, Intent data, Shotter.OnShotListener onShotListener) {
+    public void getScreenshot(boolean otsu, int delay, Intent data, Shotter.OnShotListener onShotListener) {
         Shotter shotter = new Shotter(mContext.get(), -1, data);
-        shotter.startScreenShot(onShotListener, fullFileName, location, isGrayscale, true, delay);
+        shotter.startScreenShot(onShotListener, fullFileName, location, otsu, true, delay);
     }
 
     public String[] getFullFileNames() {

@@ -33,7 +33,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
     ListPreference translator_other;
     //tess的识别器设置
     ListPreference model_tess;
-
+    ListPreference tess_langs;
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_detect, rootKey);
@@ -47,12 +47,12 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
         translator_other = getPreferenceScreen().findPreference(SharedPreferenceCollection.trans_other_translator);
 
         model_tess = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_tess_model);
-        for (ListPreference l : new ListPreference[]{sender_api, sender_api_trans, model, translator, model_other, translator_other, model_tess}) {
+        tess_langs = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_tess_lang);
+        for (ListPreference l : new ListPreference[]{sender_api, sender_api_trans, model, translator, model_other, translator_other, model_tess, tess_langs}) {
             l.setValue(l.getValue() != null ? l.getValue() : l.getEntryValues()[0] + "");
             l.setSummary(l.getEntry() != null ? l.getEntry() : l.getEntries()[0]);
             l.setOnPreferenceChangeListener(this);
         }
-
         preferenceVisibilityChange();
     }
 

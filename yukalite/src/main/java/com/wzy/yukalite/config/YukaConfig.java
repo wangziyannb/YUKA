@@ -5,7 +5,7 @@ package com.wzy.yukalite.config;
  * Created by Ziyan on 2020/8/11.
  */
 public class YukaConfig {
-    public static final String api_version = "yuka_v1.1";
+    public static final String api_version = "yuka_v1_1";
     public String mode;
     public String model;
     public String translator;

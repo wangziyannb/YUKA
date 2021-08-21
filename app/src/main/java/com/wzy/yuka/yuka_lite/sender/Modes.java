@@ -8,4 +8,6 @@ public class Modes {
     public final static String ocr = "ocr";
     public final static String translate = "translate";
     public final static String auto = "auto";
+    public final static String auto_ocr = "auto_ocr";
+    public final static String auto_text = "auto_text";
 }

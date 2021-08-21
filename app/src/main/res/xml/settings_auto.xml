@@ -178,6 +178,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="额外设置">
+        <SwitchPreference
+            android:key="settings_auto_OTSUPreprocess"
+            android:summary="凸显文字，增加复杂情形识别率（可能）。但会增加识别时间"
+            android:title="大津法（OTSU）预处理" />
         <Preference
             android:key="settings_auto_offset"
             android:summary="目前是自动判断，不需要手动调整"

@@ -114,7 +114,7 @@
             android:entries="@array/tess_lang_sub"
             android:entryValues="@array/tess_langset_sub"
             android:key="settings_detect_tess_lang_sub"
-            android:summary="包含特殊形式（如竖排），选的越多识别效率越低。"
+            android:summary="选的越多识别效率越低"
             android:title="识别语言（次要）" />
         <SwitchPreference
             android:defaultValue="true"
@@ -184,6 +184,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="额外设置">
+        <SwitchPreference
+            android:key="settings_detect_OTSUPreprocess"
+            android:summary="凸显文字，增加复杂情形识别率（可能）。但会增加识别时间"
+            android:title="大津法（OTSU）预处理" />
         <SeekBarPreference
             android:key="settings_continuousMode_interval"
             android:max="30"

@@ -37,6 +37,9 @@ public class AboutOpenSource extends Fragment {
 
         writeText2TextView(R.raw.easypermissions, root.findViewById(R.id.os9));
         writeText2TextView(R.raw.curtain, root.findViewById(R.id.os10));
+
+        writeText2TextView(R.raw.tesseract4android, root.findViewById(R.id.os11));
+        writeText2TextView(R.raw.tesseract_ocr, root.findViewById(R.id.os12));
         return root;
     }
 

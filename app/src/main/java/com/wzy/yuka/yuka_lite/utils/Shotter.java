@@ -1,14 +1,11 @@
 package com.wzy.yuka.yuka_lite.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
@@ -48,12 +45,13 @@ public class Shotter {
     private MediaProjection mMediaProjection;
     private VirtualDisplay mVirtualDisplay;
     private OnShotListener mOnShotListener;
-    private boolean isGrayscale = false;
+    private boolean otsu = false;
     private int[][] location;
     private String[] mLocalUrl;
     private boolean multiple = false;
     private int delay;
 
+    @SuppressLint("WrongConstant")
     public Shotter(Context context, int reqCode, Intent data) {
 
         this.mRefContext = new SoftReference<>(context);
@@ -94,11 +92,11 @@ public class Shotter {
     }
 
     //增加仅截取部分图片(包括灰度设定)
-    public void startScreenShot(OnShotListener onShotListener, String[] loc_url, int[][] location, boolean isGrayscale, boolean multiple, int delay) {
+    public void startScreenShot(OnShotListener onShotListener, String[] loc_url, int[][] location, boolean otsu, boolean multiple, int delay) {
         mLocalUrl = loc_url;
         this.multiple = multiple;
         this.location = location;
-        this.isGrayscale = isGrayscale;
+        this.otsu = otsu;
         this.delay = delay;
         startScreenShot(onShotListener);
     }
@@ -171,18 +169,8 @@ public class Shotter {
                     Bitmap.Config.ARGB_8888);//虽然这个色彩比较费内存但是 兼容性更好
             bitmap.copyPixelsFromBuffer(buffer);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
-            if (isGrayscale) {
-                Bitmap bmpGrayscale = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
-                Canvas c = new Canvas(bmpGrayscale);
-                Paint paint = new Paint();
-                ColorMatrix cm = new ColorMatrix();
-                //Set the matrix to affect the saturation of colors.
-                //A value of 0 maps the color to gray-scale.
-                cm.setSaturation(0);
-                ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
-                paint.setColorFilter(f);
-                c.drawBitmap(bitmap, 0, 0, paint);
-                bitmap = Bitmap.createBitmap(bmpGrayscale);
+            if (otsu) {
+                bitmap = PicPreprocess.OTSUThreshold(bitmap);
             }
             int num = 1;
             if (location != null && multiple) {

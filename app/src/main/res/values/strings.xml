@@ -137,7 +137,6 @@
         <item>俄语</item>
         <item>德语</item>
     </string-array>
-
     <string-array name="tess_langset">
         <item>chi_sim</item>
         <item>chi_sim_vert</item>
@@ -154,7 +153,6 @@
     </string-array>
 
     <string-array name="tess_lang_sub">
-        <item>无</item>
         <item>简中</item>
         <item>简中（竖排）</item>
         <item>繁中</item>
@@ -170,7 +168,6 @@
     </string-array>
 
     <string-array name="tess_langset_sub">
-        <item>null</item>
         <item>chi_sim</item>
         <item>chi_sim_vert</item>
         <item>chi_tra</item>

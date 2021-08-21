@@ -49,6 +49,8 @@ public class SharedPreferenceCollection {
     //设置组-特殊
     public static final String detect_continuousMode_interval = "settings_continuousMode_interval";
     public static final String detect_share_store = "settings_detect_share_store";
+    public static final String detect_OTSUPreprocess = "settings_detect_OTSUPreprocess";
+
     //自动识别悬浮窗相应设置项
     //使用的api
     public static final String auto_api = "settings_auto_api";
@@ -72,6 +74,7 @@ public class SharedPreferenceCollection {
     public static final String auto_other_baidu_appsec = "settings_auto_other_baidu_seckey";
     //设置组-共有
     public static final String auto_offset = "settings_auto_offset";
+    public static final String auto_OTSUPreprocess = "settings_auto_OTSUPreprocess";
 
     //同步翻译悬浮窗相应设置项
     //使用的api

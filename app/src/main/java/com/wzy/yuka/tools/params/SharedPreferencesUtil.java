@@ -7,12 +7,15 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Created by Ziyan on 2020/5/22.
@@ -133,6 +136,10 @@ public class SharedPreferencesUtil {
                 return preferences.getLong(key, (Long) defaultObject);
         }
         return getObject(key);
+    }
+
+    public Set<String> getParam(String key, @NotNull Set<String> defaultObject) {
+        return preferences.getStringSet(key, defaultObject);
     }
 
     private Object getObject(String key) {

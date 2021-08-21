@@ -59,7 +59,7 @@ public class HomeMain extends BaseFragment implements View.OnClickListener, Glob
                 } else {
                     TextInputEditText text_w = text_l.findViewById(R.id.origin_text);
                     String origin = text_w.getText() + "";
-                    YukaConfig config = ConfigBuilder.yuka(getContext(), Modes.text);
+                    YukaConfig config = new ConfigBuilder(getContext(), Modes.text).getYukaConfig();
                     Callback callback = new Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {

@@ -24,7 +24,8 @@ import okhttp3.RequestBody;
  * Created by Ziyan on 2020/8/11.
  */
 class YukaRequest {
-    final static String base_url = "https://yukacn.xyz/yuka/";
+    final static String base_url = "https://yukacn.xyz/yuka_test/";
+    final static String api_version = YukaConfig.api_version;
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30 * 1000, TimeUnit.MILLISECONDS)
             .readTimeout(30 * 1000, TimeUnit.MILLISECONDS)
@@ -40,7 +41,7 @@ class YukaRequest {
                 )
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "yuka/yuka_v1")
+                .url(base_url + "yuka/" + api_version)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -94,10 +95,11 @@ class YukaRequest {
                     )
                     .build();
             Request.Builder request = new Request.Builder().post(body);
-            if (config.mode.equals("auto")) {
-                request.url(base_url + "yuka_advance/yuka_v1");
+            if (config.mode.equals("auto") || config.mode.equals("auto_ocr")) {
+                request.url(base_url + "yuka_advance/" + api_version);
             } else {
-                request.url(base_url + "yuka/yuka_v1");
+                Log.d("TAG", "single_main: ");
+                request.url(base_url + "yuka/" + api_version);
             }
             Call call = client.newCall(request.build());
             call.enqueue(callback);
@@ -123,11 +125,13 @@ class YukaRequest {
                 .add("u_name", user[0])
                 .add("uuid", user[2])
                 .build();
-        Request request = new Request.Builder()
-                .url(base_url + "yuka/yuka_v1")
-                .post(body)
-                .build();
-        Call call = client.newCall(request);
+        Request.Builder request = new Request.Builder().post(body);
+        if (config.mode.equals("auto")) {
+            request.url(base_url + "yuka_advance/" + api_version);
+        } else {
+            request.url(base_url + "yuka/" + api_version);
+        }
+        Call call = client.newCall(request.build());
         call.enqueue(callback);
     }
 
@@ -138,7 +142,7 @@ class YukaRequest {
                 .add("uuid", user[2])
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "login/yuka_v1")
+                .url(base_url + "login/" + api_version)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -151,7 +155,7 @@ class YukaRequest {
                 .add("uuid", user[2])
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "logout/yuka_v1")
+                .url(base_url + "logout/" + api_version)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -163,7 +167,7 @@ class YukaRequest {
                 .add("u_name", user[0])
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "account/yuka_v1")
+                .url(base_url + "account/" + api_version)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -177,7 +181,7 @@ class YukaRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "regist/yuka_v1")
+                .url(base_url + "regist/" + api_version)
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -196,7 +200,7 @@ class YukaRequest {
         }
         RequestBody requestBody = formBody.build();
         Request request = new Request.Builder()
-                .url(base_url + "check/yuka_v1")
+                .url(base_url + "check/" + api_version)
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -210,7 +214,7 @@ class YukaRequest {
                 .add("uuid", params[2])
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "forget_pwd/yuka_v1")
+                .url(base_url + "forget_pwd/" + api_version)
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
@@ -223,7 +227,7 @@ class YukaRequest {
                 .add("CDKEY", params[1])
                 .build();
         Request request = new Request.Builder()
-                .url(base_url + "activate/yuka_v1")
+                .url(base_url + "activate/" + api_version)
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);

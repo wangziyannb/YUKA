@@ -144,6 +144,7 @@ public class SelectWindow_Auto extends FloatWindow {
         }
         hide();
         try {
+            Log.d("TAG", "showResults: " + translation);
             JSONObject jsono = new JSONObject(translation);
             Log.e("TAG", translation);
             JSONArray x = jsono.getJSONArray("values");

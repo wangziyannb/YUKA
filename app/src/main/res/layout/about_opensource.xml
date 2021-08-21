@@ -150,5 +150,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="Tesseract4Android: \nhttps://github.com/adaptech-cz/Tesseract4Android"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="tesseract: \nhttps://github.com/tesseract-ocr/tesseract"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
     </LinearLayout>
 </ScrollView>

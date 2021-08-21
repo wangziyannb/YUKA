@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -102,21 +104,29 @@ public class Processor {
                         }
                     }
                     if (flag) {
-                        try {
-                            JSONObject ocr = new JSONObject(data.getString("ocr"));
-                            JSONArray array = ocr.getJSONArray("values");
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject src = array.getJSONObject(i).getJSONObject("src");
-                                src.put("translation", auto_trans[i]);
-                            }
-                            ocr.put("total_time", (double) (System.currentTimeMillis() - time) / 1000);
-                            data.putString("response", ocr.toString());
+                        if (data.getString("translator").equals("yuka_v1") || data.getString("translator").equals("null")) {
+                            data.putString("response", auto_trans[0]);
                             message.setData(data);
                             message.what = 1;
                             globalHandler.sendMessage(message);
-                        } catch (JSONException e) {
-                            Toast.makeText(contextWeakReference.get(), "在显示结果时出现了未知错误！", Toast.LENGTH_SHORT).show();
+                        } else {
+                            try {
+                                JSONObject ocr = new JSONObject(data.getString("ocr"));
+                                JSONArray array = ocr.getJSONArray("values");
+                                for (int i = 0; i < array.length(); i++) {
+                                    JSONObject src = array.getJSONObject(i).getJSONObject("src");
+                                    src.put("translation", auto_trans[i]);
+                                }
+                                ocr.put("total_time", (double) (System.currentTimeMillis() - time) / 1000);
+                                data.putString("response", ocr.toString());
+                                message.setData(data);
+                                message.what = 1;
+                                globalHandler.sendMessage(message);
+                            } catch (JSONException e) {
+                                Toast.makeText(contextWeakReference.get(), "在显示结果时出现了未知错误！", Toast.LENGTH_SHORT).show();
+                            }
                         }
+
                     }
                     break;
             }
@@ -126,7 +136,7 @@ public class Processor {
     /**
      * @param context    一般是service
      * @param screenshot 截图对象
-     * @param save       是否保存（仅对自动有效）
+     * @param save       是否保存（仅对普通有效）
      */
     public Processor(Context context, Screenshot screenshot, boolean save) {
         globalHandler = GlobalHandler.getInstance();
@@ -138,11 +148,15 @@ public class Processor {
     }
 
     public void single_main() {
-        this.mode = Modes.translate;
         String api = (String) util.getParam(SharedPreferenceCollection.detect_api, resources.getStringArray(R.array.sender_api_value_detect)[0]);
+        String api_trans = (String) util.getParam(SharedPreferenceCollection.trans_api, resources.getStringArray(R.array.sender_api_value_trans)[0]);
         switch (api) {
             case "yuka_v1":
-                single_get_all_yuka();
+                if (api_trans.equals(api)) {
+                    single_get_all_yuka();
+                } else {
+                    single_get_origin_yuka();
+                }
                 break;
             case "other":
                 String model = (String) util.getParam(SharedPreferenceCollection.detect_other_model, resources.getStringArray(R.array.other_detect_modelset)[0]);
@@ -153,7 +167,7 @@ public class Processor {
                 }
                 break;
             case "tess":
-                single_tess_get_origin();
+                single_get_origin_tess();
                 break;
             case "share":
                 single_share();
@@ -162,6 +176,7 @@ public class Processor {
     }
 
     private void single_get_all_yuka() {
+        this.mode = Modes.translate;
         Callback[] callbacks = new Callback[screenshot.getLocation().length];
         String[] fileNames = screenshot.getFullFileNames();
         String filePath = screenshot.getFilePath();
@@ -198,7 +213,61 @@ public class Processor {
             };
             images[i] = new File(fileNames[i]);
         }
-        YukaConfig yukaConfig = ConfigBuilder.yuka(contextWeakReference.get(), mode);
+        YukaConfig yukaConfig = new ConfigBuilder(contextWeakReference.get(), mode).getYukaConfig();
+        YukaLite.request(yukaConfig, images, callbacks);
+    }
+
+    private void single_get_origin_yuka() {
+        this.mode = Modes.ocr;
+        Callback[] callbacks = new Callback[screenshot.getLocation().length];
+        String[] fileNames = screenshot.getFullFileNames();
+        String filePath = screenshot.getFilePath();
+        File[] images = new File[fileNames.length];
+        //yuka_v1可以直接把原文和译文一起发过来，所以不需要分成两步来做了，但是这里要求只识别不翻译。
+        //翻译可能由其他方式进行。
+        for (int i = 0; i < fileNames.length; i++) {
+            String fileName = fileNames[i];
+            int finalI = i;
+            callbacks[i] = new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("error", e.toString());
+                    Message message = Message.obtain();
+                    message.what = 0x0;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("index", screenshot.getIndex()[finalI]);
+                    bundle.putBoolean("save", save);
+                    String resp = response.body().string();
+                    try {
+                        String result = new JSONObject(resp).getString("origin");
+                        bundle.putString("ocr_initial", resp);
+                        bundle.putString("ocr", result);
+                        bundle.putString("fileName", fileName);
+                        bundle.putString("filePath", filePath);
+                        bundle.putString("model", "yuka_v1");
+                        Message message = Message.obtain();
+                        message.what = 0x1;
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                    } catch (JSONException e) {
+                        Message message = Message.obtain();
+                        message.what = 0x0;
+                        bundle.putString("error", "Yuka识别器出现错误，加官方群781666001查询错误原因。\n返回的内容为:" + resp);
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                    }
+                }
+            };
+            images[i] = new File(fileNames[i]);
+        }
+        YukaConfig yukaConfig = new ConfigBuilder(contextWeakReference.get(), mode).getYukaConfig();
         YukaLite.request(yukaConfig, images, callbacks);
     }
 
@@ -256,7 +325,7 @@ public class Processor {
         String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.detect_other_youdao_appsec, "");
         if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
             Toast.makeText(contextWeakReference.get(), "未填写有道的应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
-            single_get_all_yuka();
+            single_get_origin_yuka();
         } else {
             YoudaoOCR.request(APP_KEY, APP_SECRET, images, callbacks);
         }
@@ -318,28 +387,46 @@ public class Processor {
             String Secret_Key = (String) util.getParam(SharedPreferenceCollection.detect_other_baidu_appsec, "");
             if (API_Key.isEmpty() || Secret_Key.isEmpty()) {
                 Toast.makeText(contextWeakReference.get(), "未填写百度的API Key或Secret Key，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
-                single_get_all_yuka();
+                single_get_origin_yuka();
             } else {
                 BaiduOCR.request(API_Key, Secret_Key, images, callbacks, handler);
             }
         }).start();
     }
 
-    private void single_tess_get_origin() {
+    private void single_get_origin_tess() {
         String model = (String) util.getParam(SharedPreferenceCollection.detect_tess_model, resources.getStringArray(R.array.tess_detect_modelset)[0]);
         String langs = (String) util.getParam(SharedPreferenceCollection.detect_tess_lang, resources.getStringArray(R.array.tess_langset)[0]);
-
-        String[] sub_langs = (String[]) util.getParam(SharedPreferenceCollection.detect_tess_lang_sub, resources.getStringArray(R.array.tess_langset_sub)[0]);
-
-        if (sub_langs.equals(new String[]{"null"})) {
-
-        }
-        String[] origins = TessOCR.detect(contextWeakReference.get(), screenshot, langs, sub_langs, model);
+        Set<String> sub_langs = util.getParam(SharedPreferenceCollection.detect_tess_lang_sub, new HashSet<>());
+        new Thread(() -> {
+            String[] origins = TessOCR.detect(contextWeakReference.get(), screenshot, langs, sub_langs, model);
+            try {
+                for (int i = 0; i < origins.length; i++) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("index", screenshot.getIndex()[i]);
+                    bundle.putBoolean("save", save);
+                    JSONObject result = new JSONObject();
+                    result.put("origin", origins[i]);
+                    result.put("results", origins[i]);
+                    result.put("time", 0);
+                    bundle.putString("ocr_initial", result.toString());
+                    bundle.putString("ocr", origins[i]);
+                    bundle.putString("fileName", screenshot.getFullFileNames()[i]);
+                    bundle.putString("filePath", screenshot.getFilePath());
+                    bundle.putString("model", "tess");
+                    Message message = Message.obtain();
+                    message.what = 0x1;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void single_share() {
         String[] fullFileNames = screenshot.getFullFileNames();
-        String[] fileNames = screenshot.getFileNames();
         Uri[] uris = new Uri[fullFileNames.length];
         for (int i = 0; i < fullFileNames.length; i++) {
             //先存到DCIM下
@@ -364,17 +451,74 @@ public class Processor {
     }
 
     private void single_get_result(Bundle bundle) {
-        String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
-        boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
-        switch (translator) {
-            case "youdao":
-                single_get_result_youdao(bundle);
+        String api_trans = (String) util.getParam(SharedPreferenceCollection.trans_api, resources.getStringArray(R.array.sender_api_value_trans)[0]);
+        switch (api_trans) {
+            case "yuka_v1":
+                single_get_result_yuka(bundle);
                 break;
-            case "baidu":
-                single_get_result_baidu(bundle, SBCS);
+            case "other":
+                String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
+                boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
+                switch (translator) {
+                    case "youdao":
+                        single_get_result_youdao(bundle);
+                        break;
+                    case "baidu":
+                        single_get_result_baidu(bundle, SBCS);
+                        break;
+                }
                 break;
-        }
+            case "null":
+                bundle.putString("trans_initial", bundle.getString("ocr"));
+                bundle.putString("translate", bundle.getString("ocr"));
+                bundle.putString("translator", "yuka_v1");
+                Message message = Message.obtain();
+                message.what = 0x2;
+                message.setData(bundle);
+                handler.sendMessage(message);
+                break;
 
+        }
+    }
+
+    private void single_get_result_yuka(Bundle bundle) {
+        this.mode = Modes.text;
+        String origin = bundle.getString("ocr");
+        //yuka_v1可以直接把原文和译文一起发过来，所以不需要分成两步来做了，但是这里要求只翻译不识别。
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0x0;
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resp = response.body().string();
+                try {
+                    String result = new JSONObject(resp).getString("results");
+                    bundle.putString("trans_initial", resp);
+                    bundle.putString("translate", result);
+                    bundle.putString("translator", "yuka_v1");
+                    Message message = Message.obtain();
+                    message.what = 0x2;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } catch (JSONException e) {
+                    Message message = Message.obtain();
+                    message.what = 0x0;
+                    bundle.putString("error", "Yuka翻译器出现错误，加官方群781666001查询错误原因。\n返回的内容为:" + resp);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+            }
+        };
+        YukaConfig yukaConfig = new ConfigBuilder(contextWeakReference.get(), mode).getYukaConfig();
+        YukaLite.request(yukaConfig, origin, callback);
     }
 
     private void single_get_result_baidu(Bundle bundle, boolean SBCS) {
@@ -417,7 +561,7 @@ public class Processor {
 
         if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
             Toast.makeText(contextWeakReference.get(), "未填写应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
-            single_get_all_yuka();
+            single_get_result_yuka(bundle);
         } else {
             BaiduTranslator.request(APP_KEY, APP_SECRET, origin, SBCS, callback);
         }
@@ -470,12 +614,16 @@ public class Processor {
     }
 
     public void auto_main() {
-        this.mode = Modes.auto;
         time = System.currentTimeMillis();
         String api = (String) util.getParam(SharedPreferenceCollection.auto_api, resources.getStringArray(R.array.sender_api_value_auto)[0]);
+        String api_trans = (String) util.getParam(SharedPreferenceCollection.trans_api_auto, resources.getStringArray(R.array.sender_api_value_trans_auto)[0]);
         switch (api) {
             case "yuka_v1":
-                auto_get_all_yuka();
+                if (api_trans.equals("yuka_v1")) {
+                    auto_get_all_yuka();
+                } else {
+                    auto_get_origin_yuka();
+                }
                 break;
             case "other":
                 String model = (String) util.getParam(SharedPreferenceCollection.auto_other_model, resources.getStringArray(R.array.other_auto_modelset)[0]);
@@ -489,6 +637,7 @@ public class Processor {
     }
 
     private void auto_get_all_yuka() {
+        this.mode = Modes.auto;
         String fileName = screenshot.getFullFileNames()[0];
         String filePath = screenshot.getFilePath();
         Callback callback = new Callback() {
@@ -517,8 +666,46 @@ public class Processor {
                 globalHandler.sendMessage(message);
             }
         };
+        YukaConfig yukaConfig = new ConfigBuilder(contextWeakReference.get(), mode).getYukaConfig();
+        File image = new File(fileName);
+        YukaLite.request(yukaConfig, image, callback);
+    }
+
+    private void auto_get_origin_yuka() {
+        this.mode = Modes.auto_ocr;
+        String fileName = screenshot.getFullFileNames()[0];
+        String filePath = screenshot.getFilePath();
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0;
+                message.setData(bundle);
+                globalHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Bundle bundle = new Bundle();
+                bundle.putInt("index", screenshot.getIndex()[0]);
+                bundle.putBoolean("save", save);
+                String resp = response.body().string();
+                //yuka送来的直接是整合过的json
+                bundle.putString("ocr_initial", resp);
+                bundle.putString("ocr", resp);
+                bundle.putString("fileName", fileName);
+                bundle.putString("filePath", filePath);
+                bundle.putString("model", "yuka_v1");
+                Message message = Message.obtain();
+                message.what = 0x3;
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
+        };
         //预置yukaConfig，说实话挺难用的
-        YukaConfig yukaConfig = ConfigBuilder.yuka(contextWeakReference.get(), mode);
+        YukaConfig yukaConfig = new ConfigBuilder(contextWeakReference.get(), mode).getYukaConfig();
         File image = new File(fileName);
         YukaLite.request(yukaConfig, image, callback);
     }
@@ -579,22 +766,87 @@ public class Processor {
         String APP_SECRET = (String) util.getParam(SharedPreferenceCollection.auto_other_youdao_appsec, "");
         if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
             Toast.makeText(contextWeakReference.get(), "未填写有道的应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
-            auto_get_all_yuka();
+            auto_get_origin_yuka();
         } else {
             YoudaoOCR.request(APP_KEY, APP_SECRET, images, callbacks);
         }
     }
 
     private void auto_get_result(Bundle bundle) {
-        String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
-        boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
-        switch (translator) {
-            case "youdao":
-                auto_get_result_youdao(bundle);
+        String api_trans = (String) util.getParam(SharedPreferenceCollection.trans_api_auto, resources.getStringArray(R.array.sender_api_value_trans_auto)[0]);
+        switch (api_trans) {
+            case "yuka_v1":
+                auto_get_result_yuka(bundle);
                 break;
-            case "baidu":
-                auto_get_result_baidu(bundle, SBCS);
+            case "other":
+                String translator = (String) util.getParam(SharedPreferenceCollection.trans_other_translator, resources.getStringArray(R.array.other_trans_modelset)[0]);
+                boolean SBCS = (boolean) util.getParam(SharedPreferenceCollection.trans_other_baidu_SBCS, false);
+                switch (translator) {
+                    case "youdao":
+                        auto_get_result_youdao(bundle);
+                        break;
+                    case "baidu":
+                        auto_get_result_baidu(bundle, SBCS);
+                }
+                break;
+            case "null":
+                //todo
+                auto_trans = new String[1];
+                try {
+                    JSONObject ocr = new JSONObject(bundle.getString("ocr"));
+                    JSONArray array = ocr.getJSONArray("values");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject src = array.getJSONObject(i).getJSONObject("src");
+                        src.put("translation", src.getString("words"));
+                    }
+                    ocr.put("total_time", (double) (System.currentTimeMillis() - time) / 1000);
+                    bundle.putString("translate", ocr.toString());
+                    bundle.putString("translator", "null");
+                    bundle.putInt("auto_index", 0);
+                    Message message = Message.obtain();
+                    message.what = 0x4;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } catch (JSONException e) {
+                    Toast.makeText(contextWeakReference.get(), "在显示结果时出现了未知错误！", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
+
+
+    }
+
+    private void auto_get_result_yuka(Bundle bundle) {
+        this.mode = Modes.auto_text;
+        String origin = bundle.getString("ocr");
+        auto_trans = new String[1];
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Bundle bundle = new Bundle();
+                bundle.putString("error", e.toString());
+                Message message = Message.obtain();
+                message.what = 0x0;
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resp = response.body().string();
+                bundle.putString("trans_initial", resp);
+                bundle.putString("translate", resp);
+                bundle.putString("translator", "yuka_v1");
+                bundle.putInt("auto_index", 0);
+                Message message = Message.obtain();
+                message.what = 0x4;
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
+        };
+        YukaConfig yukaConfig = new ConfigBuilder(contextWeakReference.get(), mode).getYukaConfig();
+        YukaLite.request(yukaConfig, origin, callback);
     }
 
     private void auto_get_result_youdao(Bundle bundle) {
@@ -647,7 +899,7 @@ public class Processor {
             }
             if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
                 Toast.makeText(contextWeakReference.get(), "未填写应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
-                auto_get_all_yuka();
+                auto_get_result_yuka(bundle);
             } else {
                 for (int i = 0; i < array.length(); i++) {
                     YoudaoTranslator.request(APP_KEY, APP_SECRET, sa[i], callbacks[i]);
@@ -710,7 +962,7 @@ public class Processor {
             }
             if (APP_KEY.isEmpty() || APP_SECRET.isEmpty()) {
                 Toast.makeText(contextWeakReference.get(), "未填写应用id或密钥，将使用yuka_v1来替代", Toast.LENGTH_SHORT).show();
-                auto_get_all_yuka();
+                auto_get_result_yuka(bundle);
             } else {
                 for (int i = 0; i < array.length(); i++) {
                     BaiduTranslator.request(APP_KEY, APP_SECRET, sa[i], SBCS, callbacks[i]);
