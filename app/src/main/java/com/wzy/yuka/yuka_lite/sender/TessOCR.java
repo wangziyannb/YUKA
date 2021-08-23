@@ -47,22 +47,19 @@ public class TessOCR {
             //方块字-->RIL_SYMBOL
             //方块字词组（如“输入”）-->RIL_WORD
             //字母字-->RIL_WORD
-
-            int pageIteratorLevel;
             if (language.contains("chi") || language.contains("jpn") || language.contains("kor")) {
-                Log.e("TAG", "detect:选用RIL_SYMBOL");
-                pageIteratorLevel = TessBaseAPI.PageIteratorLevel.RIL_SYMBOL;
+                do {
+                    List<Pair<String, Double>> results = iterator.getSymbolChoicesAndConfidence();
+                    Log.e("TAG", "detect: " + results.size());
+                    for (Pair<String, Double> r : results) {
+                        builder.append(r.first);
+                        Log.d("TAG", "    \"" + r.first + "\"    " + r.second);
+                    }
+                } while (iterator.next(TessBaseAPI.PageIteratorLevel.RIL_SYMBOL));
             } else {
-                Log.e("TAG", "detect:选用RIL_WORD");
-                pageIteratorLevel = TessBaseAPI.PageIteratorLevel.RIL_WORD;
+                builder.append(api.getUTF8Text().replace("\n", " "));
             }
-            do {
-                List<Pair<String, Double>> results = iterator.getSymbolChoicesAndConfidence();
-                for (Pair<String, Double> r : results) {
-                    builder.append(r.first);
-                    Log.d("TAG", "    \"" + r.first + "\"    " + r.second);
-                }
-            } while (iterator.next(pageIteratorLevel));
+
             detected[i] = builder.toString();
             Log.d("TAG", detected[i]);
             api.clear();

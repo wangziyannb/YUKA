@@ -24,7 +24,7 @@ import okhttp3.RequestBody;
  * Created by Ziyan on 2020/8/11.
  */
 class YukaRequest {
-    final static String base_url = "https://yukacn.xyz/yuka_test/";
+    final static String base_url = "https://yukacn.xyz/yuka/";
     final static String api_version = YukaConfig.api_version;
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30 * 1000, TimeUnit.MILLISECONDS)

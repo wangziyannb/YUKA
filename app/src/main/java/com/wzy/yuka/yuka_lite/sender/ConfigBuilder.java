@@ -17,7 +17,6 @@ import java.lang.ref.WeakReference;
  */
 public class ConfigBuilder {
 
-    private final WeakReference<Context> ref;
     private final String mode;
     private final YukaConfig.Builder builder;
     private final SharedPreferencesUtil spUtil;
@@ -28,7 +27,7 @@ public class ConfigBuilder {
      * @param mode    只可能从Modes中选择。yuka不需要yukaconfig
      */
     public ConfigBuilder(Context context, String mode) {
-        this.ref = new WeakReference<>(context);
+        WeakReference<Context> ref = new WeakReference<>(context);
         this.mode = mode;
         this.builder = new YukaConfig.Builder();
         this.spUtil = SharedPreferencesUtil.getInstance();
@@ -116,6 +115,8 @@ public class ConfigBuilder {
         switch (mode) {
             case Modes.text:
             case Modes.auto_text:
+            case Modes.translate:
+            case Modes.auto:
                 switch ((String) spUtil.getParam(SharedPreferenceCollection.trans_translator, resources.getStringArray(R.array.translator)[0])) {
                     case "youdao":
                         builder.setTranslator_Youdao();
