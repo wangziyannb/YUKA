@@ -28,10 +28,13 @@ import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
 import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yuka.yuka_lite.utils.TTS;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 /**
  * Created by Ziyan on 2020/4/29.
@@ -201,6 +204,9 @@ public class SelectWindow_Normal extends FloatWindow {
         } else {
             textView.setText(translation);
         }
+        String utteranceId = UUID.randomUUID().toString();
+        TTS.getInstance(applicationWeakReference.get()).speak(textView.getText(), utteranceId);
+
     }
 
     @Override

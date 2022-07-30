@@ -22,6 +22,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         getPreferenceScreen().findPreference("settings_sync").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("settings_appearance").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("settings_developer").setOnPreferenceClickListener(this);
+        getPreferenceScreen().findPreference("settings_tts").setOnPreferenceClickListener(this);
+
     }
 
     @Nullable
@@ -52,6 +54,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 break;
             case "settings_appearance":
                 Navigation.findNavController(getView()).navigate(R.id.action_nav_settings_to_nav_settings_appearance);
+                break;
+            case "settings_tts":
+                Navigation.findNavController(getView()).navigate(R.id.action_nav_settings_to_nav_settings_tts);
                 break;
         }
 

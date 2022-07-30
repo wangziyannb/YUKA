@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_nav_settings_to_nav_settings_sync"
             app:destination="@id/nav_settings_sync" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_tts"
+            app:destination="@id/nav_settings_tts" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings_appearance"
@@ -39,6 +42,10 @@
         android:id="@+id/nav_settings_sync"
         android:name="com.wzy.yuka.ui.setting.SettingsSync"
         android:label="同传选项" />
+    <fragment
+        android:id="@+id/nav_settings_tts"
+        android:name="com.wzy.yuka.ui.setting.SettingsTTS"
+        android:label="语音转文字" />
     <fragment
         android:id="@+id/nav_settings_developer"
         android:name="com.wzy.yuka.ui.setting.SettingsDeveloper"

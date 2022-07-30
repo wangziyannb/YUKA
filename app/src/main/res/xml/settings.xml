@@ -19,6 +19,10 @@
             android:key="settings_sync"
             android:summary="根据系统内录音频生成同步字幕，需要目标app支持，需要安卓Q(10)"
             android:title="系统内录同步字幕" />
+        <Preference
+            android:key="settings_tts"
+            android:summary="系统提供支持"
+            android:title="语音转文字" />
     </PreferenceCategory>
     <PreferenceCategory android:title="开发者选项">
         <Preference

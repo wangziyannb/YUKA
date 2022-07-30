@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="基本设置">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="settings_tts_activate"
+            android:summary="仅普通（单/多悬浮窗）模式支持tts"
+            android:title="TTS开关" />
+        <Preference
+            android:key="settings_tts_goto"
+            android:title="跳转无障碍设置" />
+    </PreferenceCategory>
+</PreferenceScreen>

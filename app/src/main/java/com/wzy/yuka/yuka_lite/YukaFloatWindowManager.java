@@ -21,6 +21,7 @@ import com.wzy.yuka.yuka_lite.services.AudioService;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Auto;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Continue;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Single;
+import com.wzy.yuka.yuka_lite.utils.TTS;
 import com.wzy.yukafloatwindows.FloatWindowManager;
 import com.wzy.yukafloatwindows.FloatWindowManagerException;
 import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
@@ -71,6 +72,7 @@ public class YukaFloatWindowManager extends FloatWindowManager {
         this.mScreenShotContinueService = new Intent(applicationWeakReference.get(), ScreenShotService_Continue.class);
         this.mScreenShotSingleService = new Intent(applicationWeakReference.get(), ScreenShotService_Single.class);
         this.mAudioService = new Intent(applicationWeakReference.get(), AudioService.class);
+        TTS.init(application);
     }
 
     public static YukaFloatWindowManager getInstance() throws FloatWindowManagerException {

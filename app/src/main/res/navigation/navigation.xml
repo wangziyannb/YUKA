@@ -46,8 +46,7 @@
         android:id="@+id/nav_register"
         android:name="com.wzy.yuka.ui.log.Regist"
         android:label="注册"
-        tools:layout="@layout/log_register">
-    </fragment>
+        tools:layout="@layout/log_register"></fragment>
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.wzy.yuka.ui.setting.SettingsFragment"
@@ -67,6 +66,9 @@
         <action
             android:id="@+id/action_nav_settings_to_nav_settings_sync"
             app:destination="@id/nav_settings_sync" />
+        <action
+            android:id="@+id/action_nav_settings_to_nav_settings_tts"
+            app:destination="@id/nav_settings_tts" />
     </fragment>
     <fragment
         android:id="@+id/nav_settings_appearance"
@@ -88,7 +90,10 @@
         android:id="@+id/nav_settings_developer"
         android:name="com.wzy.yuka.ui.setting.SettingsDeveloper"
         android:label="开发者选项" />
-
+    <fragment
+        android:id="@+id/nav_settings_tts"
+        android:name="com.wzy.yuka.ui.setting.SettingsTTS"
+        android:label="语音转文字" />
     <fragment
         android:id="@+id/nav_help"
         android:name="com.wzy.yuka.ui.help.HelpFragment"

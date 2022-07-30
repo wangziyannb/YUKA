@@ -116,6 +116,10 @@ public class SharedPreferenceCollection {
     public static final String trans_other_baidu_appsec = "settings_trans_other_baidu_seckey";
     public static final String trans_other_baidu_SBCS = "settings_trans_other_baidu_SBCS";
 
+    //TTS设置
+    public static final String tts_activate = "settings_tts_activate";
+    public static final String tts_goto = "settings_tts_goto";
+
     //引导选项
     public static final String FIRST_GuideActivity = "first_open_guideActivity";
     public static final String FIRST_MainActivity = "first_open_mainActivity";
