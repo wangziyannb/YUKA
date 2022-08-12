@@ -204,9 +204,10 @@ public class SelectWindow_Normal extends FloatWindow {
         } else {
             textView.setText(translation);
         }
-        String utteranceId = UUID.randomUUID().toString();
-        TTS.getInstance(applicationWeakReference.get()).speak(textView.getText(), utteranceId);
-
+        if ((boolean) spUtil.getParam(SharedPreferenceCollection.tts_activate, false)) {
+            String utteranceId = UUID.randomUUID().toString();
+            TTS.getInstance(applicationWeakReference.get()).speak(textView.getText(), utteranceId);
+        }
     }
 
     @Override

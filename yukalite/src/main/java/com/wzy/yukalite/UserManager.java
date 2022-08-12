@@ -17,6 +17,8 @@ import okhttp3.Callback;
  * Created by Ziyan on 2020/5/9.
  */
 class UserManager {
+    // todo
+    // account might be null
     private static Account account;
     private static HashMap<String, String> hashMap;
 
@@ -25,6 +27,9 @@ class UserManager {
     }
 
     static void addUser(@NotNull String u_name, @NotNull String pwd) {
+        if (account == null) {
+            return;
+        }
         hashMap = account.get();
         hashMap.put("u_name", u_name);
         hashMap.put("pwd", pwd);
@@ -32,13 +37,27 @@ class UserManager {
     }
 
     static void removeUser() {
+        if (account == null) {
+            return;
+        }
         hashMap = account.get();
         hashMap.remove("u_name");
         hashMap.remove("pwd");
         account.update(hashMap);
     }
 
+    static String getId() throws YukaUserManagerException {
+        if (account == null) {
+            throw new YukaUserManagerException(YukaUserManagerException.NO_USER);
+        }
+        hashMap = account.get();
+        return hashMap.get("uuid");
+    }
+
     static String[] getUser() throws YukaUserManagerException {
+        if (account == null) {
+            throw new YukaUserManagerException(YukaUserManagerException.NO_USER);
+        }
         hashMap = account.get();
         String[] params = new String[3];
         params[0] = hashMap.get("u_name");
@@ -119,11 +138,17 @@ class UserManager {
     }
 
     static boolean isLogin() {
+        if (account == null) {
+            return false;
+        }
         hashMap = account.get();
         return Boolean.parseBoolean(hashMap.get("isLogin"));
     }
 
     static void setLogin(boolean i) {
+        if (account == null) {
+            return;
+        }
         hashMap = account.get();
         hashMap.put("isLogin", Boolean.toString(i));
         account.update(hashMap);
@@ -138,6 +163,9 @@ class UserManager {
             mSharedPreferences = context.getSharedPreferences("yuka", Context.MODE_PRIVATE);
             try {
                 json = new JSONObject(mSharedPreferences.getString("account", ""));
+                HashMap<String, String> map = get();
+                map.put("uuid", id);
+                update(map);
             } catch (JSONException e) {
                 Log.e("Account", "Account:load json failed");
                 json = new JSONObject();

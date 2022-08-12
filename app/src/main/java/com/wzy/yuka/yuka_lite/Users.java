@@ -37,7 +37,7 @@ public class Users {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("TAG", "onFailure: " + e.toString());
+                Log.e("TAG", "onFailure: " + e);
                 Message message = Message.obtain();
                 message.what = 400;
                 globalHandler.sendMessage(message);
@@ -81,7 +81,7 @@ public class Users {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("TAG", "onFailure: " + e.toString());
+                Log.e("TAG", "onFailure: " + e);
                 Message message = Message.obtain();
                 message.what = 400;
                 globalHandler.sendMessage(message);
@@ -125,7 +125,7 @@ public class Users {
         Callback callback = new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("TAG", "onFailure: " + e.toString());
+                Log.e("TAG", "onFailure: " + e);
                 Message message = Message.obtain();
                 message.what = 400;
                 globalHandler.sendMessage(message);
@@ -325,5 +325,6 @@ public class Users {
     public static void addUser(@NotNull String u_name, @NotNull String pwd) {
         YukaLite.addUser(u_name, pwd);
     }
+
 }
 

@@ -45,7 +45,7 @@ public class SharedPreferenceCollection {
     public static final String detect_tess_model = "settings_detect_tess_detect_model";
     public static final String detect_tess_lang = "settings_detect_tess_lang";
     public static final String detect_tess_lang_sub = "settings_detect_tess_lang_sub";
-
+    public static final String detect_tess_check_model = "settings_detect_tess_check_model";
     //设置组-特殊
     public static final String detect_continuousMode_interval = "settings_continuousMode_interval";
     public static final String detect_share_store = "settings_detect_share_store";
@@ -129,4 +129,7 @@ public class SharedPreferenceCollection {
     public static final String FIRST_SelectWindow_N_1 = "first_SWN_1";
     public static final String FIRST_SelectWindow_N_2 = "first_SWN_2";
     public static final String FIRST_SelectWindow_A = "first_SWA";
+
+    //隐私协议
+    public static final String Agreement = "Agreement";
 }

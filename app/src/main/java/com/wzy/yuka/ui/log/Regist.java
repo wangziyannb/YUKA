@@ -2,7 +2,6 @@ package com.wzy.yuka.ui.log;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -34,6 +33,8 @@ import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.ui.view.CircleTickView;
 import com.wzy.yuka.yuka_lite.Users;
 import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.YukaUserManagerException;
 
 
 public class Regist extends Fragment implements View.OnClickListener, GlobalHandler.HandleMsgListener, TextWatcher {
@@ -43,7 +44,7 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
     private CircleTickView circleTickView2;
     private EditText un_t;
     private EditText pwd_t;
-    private Runnable r = () -> Users.check_feasibility("u_name", un_t.getText().toString());
+    private final Runnable r = () -> Users.check_feasibility("u_name", un_t.getText().toString());
 
     private void showDialog() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.policy, null, false);
@@ -137,22 +138,27 @@ public class Regist extends Fragment implements View.OnClickListener, GlobalHand
             String[] params = new String[3];
             params[0] = un_t.getText() + "";
             params[1] = pwd_t.getText() + "";
-            params[2] = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-            ;
-            Users.register(params);
-            LoadingViewManager
-                    .with(getActivity())
-                    .setHintText("注册中...")
-                    .setAnimationStyle("BallScaleIndicator")
-                    .setShowInnerRectangle(true)
-                    .setOutsideAlpha(0.3f)
-                    .setLoadingContentMargins(50, 50, 50, 50)
-                    .build();
-            final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-            final MutableLiveData<String> user_n = (MutableLiveData<String>) mainViewModel.getuser_n();
-            final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
-            user_n.setValue(params[0]);
-            pwd.setValue(params[1]);
+            try {
+                params[2] = YukaLite.getId();
+                Users.register(params);
+                LoadingViewManager
+                        .with(getActivity())
+                        .setHintText("注册中...")
+                        .setAnimationStyle("BallScaleIndicator")
+                        .setShowInnerRectangle(true)
+                        .setOutsideAlpha(0.3f)
+                        .setLoadingContentMargins(50, 50, 50, 50)
+                        .build();
+                final MainViewModel mainViewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+                final MutableLiveData<String> user_n = (MutableLiveData<String>) mainViewModel.getuser_n();
+                final MutableLiveData<String> pwd = (MutableLiveData<String>) mainViewModel.getpwd();
+                user_n.setValue(params[0]);
+                pwd.setValue(params[1]);
+            } catch (YukaUserManagerException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "未找到设备id，注册失败", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 

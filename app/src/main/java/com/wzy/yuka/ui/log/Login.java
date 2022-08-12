@@ -3,7 +3,6 @@ package com.wzy.yuka.ui.log;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,16 +115,22 @@ public class Login extends Fragment implements View.OnClickListener, GlobalHandl
         View view = (View) v.getParent();
         switch (v.getId()) {
             case R.id.register:
-                LoadingViewManager
-                        .with(getActivity())
-                        .setHintText("请等待...")
-                        .setAnimationStyle("BallScaleIndicator")
-                        .setShowInnerRectangle(true)
-                        .setOutsideAlpha(0.3f)
-                        .setLoadingContentMargins(50, 50, 50, 50)
-                        .build();
-                globalHandler.setHandleMsgListener(this);
-                Users.check_feasibility("uuid", Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+                try {
+                    String uuid = YukaLite.getId();
+                    LoadingViewManager
+                            .with(getActivity())
+                            .setHintText("请等待...")
+                            .setAnimationStyle("BallScaleIndicator")
+                            .setShowInnerRectangle(true)
+                            .setOutsideAlpha(0.3f)
+                            .setLoadingContentMargins(50, 50, 50, 50)
+                            .build();
+                    globalHandler.setHandleMsgListener(this);
+                    Users.check_feasibility("uuid", uuid);
+                } catch (YukaUserManagerException e) {
+                    Toast.makeText(getContext(), "未找到设备id，注册失败", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
                 break;
             case R.id.login:
                 if (checkBox.isChecked()) {

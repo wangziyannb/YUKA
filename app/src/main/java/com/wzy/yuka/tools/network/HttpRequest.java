@@ -54,7 +54,7 @@ public class HttpRequest {
 
     public static void getModel(Callback callback) {
         Request request = new Request.Builder()
-                .url("https://yuka-app-1305234451.cos.ap-shanghai.myqcloud.com/yuka_app/models/best/tessdata/chi_sim.traineddata")
+                .url("https://yuka-app-1305234451.cos.ap-shanghai.myqcloud.com/yuka_app/models.zip")
                 .build();
         Call call = client.newCall(request);
         call.enqueue(callback);

@@ -178,5 +178,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="Android_CN_OAID: \nhttps://github.com/gzu-liyujiang/Android_CN_OAID"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/os13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
     </LinearLayout>
 </ScrollView>

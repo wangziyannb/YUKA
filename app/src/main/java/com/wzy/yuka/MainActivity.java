@@ -58,58 +58,12 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     public NavigationView navigationView;
     private GuideManager guideManager = new GuideManager(this);
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        globalHandler = GlobalHandler.getInstance();
-        globalHandler.setHandleMsgListener(this);
-
-        setContentView(R.layout.main_activity);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        navigationView = findViewById(R.id.nav_view);
-
-        initToolbar(toolbar, navigationView);
-
-        LinearLayout header = navigationView.getHeaderView(0).findViewById(R.id.line_header);
-        login = header.findViewById(R.id.login_nav_header);
-        Button logout = header.findViewById(R.id.logout_nav_header);
-        login.setOnClickListener((v) -> {
-            if (YukaLite.isLogin()) {
-                Toast.makeText(this, "您已登陆", Toast.LENGTH_SHORT).show();
-            } else {
-                navController.navigate(R.id.nav_login);
-                drawer.closeDrawers();
-            }
-        });
-        logout.setOnClickListener((v) -> {
-            if (YukaLite.isLogin()) {
-                globalHandler.setHandleMsgListener(this);
-                try {
-                    Users.logout();
-                    load("登出中...");
-                    drawer.closeDrawers();
-                } catch (YukaUserManagerException e) {
-                    Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
-            }
-        });
-        try {
-            Message message = getIntent().getParcelableExtra("msg");
-            if (message.what == 100) {
-                //需要继续尝试登陆
-                globalHandler.setHandleMsgListener(this);
-                Users.login();
-                load("登录中...");
-            }
-            globalHandler.sendMessage(message);
-        } catch (NullPointerException | YukaUserManagerException ignored) {
-            //不需要登录，或者干脆没用户
+    private final DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            curtainFlowInterface.push();
         }
-
-    }
+    };
 
 
     private void initToolbar(Toolbar toolbar, NavigationView navigationView) {
@@ -233,12 +187,61 @@ public class MainActivity extends BaseActivity implements GlobalHandler.HandleMs
     }
 
     private CurtainFlowInterface curtainFlowInterface;
-    private DrawerLayout.SimpleDrawerListener listener = new DrawerLayout.SimpleDrawerListener() {
-        @Override
-        public void onDrawerOpened(View drawerView) {
-            curtainFlowInterface.push();
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        globalHandler = GlobalHandler.getInstance();
+        globalHandler.setHandleMsgListener(this);
+
+        setContentView(R.layout.main_activity);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        navigationView = findViewById(R.id.nav_view);
+
+        initToolbar(toolbar, navigationView);
+
+        LinearLayout header = navigationView.getHeaderView(0).findViewById(R.id.line_header);
+        login = header.findViewById(R.id.login_nav_header);
+        Button logout = header.findViewById(R.id.logout_nav_header);
+        login.setOnClickListener((v) -> {
+            if (YukaLite.isLogin()) {
+                Toast.makeText(this, "您已登陆", Toast.LENGTH_SHORT).show();
+            } else {
+                navController.navigate(R.id.nav_login);
+                drawer.closeDrawers();
+            }
+        });
+        logout.setOnClickListener((v) -> {
+            if (YukaLite.isLogin()) {
+                globalHandler.setHandleMsgListener(this);
+                try {
+                    Users.logout();
+                    load("登出中...");
+                    drawer.closeDrawers();
+                } catch (YukaUserManagerException e) {
+                    Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "未登录", Toast.LENGTH_SHORT).show();
+            }
+        });
+        try {
+            Message message = getIntent().getParcelableExtra("msg");
+            if (message.what == 100) {
+                //需要继续尝试登陆
+                globalHandler.setHandleMsgListener(this);
+                Users.login();
+                load("登录中...");
+            }
+            globalHandler.sendMessage(message);
+        } catch (NullPointerException | YukaUserManagerException ignored) {
+            //不需要登录，或者干脆没用户
         }
-    };
+
+    }
 
     private void showInitGuide_First() {
         if ((boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.application_touchExplorationEnabled, false)) {

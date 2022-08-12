@@ -98,6 +98,9 @@
     <PreferenceCategory
         android:key="settings_detect_tess"
         android:title="识别设置(tesseract-LSTM)">
+        <Preference
+            android:key="settings_detect_tess_check_model"
+            android:title="重新下载模型" />
         <ListPreference
             android:entries="@array/tess_detect_model"
             android:entryValues="@array/tess_detect_modelset"

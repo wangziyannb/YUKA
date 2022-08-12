@@ -15,7 +15,6 @@ import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.Users;
-import com.wzy.yukalite.YukaUserManagerException;
 
 import java.lang.ref.WeakReference;
 
@@ -27,37 +26,8 @@ public class SplashActivity extends Activity implements GlobalHandler.HandleMsgL
     private static final int GO_GUIDE = 2;
     private static final int ENTER_DURATION = 2000;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
-        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_GuideActivity, true);
-        if (isFirstOpen) {
-            SplashHandler splashHandler = new SplashHandler(this);
-            splashHandler.sendEmptyMessageDelayed(GO_GUIDE, ENTER_DURATION);
-        } else {
-            GlobalHandler globalHandler = GlobalHandler.getInstance();
-            globalHandler.setHandleMsgListener(this);
-            globalHandler.postDelayed(runnable, ENTER_DURATION);
-            try {
-                Users.login();
-            } catch (YukaUserManagerException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    private void startGuideActivity() {
-        Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
     private int what = 100;
-    private Runnable runnable = () -> {
+    private final Runnable runnable = () -> {
         Intent intent = new Intent(this, MainActivity.class);
         Message msg = Message.obtain();
         msg.what = what;
@@ -70,6 +40,35 @@ public class SplashActivity extends Activity implements GlobalHandler.HandleMsgL
         }
         finish();
     };
+
+    private void startGuideActivity() {
+        Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.welcome);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        SharedPreferencesUtil sharedPreferencesUtil = SharedPreferencesUtil.getInstance();
+        boolean isFirstOpen = (boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.FIRST_GuideActivity, true);
+        boolean agreement = (boolean) SharedPreferencesUtil.getInstance().getParam(SharedPreferenceCollection.Agreement, false);
+        if (isFirstOpen || !agreement) {
+            SplashHandler splashHandler = new SplashHandler(this);
+            splashHandler.sendEmptyMessageDelayed(GO_GUIDE, ENTER_DURATION);
+        } else {
+            GlobalHandler globalHandler = GlobalHandler.getInstance();
+            globalHandler.setHandleMsgListener(this);
+            globalHandler.postDelayed(runnable, ENTER_DURATION);
+            try {
+                Users.login();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     protected void onDestroy() {

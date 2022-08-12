@@ -1,9 +1,13 @@
 package com.wzy.yuka.ui.setting;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
@@ -14,7 +18,9 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 
 import com.wzy.yuka.R;
+import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
+import com.wzy.yuka.yuka_lite.sender.TessOCR;
 
 /**
  * Created by Ziyan on 2020/6/6.
@@ -34,6 +40,22 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
     //tess的识别器设置
     ListPreference model_tess;
     ListPreference tess_langs;
+
+    Preference checkModel;
+    Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case 0x01:
+                    LoadingViewManager.dismiss();
+                    boolean tessReady = TessOCR.checkModel(getContext());
+                    changeStateOfTess(tessReady);
+                    checkModel.setSummary("当前可用性：" + (tessReady ? "是" : "否"));
+                    break;
+            }
+        }
+    };
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings_detect, rootKey);
@@ -53,7 +75,36 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
             l.setSummary(l.getEntry() != null ? l.getEntry() : l.getEntries()[0]);
             l.setOnPreferenceChangeListener(this);
         }
+        checkModel = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_tess_check_model);
+        boolean tessReady = TessOCR.checkModel(getContext());
+        changeStateOfTess(tessReady);
+        checkModel.setSummary("当前可用性：" + (tessReady ? "是" : "否"));
+        checkModel.setOnPreferenceClickListener(preference -> {
+            LoadingViewManager
+                    .with(getActivity())
+                    .setHintText("正在下载模型文件(约160.32MB)...")
+                    .setAnimationStyle("BallScaleIndicator")
+                    .setShowInnerRectangle(true)
+                    .setOutsideAlpha(0.3f)
+                    .setLoadingContentMargins(50, 50, 50, 50)
+                    .build();
+            new Thread(() -> TessOCR.downloadModel(getContext(), () -> {
+                Message message = Message.obtain();
+                message.what = 0x01;
+                handler.sendMessage(message);
+            })).start();
+            return false;
+        });
         preferenceVisibilityChange();
+    }
+
+
+    private void changeStateOfTess(boolean available) {
+        PreferenceScreen screen = getPreferenceScreen();
+        PreferenceCategory category_model_tess = screen.findPreference(SharedPreferenceCollection.detect_tess);
+        category_model_tess.findPreference(SharedPreferenceCollection.detect_tess_model).setEnabled(available);
+        category_model_tess.findPreference(SharedPreferenceCollection.detect_tess_lang).setEnabled(available);
+        category_model_tess.findPreference(SharedPreferenceCollection.detect_tess_lang_sub).setEnabled(available);
     }
 
     private void preferenceVisibilityChange() {
@@ -153,6 +204,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                     category_model.setVisible(false);
                     category_model_other.setVisible(false);
                     category_model_tess.setVisible(false);
+                    //only share mode need this notification
                     Preference share_store = screen.findPreference(SharedPreferenceCollection.detect_share_store);
                     if (share_store != null) {
                         share_store.setVisible(true);

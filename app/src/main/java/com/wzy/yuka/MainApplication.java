@@ -3,6 +3,8 @@ package com.wzy.yuka;
 import android.app.Application;
 import android.view.accessibility.AccessibilityManager;
 
+import com.github.gzuliyujiang.oaid.DeviceID;
+import com.github.gzuliyujiang.oaid.DeviceIdentifier;
 import com.lzf.easyfloat.EasyFloat;
 import com.wzy.yuka.tools.debug.CrashManager;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
@@ -10,12 +12,11 @@ import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.YukaFloatWindowManager;
 import com.wzy.yukalite.YukaLite;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Objects;
 
 public class MainApplication extends Application {
+    private static final String TAG = "MainApplication";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,10 +24,22 @@ public class MainApplication extends Application {
         CrashManager crashHandler = new CrashManager(this);
         Thread.setDefaultUncaughtExceptionHandler(crashHandler);
         YukaFloatWindowManager.init(this);
-        YukaLite.init(this);
         SharedPreferencesUtil.init(this);
+        if ((Boolean) SharedPreferencesUtil.getInstance().getParam(SharedPreferenceCollection.Agreement, false)) {
+            //id registration
+            DeviceIdentifier.register(this);
+            String id = DeviceIdentifier.getAndroidID(this);
+            if (Objects.equals(id, "0000000000000000") || Objects.equals(id, "")) {
+                id = DeviceIdentifier.getGUID(this);
+                if (DeviceID.supportedOAID(this) && !Objects.equals(DeviceIdentifier.getOAID(this), "")) {
+                    id = DeviceIdentifier.getOAID(this);
+                }
+            }
+            YukaLite.init(this, id);
+        }
         check();
     }
+
 
     private void check() {
         SharedPreferencesUtil util = SharedPreferencesUtil.getInstance();
@@ -37,41 +50,7 @@ public class MainApplication extends Application {
         } catch (NullPointerException ignored) {
             util.saveParam(SharedPreferenceCollection.application_touchExplorationEnabled, false);
         }
-        check_models("models/best/tessdata");
-        check_models("models/fast/tessdata");
         this.getExternalFilesDir("logs");
     }
 
-    private void check_models(String path) {
-        //检查tess模型是否正常释放
-        new Thread(() -> {
-            try {
-                String[] asset_models = getAssets().list("models");
-                if (asset_models.length != 0) {
-                    File tessdir = this.getExternalFilesDir(path);
-                    if (tessdir.list() != null && tessdir.list().length == 0) {
-                        String[] model_names = getAssets().list(path);
-                        for (String model : model_names) {
-                            InputStream in = getAssets().open(path + "/" + model);
-                            File file = new File(tessdir.getAbsolutePath() + "/" + model);
-                            if (file.createNewFile()) {
-                                byte[] buffer = new byte[1024 * 8];
-                                FileOutputStream out = new FileOutputStream(file);
-                                int lengthRead;
-                                while ((lengthRead = in.read(buffer)) > 0) {
-                                    out.write(buffer, 0, lengthRead);
-                                    out.flush();
-                                }
-                                out.close();
-                            }
-                            in.close();
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-    }
 }

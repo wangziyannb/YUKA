@@ -20,19 +20,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.github.gzuliyujiang.oaid.DeviceID;
+import com.github.gzuliyujiang.oaid.DeviceIdentifier;
 import com.wzy.yuka.tools.params.SharedPreferenceCollection;
 import com.wzy.yuka.tools.params.SharedPreferencesUtil;
 import com.wzy.yuka.yuka_lite.utils.SizeUtil;
+import com.wzy.yukalite.YukaLite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GuideActivity extends Activity implements ViewPager.OnPageChangeListener {
     private SharedPreferencesUtil sharedPreferencesUtil;
     private List<View> mViewList;
     private ImageView[] mDotList;
     private int mLastPosition;
-    private int[] idots = {R.id.idot1, R.id.idot2, R.id.idot3};
+    private final int[] idots = {R.id.idot1, R.id.idot2, R.id.idot3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +119,20 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
         Button ok = view.findViewById(R.id.policy_ok);
         Button cancel = view.findViewById(R.id.policy_cancel);
         ok.setOnClickListener(v -> {
+            sharedPreferencesUtil.saveParam(SharedPreferenceCollection.Agreement, true);
+            //id registration
+            DeviceIdentifier.register(getApplication());
+            String id = DeviceIdentifier.getAndroidID(getApplication());
+            if (Objects.equals(id, "0000000000000000") || Objects.equals(id, "")) {
+                id = DeviceIdentifier.getGUID(getApplication());
+                if (DeviceID.supportedOAID(getApplication()) && !Objects.equals(DeviceIdentifier.getOAID(getApplication()), "")) {
+                    id = DeviceIdentifier.getOAID(getApplication());
+                }
+            }
+            YukaLite.init(getApplication(), id);
             dialog.dismiss();
             startHomeActivity();
+
         });
         cancel.setOnClickListener(v -> {
             final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -142,7 +158,7 @@ public class GuideActivity extends Activity implements ViewPager.OnPageChangeLis
 
     private class MyPagerAdapter extends PagerAdapter {
 
-        private List<View> mImageViewList;
+        private final List<View> mImageViewList;
 
         MyPagerAdapter(List<View> list) {
             super();

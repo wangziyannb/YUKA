@@ -1,8 +1,6 @@
 package com.wzy.yukalite;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.provider.Settings;
 
 import com.wzy.yukalite.config.YukaConfig;
 
@@ -17,9 +15,7 @@ import okhttp3.Callback;
  * Created by Ziyan on 2020/8/14.
  */
 public class YukaLite {
-    public static void init(Context application) {
-        @SuppressLint("HardwareIds")
-        String uuid = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID);
+    public static void init(Context application, String uuid) {
         UserManager.init(application, uuid);
         try {
             UserManager.getUser();
@@ -113,5 +109,9 @@ public class YukaLite {
 
     public static String[] getUser() throws YukaUserManagerException {
         return UserManager.getUser();
+    }
+
+    public static String getId() throws YukaUserManagerException {
+        return UserManager.getId();
     }
 }

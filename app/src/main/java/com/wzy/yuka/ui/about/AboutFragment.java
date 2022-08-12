@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.wzy.yuka.R;
 import com.wzy.yuka.tools.message.GlobalHandler;
 import com.wzy.yuka.yuka_lite.utils.SizeUtil;
 import com.wzy.yukalite.YukaLite;
+import com.wzy.yukalite.YukaUserManagerException;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -87,10 +87,14 @@ public class AboutFragment extends PreferenceFragmentCompat implements Preferenc
         getPreferenceScreen().findPreference("about_thanks_reference").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_server").setOnPreferenceClickListener(this);
         getPreferenceScreen().findPreference("about_about_dev").setOnPreferenceClickListener(this);
-        String uuid = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String uuid = "UUID获取失败，未知错误";
+        try {
+            uuid = YukaLite.getId();
+        } catch (YukaUserManagerException e) {
+            e.printStackTrace();
+        }
         Preference preference = getPreferenceScreen().findPreference("about_this_1");
         preference.setSummary(uuid + "\n\n" + preference.getSummary());
-
     }
 
     @Override
