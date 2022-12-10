@@ -1,7 +1,7 @@
 package com.wzy.yuka.yuka_lite.utils;
 
 import android.content.Context;
-import android.content.Intent;
+import android.media.projection.MediaProjection;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -39,8 +39,8 @@ public class Screenshot {
         }
     }
 
-    public void getScreenshot(boolean otsu, int delay, Intent data, Shotter.OnShotListener onShotListener) {
-        Shotter shotter = new Shotter(mContext.get(), -1, data);
+    public void getScreenshot(boolean otsu, int delay, MediaProjection mediaProjection, Shotter.OnShotListener onShotListener) {
+        Shotter shotter = new Shotter(mContext.get(), mediaProjection);
         shotter.startScreenShot(onShotListener, fullFileName, location, otsu, true, delay);
     }
 

@@ -3,7 +3,6 @@ package com.wzy.yuka.yuka_lite.utils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
@@ -52,13 +51,13 @@ public class Shotter {
     private int delay;
 
     @SuppressLint("WrongConstant")
-    public Shotter(Context context, int reqCode, Intent data) {
+    public Shotter(Context context, MediaProjection mediaProjection) {
 
         this.mRefContext = new SoftReference<>(context);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mMediaProjection = getMediaProjectionManager().getMediaProjection(reqCode, data);
-
+//            mMediaProjection = getMediaProjectionManager().getMediaProjection(reqCode, data);
+            this.mMediaProjection = mediaProjection;
             WindowManager window = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display mDisplay = window.getDefaultDisplay();
             DisplayMetrics metrics = new DisplayMetrics();

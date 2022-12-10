@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.projection.MediaProjection;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -92,7 +93,6 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             floatWindowManager = YukaFloatWindowManager.getInstance();
-            createNotificationChannel();
             globalHandler = GlobalHandler.getInstance();
         } catch (FloatWindowManagerException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -118,13 +118,19 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
             //时间足够长，点击退出按钮会导致本过程失效
             globalHandler.postDelayed(screenshot::cleanImage, 6000);
         }
-        screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_OTSUPreprocess, false), delay, floatWindowManager.getData(), () -> {
-            for (FloatWindow floatWindow : floatWindows) {
-                floatWindow.show();
-                floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
-            }
-            sendScreenshot(screenshot, save);
-        });
+        try {
+            MediaProjection mp = floatWindowManager.getMediaProjection();
+            screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_OTSUPreprocess, false), delay, mp, () -> {
+                for (FloatWindow floatWindow : floatWindows) {
+                    floatWindow.show();
+                    floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
+                }
+                sendScreenshot(screenshot, save);
+            });
+        } catch (FloatWindowManagerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void getScreenshot(FloatWindow floatWindow) {
@@ -190,7 +196,6 @@ public class ScreenShotService_Single extends Service implements GlobalHandler.H
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
         super.onDestroy();
     }
 

@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.projection.MediaProjection;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,7 +82,7 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createNotificationChannel();
+//        createNotificationChannel();
         try {
             floatWindowManager = YukaFloatWindowManager.getInstance();
         } catch (FloatWindowManagerException e) {
@@ -101,11 +102,17 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
             //时间足够长，点击退出按钮会导致本过程失效
             globalHandler.postDelayed(screenshot::cleanImage, 6000);
         }
-        screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.auto_OTSUPreprocess, false), delay, floatWindowManager.getData(), () -> {
-            floatWindow.show();
-            floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
-            sendScreenshot(screenshot, save);
-        });
+        try {
+            MediaProjection mp = floatWindowManager.getMediaProjection();
+            screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.auto_OTSUPreprocess, false), delay, mp, () -> {
+                floatWindow.show();
+                floatWindow.showResults("before response", "目标图片已发送，请等待...", 0);
+                sendScreenshot(screenshot, save);
+            });
+        } catch (FloatWindowManagerException e) {
+            e.printStackTrace();
+        }
+
         //各项设置，包括快速模式、保存照片
     }
 
@@ -189,7 +196,6 @@ public class ScreenShotService_Auto extends Service implements GlobalHandler.Han
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
         super.onDestroy();
     }
 

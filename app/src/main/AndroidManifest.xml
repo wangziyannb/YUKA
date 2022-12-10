@@ -66,18 +66,18 @@
 
         <service
             android:name=".yuka_lite.services.ScreenShotService_Single"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
+            android:enabled="true" />
         <service
             android:name=".yuka_lite.services.ScreenShotService_Continue"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
+            android:enabled="true" />
         <service
             android:name=".yuka_lite.services.ScreenShotService_Auto"
-            android:enabled="true"
-            android:foregroundServiceType="mediaProjection" />
+            android:enabled="true" />
         <service
             android:name=".yuka_lite.services.AudioService"
+            android:enabled="true" />
+        <service
+            android:name=".yuka_lite.services.MediaProjectionService"
             android:enabled="true"
             android:foregroundServiceType="mediaProjection" />
         <service

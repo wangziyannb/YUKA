@@ -150,7 +150,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createNotificationChannel();
+//        createNotificationChannel();
         return Service.START_NOT_STICKY;
     }
 
@@ -251,7 +251,7 @@ public class AudioService extends Service implements GlobalHandler.HandleMsgList
         websocketRequest.close();
         mWhetherRecord = false;
         resolver = null;
-        stopForeground(true);
+//        stopForeground(true);
         super.onDestroy();
     }
 

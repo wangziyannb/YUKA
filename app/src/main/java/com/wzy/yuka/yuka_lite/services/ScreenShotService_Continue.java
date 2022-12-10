@@ -55,7 +55,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
                 globalHandler.postDelayed(screenshot::cleanImage, 6000);
             }
             if (continuous) {
-                screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_OTSUPreprocess, false), delay, floatWindowManager.getData(), () -> {
+                screenshot.getScreenshot((Boolean) sharedPreferencesUtil.getParam(SharedPreferenceCollection.detect_OTSUPreprocess, false), delay, floatWindowManager.getMediaProjection(), () -> {
                     try {
                         FloatWindow floatWindow = floatWindowManager.get_FloatWindow(0);
                         floatWindow.show();
@@ -152,7 +152,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         continuous = true;
-        createNotificationChannel();
+//        createNotificationChannel();
         globalHandler = GlobalHandler.getInstance();
         try {
             floatWindowManager = YukaFloatWindowManager.getInstance();
@@ -203,7 +203,7 @@ public class ScreenShotService_Continue extends Service implements GlobalHandler
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
+//        stopForeground(true);
         globalHandler.removeCallbacks(runnable);
         super.onDestroy();
     }

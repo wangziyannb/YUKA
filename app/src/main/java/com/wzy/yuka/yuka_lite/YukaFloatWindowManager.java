@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.projection.MediaProjection;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import com.wzy.yuka.yuka_lite.floatwindow.SelectWindow_Auto;
 import com.wzy.yuka.yuka_lite.floatwindow.SelectWindow_Normal;
 import com.wzy.yuka.yuka_lite.floatwindow.SubtitleWindow;
 import com.wzy.yuka.yuka_lite.services.AudioService;
+import com.wzy.yuka.yuka_lite.services.MediaProjectionService;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Auto;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Continue;
 import com.wzy.yuka.yuka_lite.services.ScreenShotService_Single;
@@ -31,18 +33,18 @@ import com.wzy.yukafloatwindows.floatwindow.FloatWindow;
  */
 public class YukaFloatWindowManager extends FloatWindowManager {
     private static YukaFloatWindowManager manager = null;
-    private Intent mData;
     private final Intent mScreenShotAutoService;
     private final Intent mScreenShotContinueService;
     private final Intent mScreenShotSingleService;
     private final Intent mAudioService;
+    private final Intent mMediaProjectionService;
     private int sum = 0;
     private String lastMode = "SWN_S";
     private ScreenShotService_Single.SingleBinder singleBinder;
     private ScreenShotService_Continue.ContinueBinder continueBinder;
     private ScreenShotService_Auto.AutoBinder autoBinder;
     private AudioService.AudioBinder audioBinder;
-
+    private MediaProjectionService.MPBinder mpBinder;
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -66,12 +68,30 @@ public class YukaFloatWindowManager extends FloatWindowManager {
         }
     };
 
+    private final ServiceConnection mp_connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            if (service.getClass().equals(MediaProjectionService.MPBinder.class)) {
+                mpBinder = (MediaProjectionService.MPBinder) service;
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mpBinder = null;
+        }
+    };
+
     private YukaFloatWindowManager(Application application) {
         super(application);
         this.mScreenShotAutoService = new Intent(applicationWeakReference.get(), ScreenShotService_Auto.class);
         this.mScreenShotContinueService = new Intent(applicationWeakReference.get(), ScreenShotService_Continue.class);
         this.mScreenShotSingleService = new Intent(applicationWeakReference.get(), ScreenShotService_Single.class);
         this.mAudioService = new Intent(applicationWeakReference.get(), AudioService.class);
+        this.mMediaProjectionService = new Intent(applicationWeakReference.get(), MediaProjectionService.class);
+        startService(mMediaProjectionService);
+        applicationWeakReference.get().getApplicationContext()
+                .bindService(mMediaProjectionService, mp_connection, Service.BIND_AUTO_CREATE);
         TTS.init(application);
     }
 
@@ -105,11 +125,15 @@ public class YukaFloatWindowManager extends FloatWindowManager {
     }
 
     public Intent getData() {
-        return mData;
+        return mpBinder.getService().getData();
     }
 
     public void setData(Intent data) {
-        this.mData = data;
+        mpBinder.getService().setData(data);
+    }
+
+    public MediaProjection getMediaProjection() throws FloatWindowManagerException {
+        return mpBinder.getService().getMediaProjection();
     }
 
     public void addFloatBall(String mode) {
@@ -328,6 +352,18 @@ public class YukaFloatWindowManager extends FloatWindowManager {
         }
     }
 
+    public void stop_MP_service() {
+        if (mpBinder != null) {
+            applicationWeakReference.get().getApplicationContext().unbindService(mp_connection);
+            applicationWeakReference.get().stopService(mMediaProjectionService);
+            mpBinder = null;
+        }
+        stop_ScreenShotTrans_normal(false);
+        stop_ScreenShotTrans_normal(true);
+        stop_ScreenShotTrans_auto();
+        stop_RecordingTrans();
+    }
+
     private boolean judgeTypeOfFloatWindow(Class clazz, int index) {
         if (getNumOfFloatWindows() > index) {
             return mFloatWindows[index].getClass().equals(clazz);
@@ -339,7 +375,12 @@ public class YukaFloatWindowManager extends FloatWindowManager {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             applicationWeakReference.get().startService(intent);
         } else {
-            applicationWeakReference.get().startForegroundService(intent);
+            if (intent.equals(mMediaProjectionService)) {
+                applicationWeakReference.get().startForegroundService(intent);
+            } else {
+                applicationWeakReference.get().startService(intent);
+            }
+
         }
     }
 }
