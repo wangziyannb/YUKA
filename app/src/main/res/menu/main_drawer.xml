@@ -8,26 +8,26 @@
             android:id="@+id/nav_home"
             android:contentDescription="主页"
             android:icon="@drawable/ic_home"
-            android:title="主页" />
+            android:title="@string/menu_main_drawer_mainpage" />
         <item
             android:id="@+id/nav_settings"
             android:contentDescription="设置"
             android:icon="@drawable/ic_settings"
-            android:title="设置" />
+            android:title="@string/menu_main_drawer_options" />
         <item
             android:id="@+id/nav_guide"
             android:contentDescription="引导"
             android:icon="@drawable/ic_guide"
-            android:title="引导" />
+            android:title="@string/menu_main_drawer_guide" />
         <item
             android:id="@+id/nav_help"
             android:contentDescription="帮助"
             android:icon="@drawable/ic_help"
-            android:title="帮助" />
+            android:title="@string/menu_main_drawer_help" />
         <item
             android:id="@+id/nav_about"
             android:contentDescription="关于"
             android:icon="@drawable/ic_developer_board"
-            android:title="关于" />
+            android:title="@string/menu_main_drawer_about" />
     </group>
 </menu>

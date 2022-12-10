@@ -3,10 +3,47 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/about_dev.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/about_dev_function.xml" value="0.15081521739130435" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/about_opensource.xml" value="0.1480978260869565" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/app_bar.xml" value="0.11752786220871327" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/content_main.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/float_ball.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/floatwindow_auto.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/floatwindow_main.xml" value="0.15081521739130435" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/floatwindow_settings.xml" value="0.1625" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/floatwindow_subtitle.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/guide.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/guide_empty.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/guide_interpret.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/guide_touchexploration.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/help_example.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/home.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/home_boutique.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/home_main.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/home_screenshot.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/log_forgetpassword.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/log_login.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/log_register.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/main_activity.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/main_guide.xml" value="0.15081521739130435" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/nav_header.xml" value="0.15081521739130435" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/personal_page.xml" value="0.11752786220871327" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/personal_service.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/personal_view.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/policy.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/splash.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/splashfirst.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/splashsecond.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/splashthird.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/sync_compatible_apps.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/sync_compatible_views.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/layout/welcome.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/menu/main.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/menu/main_drawer.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/menu/nav_menu.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/xml/about.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/xml/about_reference.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/xml/settings.xml" value="0.17391304347826086" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/xml/settings_auto.xml" value="0.17391304347826086" />
         <entry key="..\:/AndroidStudioProjects/YukaGitee/app/src/main/res/xml/settings_detect.xml" value="0.17391304347826086" />

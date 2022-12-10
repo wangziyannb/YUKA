@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="YuKa翻译器使用指导"
+            android:text="@string/main_guide_1"
             android:textColor="#000000"
             android:textSize="24sp" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="一、基本使用"
+            android:text="@string/main_guide_2"
             android:textColor="#000000"
             android:textSize="20sp" />
 
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="启动App完成登陆之后，点击底部导航栏启动按钮打开悬浮球，点击悬浮球打开悬浮菜单"
+            android:text="@string/main_guide_3"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="悬浮菜单从上往下依次是设置、识别、重置、退出，点击重置按钮打开悬浮窗"
+            android:text="@string/main_guide_4"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="长按重置按钮可以进入二级菜单，二级菜单从上往下依次是单/多悬浮窗识别翻译、持续识别翻译、自动识别翻译、视频同步字幕翻译，选择好翻译模式之后关闭二级菜单，再次点击重置按钮即为选择的模式"
+            android:text="@string/main_guide_5"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="拖动悬浮窗到相应位置，调整大小框选需要翻译的内容，点击悬浮窗上的翻译按钮或者悬浮菜单的识别按钮，即可完成翻译"
+            android:text="@string/main_guide_6"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="二、进阶使用"
+            android:text="@string/main_guide_7"
             android:textColor="#000000"
             android:textSize="20sp" />
 
@@ -109,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="在持续识别翻译模式下，可以手动设置持续时间，用来玩游戏在适合不过了"
+            android:text="@string/main_guide_8"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 
@@ -125,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="在自动识别翻译模式下，可以精准识别文字区域进行翻译，是用来看漫画刷评论的不二之选"
+            android:text="@string/main_guide_9"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 
@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="三、翻译示例"
+            android:text="@string/main_guide_10"
             android:textColor="#000000"
             android:textSize="20sp" />
 
@@ -149,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="点击下面图片观看YuKa翻译作品Narcissu"
+            android:text="@string/main_guide_yuka_narcissu"
             android:textColor="#000000"
             app:lineHeight="20dp" />
 

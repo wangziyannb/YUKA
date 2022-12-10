@@ -6,7 +6,7 @@
         android:contentDescription="主页"
         android:icon="@drawable/nav_home_checked"
         android:iconTint="#F06292"
-        android:title="主页" />
+        android:title="@string/menu_nav_menu_mainpage" />
     <item
         android:enabled="false"
         android:title="" />
@@ -15,5 +15,5 @@
         android:contentDescription="历史"
         android:icon="@drawable/nav_history_unchecked"
         android:iconTint="#F06292"
-        android:title="历史" />
+        android:title="@string/menu_nav_menu_history" />
 </menu>

@@ -55,7 +55,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         yuka:left_icon="@drawable/ic_check"
-        yuka:left_text="功能介绍"
+        yuka:left_text="@string/about_dev_func"
         yuka:show_bottom_line="true"
         yuka:show_left_icon="true" />
 
@@ -68,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/personal_function"
-        app:left_text="YuKa官网"
+        app:left_text="@string/about_dev_yukaIndex"
         tools:ignore="MissingConstraints"
         yuka:left_icon="@drawable/ic_check"
         yuka:show_bottom_line="true"
@@ -85,7 +85,7 @@
         app:layout_constraintTop_toBottomOf="@+id/personal_web"
         tools:ignore="MissingConstraints"
         yuka:left_icon="@drawable/ic_check"
-        yuka:left_text="检查更新"
+        yuka:left_text="@string/about_dev_checkUpdate"
         yuka:show_bottom_line="true"
         yuka:show_left_icon="true" />
 

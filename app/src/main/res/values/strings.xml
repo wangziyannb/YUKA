@@ -336,7 +336,32 @@
     <string name="guide_te_string11">下方为退出按钮，在二级面板下为视频同步字幕悬浮窗按钮。主要效果为退出app。</string>
     <string name="guide_te_string12">中间为闭合悬浮球按钮，在二级面板下为返回上一级。主要效果为关闭展开的悬浮球。</string>
     <string name="guide_te_string13">悬浮球已闭合，悬浮球引导结束。此外，为了方便使用，以下功能已被禁用：1、悬浮球一段时间不使用后贴边隐藏已禁用 2、拖动的安全区域已禁用，3、流体手势兼容已禁用。悬浮窗的功能也会相应变化，这点将会在各种悬浮窗的引导中进行说明。最后，你随时可以通过开发者选项内的重置所有信息来重新回顾所有引导。祝你玩的愉快！点击下一步结束引导</string>
-
+    <string name="main_guide_1">YuKa翻译器使用指导</string>
+    <string name="main_guide_2">一、基本使用</string>
+    <string name="main_guide_3">启动App完成登陆之后，点击底部导航栏启动按钮打开悬浮球，点击悬浮球打开悬浮菜单</string>
+    <string name="main_guide_4">悬浮菜单从上往下依次是设置、识别、重置、退出，点击重置按钮打开悬浮窗</string>
+    <string name="main_guide_5">长按重置按钮可以进入二级菜单，二级菜单从上往下依次是单/多悬浮窗识别翻译、持续识别翻译、自动识别翻译、视频同步字幕翻译，选择好翻译模式之后关闭二级菜单，再次点击重置按钮即为选择的模式</string>
+    <string name="main_guide_6">拖动悬浮窗到相应位置，调整大小框选需要翻译的内容，点击悬浮窗上的翻译按钮或者悬浮菜单的识别按钮，即可完成翻译</string>
+    <string name="main_guide_7">二、进阶使用</string>
+    <string name="main_guide_8">在持续识别翻译模式下，可以手动设置持续时间，用来玩游戏在适合不过了</string>
+    <string name="main_guide_9">在自动识别翻译模式下，可以精准识别文字区域进行翻译，是用来看漫画刷评论的不二之选</string>
+    <string name="main_guide_10">三、翻译示例</string>
+    <string name="main_guide_yuka_narcissu">点击下面图片观看YuKa翻译作品Narcissu</string>
+    <string name="about_dev_checkUpdate">检查更新</string>
+    <string name="about_dev_yukaIndex">YuKa官网</string>
+    <string name="about_dev_func">功能介绍</string>
+    <string name="floatwindow_subtitle_displayOrigin">显示原文</string>
+    <string name="floatwindow_subtitle_displayTrans">显示译文</string>
+    <string name="personal_service_moreInfo">更多信息</string>
+    <string name="splashthird_start">立即体验</string>
+    <string name="menu_main_account">账户信息</string>
+    <string name="menu_main_drawer_mainpage">主页</string>
+    <string name="menu_main_drawer_options">设置</string>
+    <string name="menu_main_drawer_guide">引导</string>
+    <string name="menu_main_drawer_help">帮助</string>
+    <string name="menu_main_drawer_about">关于</string>
+    <string name="menu_nav_menu_mainpage">主页</string>
+    <string name="menu_nav_menu_history">历史</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

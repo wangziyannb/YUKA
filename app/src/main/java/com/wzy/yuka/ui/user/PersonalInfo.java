@@ -24,9 +24,18 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.wzy.yuka.R;
 import com.wzy.yuka.tools.interaction.LoadingViewManager;
 import com.wzy.yuka.tools.message.GlobalHandler;
+import com.wzy.yuka.tools.network.HttpRequest;
 import com.wzy.yuka.yuka_lite.Users;
 import com.wzy.yukalite.YukaLite;
 import com.wzy.yukalite.YukaUserManagerException;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Ziyan on 2020/5/15.
@@ -56,6 +65,13 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
             case 400:
                 LoadingViewManager.dismiss();
                 Toast.makeText(getContext(), "网络似乎出现了点问题...\n请检查网络或于开发者选项者检查服务器", Toast.LENGTH_SHORT).show();
+                break;
+            case 202:
+                Bundle bundle = msg.getData();
+                String resp = bundle.getString("response");
+                Uri uri = Uri.parse(resp);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
                 break;
         }
     }
@@ -159,15 +175,34 @@ public class PersonalInfo extends Fragment implements View.OnClickListener, Glob
                 "3、点击起飞会跳转到商店页面，购买后自动发激活码，填于空位即可根据购买的类型获得充值。\n" +
                 "4、加群781666001，PY获得月卡。加群参与测试版本将不定期发放各种福利（不包括女装）\n");
         alert.setPositiveButton("起飞！", (dialog, which) -> {
-            Uri uri = Uri.parse("https://www.axuanpay.com/links/9B539CB2");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            globalHandler.setHandleMsgListener(this);
+            HttpRequest.checkMarket(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Message message = Message.obtain();
+                    message.what = 400;
+                    globalHandler.sendMessage(message);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String res = response.body().string();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("response", res);
+                    Message message = Message.obtain();
+                    message.what = 202;
+                    message.setData(bundle);
+                    globalHandler.sendMessage(message);
+                }
+            });
+
         });
         alert.setNegativeButton("别急，等等再说！", (dialog, which) -> {
 
         });
         alert.show();
     }
+
     @Nullable
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {

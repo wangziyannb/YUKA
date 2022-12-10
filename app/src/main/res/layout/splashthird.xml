@@ -18,7 +18,7 @@
         android:layout_marginBottom="100dp"
         android:background="@drawable/radius_style"
         android:scaleType="centerCrop"
-        android:text="立即体验"
+        android:text="@string/splashthird_start"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         tools:ignore="ContentDescription" />

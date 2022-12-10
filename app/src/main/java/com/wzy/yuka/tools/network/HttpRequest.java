@@ -52,6 +52,16 @@ public class HttpRequest {
         call.enqueue(callback);
     }
 
+    public static void checkMarket(Callback callback) {
+        RequestBody requestBody = new FormBody.Builder().build();
+        Request request = new Request.Builder()
+                .url("https://yukacn.xyz/yuka/market/")
+                .post(requestBody)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
     public static void getModel(Callback callback) {
         Request request = new Request.Builder()
                 .url("https://yuka-app-1305234451.cos.ap-shanghai.myqcloud.com/yuka_app/models.zip")
