@@ -27,10 +27,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onItemClickListener {
-    private List<Screenshot> screenshots = new ArrayList<>();
+    private static final String TAG = "HomeBoutique";
     private ScreenshotAdapter adapter;
     private boolean isDetail = false;
     private HashMap<String, Integer> spacesVelue;
+    private List<Screenshot> screenshots;
+
     @Override
     public boolean onBackPressed() {
         if (isDetail) {
@@ -48,11 +50,12 @@ public class HomeBoutique extends BaseFragment implements ScreenshotAdapter.onIt
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        initScreenshots(null);
         super.onCreate(savedInstanceState);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        screenshots = new ArrayList<>();
+        initScreenshots(null);
         View root = inflater.inflate(R.layout.home_boutique, container, false);
 
         RecyclerView recyclerView = root.findViewById(R.id.boutique_rec);

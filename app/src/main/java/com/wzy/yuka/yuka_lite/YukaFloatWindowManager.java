@@ -125,15 +125,27 @@ public class YukaFloatWindowManager extends FloatWindowManager {
     }
 
     public Intent getData() {
-        return mpBinder.getService().getData();
+        if (mpBinder.getService() != null) {
+            return mpBinder.getService().getData();
+        } else {
+            return null;
+        }
+
     }
 
     public void setData(Intent data) {
-        mpBinder.getService().setData(data);
+        if (mpBinder.getService() != null) {
+            mpBinder.getService().setData(data);
+        }
     }
 
     public MediaProjection getMediaProjection() throws FloatWindowManagerException {
-        return mpBinder.getService().getMediaProjection();
+        if (mpBinder.getService() != null) {
+            return mpBinder.getService().getMediaProjection();
+        } else {
+            throw new FloatWindowManagerException("no available media projection service");
+        }
+
     }
 
     public void addFloatBall(String mode) {
@@ -362,6 +374,7 @@ public class YukaFloatWindowManager extends FloatWindowManager {
         stop_ScreenShotTrans_normal(true);
         stop_ScreenShotTrans_auto();
         stop_RecordingTrans();
+        manager = null;
     }
 
     private boolean judgeTypeOfFloatWindow(Class clazz, int index) {

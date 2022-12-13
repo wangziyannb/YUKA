@@ -236,7 +236,7 @@ public class Shotter {
             }
             if (mMediaProjection != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mMediaProjection.stop();
+//                    mMediaProjection.stop();
                 }
             }
             if (mOnShotListener != null) {
