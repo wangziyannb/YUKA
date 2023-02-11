@@ -169,6 +169,9 @@ public class Processor {
             case "tess":
                 single_get_origin_tess();
                 break;
+            case "ml_kit":
+                single_get_origin_ml_kit();
+                break;
             case "share":
                 single_share();
                 break;
@@ -449,6 +452,15 @@ public class Processor {
             contextWeakReference.get().startActivity(share);
         }
     }
+
+    private void single_get_origin_ml_kit() {
+        String lang = (String) util.getParam(SharedPreferenceCollection.detect_ml_kit_lang, resources.getStringArray(R.array.ml_kit_langset)[0]);
+        new Thread(() -> {
+            MLKitVision.detect(screenshot, lang, handler, save);
+
+        }).start();
+    }
+
 
     private void single_get_result(Bundle bundle) {
         String api_trans = (String) util.getParam(SharedPreferenceCollection.trans_api, resources.getStringArray(R.array.sender_api_value_trans)[0]);

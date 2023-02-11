@@ -182,6 +182,22 @@
         <item>deu</item>
     </string-array>
 
+    <string-array name="ml_kit_lang">
+        <item>拉丁语（即英语等）</item>
+        <item>中文</item>
+        <item>日语</item>
+        <item>韩语</item>
+        <item>梵文</item>
+    </string-array>
+
+    <string-array name="ml_kit_langset">
+        <item>latin</item>
+        <item>Chinese</item>
+        <item>Japanese</item>
+        <item>Korean</item>
+        <item>Devanagari</item>
+    </string-array>
+
     <string-array name="other_detect_modelset">
         <item>youdao</item>
         <item>baidu</item>
@@ -216,6 +232,7 @@
     <string-array name="sender_api_detect">
         <item>yuka_v1</item>
         <item>自定义在线识别</item>
+        <item>离线Google ML kit Vision</item>
         <item>离线tesseract-LSTM</item>
         <item>分享截图至其他软件（如有道翻译官等）</item>
     </string-array>
@@ -223,6 +240,7 @@
     <string-array name="sender_api_value_detect">
         <item>yuka_v1</item>
         <item>other</item>
+        <item>ml_kit</item>
         <item>tess</item>
         <item>share</item>
     </string-array>

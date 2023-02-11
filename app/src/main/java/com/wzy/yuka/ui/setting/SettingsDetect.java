@@ -40,7 +40,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
     //tess的识别器设置
     ListPreference model_tess;
     ListPreference tess_langs;
-
+    ListPreference ml_kit_langs;
     Preference checkModel;
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -70,7 +70,8 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
 
         model_tess = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_tess_model);
         tess_langs = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_tess_lang);
-        for (ListPreference l : new ListPreference[]{sender_api, sender_api_trans, model, translator, model_other, translator_other, model_tess, tess_langs}) {
+        ml_kit_langs = getPreferenceScreen().findPreference(SharedPreferenceCollection.detect_ml_kit_lang);
+        for (ListPreference l : new ListPreference[]{sender_api, sender_api_trans, model, translator, model_other, translator_other, model_tess, tess_langs, ml_kit_langs}) {
             l.setValue(l.getValue() != null ? l.getValue() : l.getEntryValues()[0] + "");
             l.setSummary(l.getEntry() != null ? l.getEntry() : l.getEntries()[0]);
             l.setOnPreferenceChangeListener(this);
@@ -114,15 +115,15 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
         PreferenceCategory category_model_other = screen.findPreference(SharedPreferenceCollection.detect_other);
         PreferenceCategory category_translator_other = screen.findPreference(SharedPreferenceCollection.translator_other);
         PreferenceCategory category_model_tess = screen.findPreference(SharedPreferenceCollection.detect_tess);
-
-        if (category_model != null && category_translator != null && category_model_other != null && category_translator_other != null && category_model_tess != null) {
+        PreferenceCategory category_model_ml_kit = screen.findPreference(SharedPreferenceCollection.detect_ml_kit);
+        if (category_model != null && category_translator != null && category_model_other != null && category_translator_other != null && category_model_tess != null && category_model_ml_kit != null) {
             switch (sender_api.getValue()) {
                 case "other": {
                     //自定义
                     category_model.setVisible(false);
                     category_model_tess.setVisible(false);
                     category_model_other.setVisible(true);
-
+                    category_model_ml_kit.setVisible(false);
                     //todo 加监听器送过去注册账号
                     Preference youdao_reg = screen.findPreference(SharedPreferenceCollection.detect_other_reg_youdao);
                     Preference baidu_reg = screen.findPreference(SharedPreferenceCollection.detect_other_reg_baidu);
@@ -173,7 +174,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                     category_model.setVisible(true);
                     category_model_other.setVisible(false);
                     category_model_tess.setVisible(false);
-
+                    category_model_ml_kit.setVisible(false);
                     SwitchPreference vertical = screen.findPreference(SharedPreferenceCollection.detect_vertical);
                     SwitchPreference punctuation = screen.findPreference(SharedPreferenceCollection.detect_punctuation);
                     Preference share_store = screen.findPreference(SharedPreferenceCollection.detect_share_store);
@@ -204,6 +205,7 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                     category_model.setVisible(false);
                     category_model_other.setVisible(false);
                     category_model_tess.setVisible(false);
+                    category_model_ml_kit.setVisible(false);
                     //only share mode need this notification
                     Preference share_store = screen.findPreference(SharedPreferenceCollection.detect_share_store);
                     if (share_store != null) {
@@ -218,6 +220,19 @@ public class SettingsDetect extends PreferenceFragmentCompat implements Preferen
                     category_model.setVisible(false);
                     category_model_other.setVisible(false);
                     category_model_tess.setVisible(true);
+                    category_model_ml_kit.setVisible(false);
+                    Preference share_store = screen.findPreference(SharedPreferenceCollection.detect_share_store);
+                    if (share_store != null) {
+                        share_store.setVisible(false);
+                    }
+                    sender_api_trans.setEnabled(true);
+                    break;
+                }
+                case "ml_kit": {
+                    category_model.setVisible(false);
+                    category_model_other.setVisible(false);
+                    category_model_tess.setVisible(false);
+                    category_model_ml_kit.setVisible(true);
                     Preference share_store = screen.findPreference(SharedPreferenceCollection.detect_share_store);
                     if (share_store != null) {
                         share_store.setVisible(false);

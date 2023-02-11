@@ -64,6 +64,14 @@ public class Screenshot {
         return index;
     }
 
+    public File[] getFiles() {
+        File[] files = new File[fullFileName.length];
+        for (int i = 0; i < files.length; i++) {
+            files[i] = new File(fullFileName[i]);
+        }
+        return files;
+    }
+
     public void cleanImage() {
         for (String str : fullFileName) {
             File image = new File(str);

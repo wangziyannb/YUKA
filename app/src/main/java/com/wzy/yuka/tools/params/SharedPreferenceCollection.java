@@ -46,6 +46,9 @@ public class SharedPreferenceCollection {
     public static final String detect_tess_lang = "settings_detect_tess_lang";
     public static final String detect_tess_lang_sub = "settings_detect_tess_lang_sub";
     public static final String detect_tess_check_model = "settings_detect_tess_check_model";
+    //设置组-本地Google ML kit的识别器(ML_kit)
+    public static final String detect_ml_kit = "settings_detect_ML_kit";
+    public static final String detect_ml_kit_lang = "settings_detect_ml_kit_lang";
     //设置组-特殊
     public static final String detect_continuousMode_interval = "settings_continuousMode_interval";
     public static final String detect_share_store = "settings_detect_share_store";

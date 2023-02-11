@@ -125,6 +125,21 @@
             android:summary="高性能要求，出现取词框消失请禁用"
             android:title="快速识别" />
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="settings_detect_ML_kit"
+        android:title="识别设置(Google ML kit)">
+        <ListPreference
+            android:entries="@array/ml_kit_lang"
+            android:entryValues="@array/ml_kit_langset"
+            android:key="settings_detect_ml_kit_lang"
+            android:summary="默认拉丁语（即英语等）"
+            android:title="识别语言" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="settings_fastMode"
+            android:summary="高性能要求，出现取词框消失请禁用"
+            android:title="快速识别" />
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:key="settings_translator"
