@@ -12,7 +12,8 @@ public class SharedPreferenceCollection {
     public static final String ball_autoClose = "settings_ball_autoClose";
     public static final String ball_safeMode = "settings_ball_safeMode";
     public static final String ball_fluidMode = "settings_ball_fluidMode";
-
+    public static final String ball_opacityBg = "settings_ball_opacityBg";
+    public static final String ball_autoHideTimeout = "settings_ball_autoHideTimeout";
     //悬浮窗相应设置项
     public static final String window_textBlackBg = "settings_window_textBlackBg";
     public static final String window_opacityBg = "settings_window_opacityBg";

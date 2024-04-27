@@ -50,7 +50,7 @@ public class MainFloatBall extends FloatBall {
                 .setLayout(R.layout.float_ball, v -> {
                     setView(v);
                     ImageButton imageButton = v.findViewById(R.id.floatball_main);
-                    imageButton.getBackground().setAlpha(255);
+                    imageButton.getBackground().setAlpha((int) spUtil.getParam(SharedPreferenceCollection.ball_opacityBg, 255));
                     v.findViewById(R.id.floatball_main).setOnClickListener(this);
                 })
                 .setSidePattern(SidePattern.RESULT_HORIZONTAL)
@@ -104,24 +104,24 @@ public class MainFloatBall extends FloatBall {
                         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                         windowManager.updateViewLayout(view, layoutParams);
                         ImageButton imageButton = mFloatBallView.findViewById(R.id.floatball_main);
-                        imageButton.getBackground().setAlpha(255);
+                        imageButton.getBackground().setAlpha((int) spUtil.getParam(SharedPreferenceCollection.ball_opacityBg, 255));
                     }
 
                     @Override
                     public void drag(@NotNull View view, @NotNull MotionEvent motionEvent) {
                         ImageButton imageButton = mFloatBallView.findViewById(R.id.floatball_main);
-                        imageButton.getBackground().setAlpha(255);
+                        imageButton.getBackground().setAlpha((int) spUtil.getParam(SharedPreferenceCollection.ball_opacityBg, 255));
                     }
 
                     @Override
                     public void dragEnd(@NotNull View view) {
                         if ((boolean) spUtil.getParam(SharedPreferenceCollection.ball_autoHide, true)) {
-                            handler.postDelayed(runnable, 3000);
+                            handler.postDelayed(runnable, (int) spUtil.getParam(SharedPreferenceCollection.ball_autoHideTimeout, 3) * 1000);
                         } else {
                             handler.postDelayed(() -> {
                                 ImageButton imageButton = mFloatBallView.findViewById(R.id.floatball_main);
                                 imageButton.getBackground().setAlpha(50);
-                            }, 3000);
+                            }, (int) spUtil.getParam(SharedPreferenceCollection.ball_autoHideTimeout, 3) * 1000);
                         }
                     }
                 })

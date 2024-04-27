@@ -5,13 +5,33 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_ball_autoHide"
-            android:summary="拖曳后3秒未点击自动隐藏"
+            android:summary="拖曳后N秒未点击自动隐藏"
             android:title="贴边隐藏" />
+        <SeekBarPreference
+            android:key="settings_ball_autoHideTimeout"
+            android:max="5"
+            android:summary="默认3秒"
+            android:title="贴边隐藏时间"
+            app:adjustable="true"
+            app:defaultValue="3"
+            app:min="1"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_ball_autoClose"
             android:summary="点击按钮后收回面板"
             android:title="自动收回" />
+        <SeekBarPreference
+            android:key="settings_ball_opacityBg"
+            android:max="255"
+            android:summary="默认255（100%不透明）"
+            android:title="悬浮球不透明度"
+            app:adjustable="true"
+            app:defaultValue="255"
+            app:min="5"
+            app:seekBarIncrement="10"
+            app:showSeekBarValue="true" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="settings_ball_safeMode"
